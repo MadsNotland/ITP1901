@@ -84,7 +84,6 @@
                     <argLine>
                     --add-opens app/core=ALL-UNNAMED --add-opens app/ui=ALL-UNNAMED --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
                     </argLine>
-                    <useModulePath>false</useModulePath>
                 </configuration>
 	        </plugin>
 
@@ -95,7 +94,7 @@
                 <!-- Default configuration for running -->
                 <!-- Usage: mvn javafx:run -->
                 <configuration>
-                    <mainClass>app/ui.App</mainClass>
+                    <mainClass>ui.App</mainClass>
                 </configuration>
             </plugin>
         </plugins>
