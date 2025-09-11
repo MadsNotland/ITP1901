@@ -4,8 +4,6 @@ import core.Workout;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,12 +25,13 @@ public class WorkoutFileManager {
 
     //legger til alle workouts til fil (overskriver eksisterende innhold)
     public void saveWorkouts(List<Workout> workouts) throws IOException {
-    try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
-        for (Workout ws : workouts) {
-            writer.write(toCsvLine(ws));
-            writer.newLine();
+        try (BufferedWriter writer = Files.newBufferedWriter(filePath)) {
+            for (Workout ws : workouts) {
+                writer.write(toCsvLine(ws));
+                writer.newLine();
+            }
         }
-    }   
+    }
 
     //legger til EN workout nederst i filen (lager fil hvis den ikke finnes)
     public void addWorkout(Workout ws) throws IOException {
