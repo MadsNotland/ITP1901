@@ -10,7 +10,7 @@ public class Workout {
 
     public Workout(String type, String notes, LocalDate date, double time) {
         if (type == null || type.isBlank()) {
-            throw new IllegalArgumentException("Workout session cannot be null or empty");
+            throw new IllegalArgumentException("Type cannot be null or empty");
         }
         if (time <= 0) {
             throw new IllegalArgumentException("Time has to be bigger than 0");
@@ -66,7 +66,7 @@ public class Workout {
 
     public void setType(String type) {
          if (type == null || type.isBlank()) {
-            throw new IllegalArgumentException("Workout session cannot be null or empty");
+            throw new IllegalArgumentException("Type cannot be null or empty");
         }
         this.type = type;
     }
