@@ -16,8 +16,13 @@ public class WorkoutFileManager {
 
     private final Path filePath;
 
+    // Path p1 = Path.of("app/data/workouts.csv");  eksempel på filePath
     public WorkoutFileManager(Path filePath) {
-        this.filePath = filePath;
+        if (filePath == null) {
+            this.filePath = Path.of("app/data/workouts.csv");
+        } else {
+            this.filePath = filePath;
+        }
     }
 
     //legger til alle workouts til fil (overskriver eksisterende innhold)
