@@ -32,6 +32,9 @@ public class Workout {
     }
 
     public void setDate(LocalDate date) {
+        if(date == null){
+            throw new IllegalArgumentException("Date cannot be null");
+        }
         this.date = date;
     }
 
@@ -40,6 +43,9 @@ public class Workout {
     }
 
     public void setTime(double time) {
+         if (time <= 0) {
+            throw new IllegalArgumentException("Time has to be bigger than 0");
+        }
         this.time = time;
     }
 
@@ -48,6 +54,9 @@ public class Workout {
     }
 
     public void setNotes(String notes) {
+         if (notes == null || notes.isBlank()) {
+            throw new IllegalArgumentException("Notes cannot be null or empty");
+        }
         this.notes = notes;
     }
 
@@ -56,13 +65,16 @@ public class Workout {
     }
 
     public void setType(String type) {
+         if (type == null || type.isBlank()) {
+            throw new IllegalArgumentException("Workout session cannot be null or empty");
+        }
         this.type = type;
     }
 
     @Override
     public String toString() {
         return "Workout{" +
-                ", type='" + type + '\'' +
+                "type='" + type + '\'' +
                 ", notes='" + notes + '\'' +
                 "date=" + date +
                 ", time=" + time +
