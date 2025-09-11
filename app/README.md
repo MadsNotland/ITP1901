@@ -5,7 +5,7 @@ The Workout Tracker is a simple training diary where users can register workouts
 The app will eventually support saving workouts to file so they can be loaded again later.  
 
 ## Expected functionality (Release 1)
-- Add a new workout with title, description and date.
+- Add a new workout with title, description, date and time.
 - Show a list of all workouts in the UI.
 - Save and load workouts from a file.
 
