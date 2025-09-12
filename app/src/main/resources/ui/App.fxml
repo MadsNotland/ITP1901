@@ -1,15 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" 
-      fx:controller="ui.AppController" alignment="CENTER" spacing="100.0">
-   
-   <Label text="Welcome to your new JavaFX application!" 
-          style="-fx-font-size: 18px; -fx-font-weight: bold;"/>
-   
-   <Label text="Ready for your implementation!" 
-          style="-fx-font-size: 14px;"/>
+<VBox alignment="CENTER" spacing="100.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.AppController">
+   <AnchorPane fx:id="rootPane" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #F4F6F8; -fx-border-color: #DADFE1;">
+      <children>
+         <Label alignment="CENTER" layoutX="245.0" layoutY="47.0" style="-fx-text-fill: #2C3E50; -fx-font-weight: bold;" text="Workout Tracker" textAlignment="CENTER">
+            <font>
+               <Font size="28.0" />
+            </font>
+         </Label>
+         <Label layoutX="376.0" layoutY="111.0" text="Type">
+            <font>
+               <Font size="18.0" />
+            </font>
+         </Label>
+         <Label layoutX="63.0" layoutY="111.0" text="Date">
+            <font>
+               <Font size="18.0" />
+            </font>
+         </Label>
+         <Label layoutX="62.0" layoutY="173.0" text="Time">
+            <font>
+               <Font size="18.0" />
+            </font>
+         </Label>
+         <Label layoutX="371.0" layoutY="173.0" text="Notes">
+            <font>
+               <Font size="18.0" />
+            </font>
+         </Label>
+         <TextField layoutX="438.0" layoutY="112.0" prefHeight="25.0" prefWidth="175.0" promptText="Push/Pull" />
+         <DatePicker layoutX="124.0" layoutY="112.0" />
+         <ComboBox fx:id="comboBoxHours" layoutX="123.0" layoutY="174.0" prefHeight="28.0" prefWidth="71.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #DADFE1;" />
+         <TextArea layoutX="427.0" layoutY="152.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="63.0" prefWidth="198.0" wrapText="true" />
+         <ComboBox fx:id="comboBoxMinutes" layoutX="211.0" layoutY="174.0" prefHeight="28.0" prefWidth="71.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #DADFE1;" />
+      </children>
+   </AnchorPane>
    
 </VBox>
