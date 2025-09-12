@@ -8,14 +8,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
  * Empty controller - ready for your implementation
  */
 public class AppController {
 
+    // Input-components //
     @FXML
     private ComboBox<Integer> comboBoxHours;
     @FXML
@@ -27,6 +31,19 @@ public class AppController {
     @FXML
     private DatePicker datePicker;
 
+    // TableView-components //
+    @FXML
+    private TableView<Workout> workoutTable;
+    @FXML
+    private TableColumn<Workout, String> typeColumn;
+    @FXML
+    private TableColumn<Workout, LocalDate> dateColumn;
+    @FXML
+    private TableColumn<Workout, Double> timeColumn;
+    @FXML
+    private TableColumn<Workout, String> notesColumn;
+
+    // WorkoutTracker //
     private WorkoutTracker workoutTracker;
 
 
@@ -34,7 +51,9 @@ public class AppController {
     void initialize() {
         initializeComboBoxes();
         workoutTracker = new WorkoutTracker();
+        setTableView();
     }
+
 
     // "ADD WORKOUT"-BUTTON //
     @FXML
@@ -64,31 +83,43 @@ public class AppController {
             }
             // Time must be validated before input. NOTE: minutes is divided by 100 for visual representation
             double time = (double) comboBoxHours.getValue() + (comboBoxMinutes.getValue() / 100.0);
-            System.out.println(time);
-
 
             // Create new Workout-object and add to WorkoutTracker //
             Workout newworkout = new Workout(type, notes, date, time);
             workoutTracker.addWorkout(newworkout);
+            // workoutTable.setItems(workoutTracker.getAllWorkouts()); // Oppdatere TableView
 
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
-        System.out.println(workoutTracker.getAllWorkouts()); // Validate workout added
     }
 
+    // TABLEVIEW //
+    private void setTableView() {
+        // Connecting TableView to ObservableList workouts
+        workoutTable.setItems(workoutTracker.getAllWorkouts()); 
+
+        // Connecting tableColumns to fields in workout
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
+        notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
+    }
+
+
+    // Make ComboBoxes-content for time //
     private void initializeComboBoxes() {
         comboBoxHours.getItems().clear();
         for (int hours = 0; hours <= 10; hours++) {
             comboBoxHours.getItems().add(hours);
         }
-
         comboBoxMinutes.getItems().clear();
         for (int minutes = 0; minutes < 60; minutes = minutes += 5){
             comboBoxMinutes.getItems().add(minutes);
         }
     }
 
+    // ERROR-MESSAGE //
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Invalid Input");
