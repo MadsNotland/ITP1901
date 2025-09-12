@@ -1,11 +1,24 @@
 package core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Empty core class - ready for your implementation
+ * Core class
  */
 public class WorkoutTracker {
-    
+    private final List<Workout> workouts;
+
     public WorkoutTracker() {
-        // Ready for your implementation
+        this.workouts = new ArrayList<>();
+    }
+
+    public void addWorkouts(Workout workout) {
+        if (workout == null) {throw new IllegalArgumentException("Workout cannot be null");}
+        workouts.add(workout);
+    }
+    
+    public List<Workout> getAllWorkouts() {
+        return new ArrayList<>(workouts);
     }
 }
