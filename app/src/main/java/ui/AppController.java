@@ -58,7 +58,7 @@ public class AppController {
                 showError("Notes must be at least 3 characters long.");
                 return;
             }
-            if (comboBoxHours.getValue() == null || comboBoxMinutes.getValue() == null) {
+            if (comboBoxHours.getValue() == null || comboBoxMinutes.getValue() == null || comboBoxHours.getValue() + comboBoxMinutes.getValue() == 0) {
                 showError("Please select both hours and minutes.");
                 return;
             }
@@ -84,7 +84,7 @@ public class AppController {
         }
 
         comboBoxMinutes.getItems().clear();
-        for (int minutes = 5; minutes < 60; minutes = minutes += 5){
+        for (int minutes = 0; minutes < 60; minutes = minutes += 5){
             comboBoxMinutes.getItems().add(minutes);
         }
     }
