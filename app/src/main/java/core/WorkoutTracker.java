@@ -13,7 +13,7 @@ public class WorkoutTracker {
         this.workouts = new ArrayList<>();
     }
 
-    public void addWorkouts(Workout workout) {
+    public void addWorkout(Workout workout) {
         if (workout == null) {throw new IllegalArgumentException("Workout cannot be null");}
         workouts.add(workout);
     }
