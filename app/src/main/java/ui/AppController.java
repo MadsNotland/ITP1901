@@ -60,12 +60,18 @@ public class AppController {
         workoutTracker = new WorkoutTracker();
         setTableView();
         fileManager = new WorkoutFileManager(Path.of("app/data/workouts.csv"));
+        try {
+            var loaded = fileManager.loadWorkouts();
+            workoutTracker.getAllWorkouts().setAll(loaded);
+        } catch (Exception e) {
+            showLoadError("Could not load workouts from file "+e.getMessage());
+        }
     }
 
     // "Save" -button //
     @FXML
     private void handleSave(){
-        List<Workout> workouts = new ArrayList<>(workoutTracker.getWorkouts());
+        List<Workout> workouts = new ArrayList<>(workoutTracker.getAllWorkouts());
         try {
             fileManager.saveWorkouts(workouts);
             showInfo("Saved", "Workouts saved to workouts.csv");
@@ -150,6 +156,14 @@ public class AppController {
     private void showInfo(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    // Load error message//
+    private void showLoadError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Load Error");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
