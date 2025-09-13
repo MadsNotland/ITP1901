@@ -1,9 +1,13 @@
 package ui;
 
+import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import core.Workout;
 import core.WorkoutTracker;
+import core.persistence.WorkoutFileManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
@@ -46,14 +50,29 @@ public class AppController {
     // WorkoutTracker //
     private WorkoutTracker workoutTracker;
 
+    // WorkoutFileManager //
+    private WorkoutFileManager fileManager;
+
 
     @FXML
     void initialize() {
         initializeComboBoxes();
         workoutTracker = new WorkoutTracker();
         setTableView();
+        fileManager = new WorkoutFileManager(Path.of("app/data/workouts.csv"));
     }
 
+    // "Save" -button //
+    @FXML
+    private void handleSave(){
+        List<Workout> workouts = new ArrayList<>(workoutTracker.getWorkouts());
+        try {
+            fileManager.saveWorkouts(workouts);
+            showInfo("Saved", "Workouts saved to workouts.csv");
+        } catch (Exception e) {
+            showError("Could not save workouts to file: " + e.getMessage());
+        }
+    }
 
     // "ADD WORKOUT"-BUTTON //
     @FXML
@@ -123,6 +142,14 @@ public class AppController {
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Invalid Input");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    // Confirm saved info//
+    private void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
