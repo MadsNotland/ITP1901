@@ -76,9 +76,8 @@ public class Workout {
         return "Workout{" +
                 "type='" + type + '\'' +
                 ", notes='" + notes + '\'' +
-                "date=" + date +
+                ", date=" + date +
                 ", time=" + time +
-
                 '}';
     }
 }
