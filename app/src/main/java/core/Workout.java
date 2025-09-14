@@ -2,12 +2,26 @@ package core;
 
 import java.time.LocalDate;
 
+/**
+ * Represents a workout session with type, notes, date, and duration.
+ * Provides validation for all workout data fields.
+ */
 public class Workout {
     private LocalDate date;
     private double time;
     private String notes;
     private String type;
 
+    /**
+     * Creates a new workout with the specified parameters.
+     * All parameters are validated to ensure data integrity.
+     * 
+     * @param type the type of workout (e.g., "Running", "Gym")
+     * @param notes additional notes about the workout
+     * @param date the date when the workout occurred
+     * @param time the duration of the workout in hours
+     * @throws IllegalArgumentException if any parameter is invalid
+     */
     public Workout(String type, String notes, LocalDate date, double time) {
         if (type == null || type.isBlank()) {
             throw new IllegalArgumentException("Type cannot be null or empty");

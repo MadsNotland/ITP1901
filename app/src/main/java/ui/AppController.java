@@ -10,6 +10,8 @@ import core.WorkoutTracker;
 import core.persistence.WorkoutFileManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
@@ -19,11 +21,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
- * Empty controller - ready for your implementation
+ * Controller for the Workout Tracker application.
+ * Handles user interactions and manages workout data persistence.
  */
 public class AppController {
 
-    // Input-components //
+    // Input components
     @FXML
     private ComboBox<Integer> comboBoxHours;
     @FXML
@@ -35,7 +38,7 @@ public class AppController {
     @FXML
     private DatePicker datePicker;
 
-    // TableView-components //
+    // Table view components
     @FXML
     private TableView<Workout> workoutTable;
     @FXML
@@ -47,10 +50,8 @@ public class AppController {
     @FXML
     private TableColumn<Workout, String> notesColumn;
 
-    // WorkoutTracker //
+    // Core business logic components
     private WorkoutTracker workoutTracker;
-
-    // WorkoutFileManager //
     private WorkoutFileManager fileManager;
 
 
@@ -61,7 +62,7 @@ public class AppController {
         setTableView();
 
 
-        // Load workouts from file //
+        // Load workouts from file
         String currentDir = System.getProperty("user.dir"); // Set relative filepath, so it will work for both mvn build and IDE
         if (currentDir == null) throw new IllegalStateException("Cannot determine working directory");
         Path workoutFilePath;
@@ -76,67 +77,59 @@ public class AppController {
             var loaded = fileManager.loadWorkouts();
             workoutTracker.getAllWorkouts().setAll(loaded);
         } catch (Exception e) {
-            showLoadError("Could not load workouts from file "+e.getMessage());
+            showAlert(ERROR, "Load Error", "Could not load workouts from file " +e.getMessage());
         }
     }
 
-    // "Save" -button //
+    /**
+     * Handles the save button click event.
+     * Saves all workouts to the CSV file.
+     */
     @FXML
     private void handleSave() {
         List<Workout> workouts = new ArrayList<>(workoutTracker.getAllWorkouts());
         try {
             fileManager.saveWorkouts(workouts);
-            showInfo("Saved", "Workouts saved to workouts.csv");
+            showAlert(INFORMATION, "Saved", "Workouts saved to workouts.csv");
         } catch (Exception e) {
-            showError("Could not save workouts to file: " + e.getMessage());
+            showAlert(ERROR, "Save Failed", "Could not save workouts to file: " + e.getMessage());
         }
     }
 
-    // "ADD WORKOUT"-BUTTON //
+    /**
+     * Handles the add workout button click event.
+     * Validates input and adds a new workout to the tracker.
+     */
     @FXML
     private void handleAddWorkout() {
         try {
-            // Extract fields //
+            // Extract input fields
             String type = typeField.getText();
             String notes = notesField.getText();
             LocalDate date = datePicker.getValue();
 
-            // Validate fields //
-            if (type == null || type.trim().isEmpty()) {
-                showError("Type must not be empty");
-                return;
-            }
-            if (date == null) {
-                showError("Date must not be empty");
-                return;
-            }
-            if (notes == null || notes.trim().length() < 3) {
-                showError("Notes must be at least 3 characters long.");
-                return;
-            }
-            if (comboBoxHours.getValue() == null || comboBoxMinutes.getValue() == null || comboBoxHours.getValue() + comboBoxMinutes.getValue() == 0) {
-                showError("Please select both hours and minutes.");
-                return;
-            }
+            // Validate input fields
+            if (!validWorkoutData(type, notes, date)) return;
             // Time must be validated before input. NOTE: minutes is divided by 100 for visual representation
             double time = comboBoxHours.getValue() + (comboBoxMinutes.getValue() / 100.0);
 
-            // Create new Workout-object and add to WorkoutTracker //
+            // Create and add new workout
             Workout newWorkout = new Workout(type, notes, date, time);
             workoutTracker.addWorkout(newWorkout);
-            // workoutTable.setItems(workoutTracker.getAllWorkouts()); // Oppdatere TableView
 
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
     }
 
-    // TABLEVIEW //
+    /**
+     * Sets up the table view with workout data and column mappings.
+     */
     private void setTableView() {
-        // Connecting TableView to ObservableList workouts
+        // Connect table view to workout data
         workoutTable.setItems(workoutTracker.getAllWorkouts()); 
 
-        // Connecting tableColumns to fields in workout
+        // Map table columns to workout properties
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
@@ -144,7 +137,9 @@ public class AppController {
     }
 
 
-    // Make ComboBoxes-content for time //
+    /**
+     * Initializes the time selection combo boxes with available values.
+     */
     private void initializeComboBoxes() {
         comboBoxHours.getItems().clear();
         for (int hours = 0; hours <= 10; hours++) {
@@ -156,26 +151,43 @@ public class AppController {
         }
     }
 
-    // ERROR-MESSAGE //
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Invalid Input");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+
+    /**
+     * Validates workout input data and shows error messages if validation fails.
+     * @param type the workout type
+     * @param notes the workout notes
+     * @param date the workout date
+     * @return true if all validation passes, false otherwise
+     */
+    private boolean validWorkoutData(String type, String notes, LocalDate date) {
+        if (type == null || type.trim().isEmpty()) {
+            showAlert(ERROR, "Invalid Input", "Type must not be empty");
+            return false;
+        }
+        if (date == null) {
+            showAlert(ERROR, "Invalid Input", "Date must not be empty");
+            return false;
+        }
+        if (notes == null || notes.trim().length() < 3) {
+            showAlert(ERROR, "Invalid Input", "Notes must be at least 3 characters long.");
+            return false;
+        }
+        if (comboBoxHours.getValue() == null || comboBoxMinutes.getValue() == null || comboBoxHours.getValue() + comboBoxMinutes.getValue() == 0) {
+            showAlert(ERROR, "Invalid Input", "Please select both hours and minutes.");
+            return false;
+        }
+        return true;
     }
-    // Confirm saved info//
-    private void showInfo(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+    /**
+     * Shows an alert dialog with the specified type, title and message.
+     * @param type the alert type (ERROR, INFORMATION, etc.)
+     * @param title the alert title
+     * @param message the alert message
+     */
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
         alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-    // Load error message//
-    private void showLoadError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Load Error");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
