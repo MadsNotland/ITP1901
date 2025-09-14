@@ -104,22 +104,7 @@ public class AppController {
             LocalDate date = datePicker.getValue();
 
             // Validate fields //
-            if (type == null || type.trim().isEmpty()) {
-                showAlert(ERROR, "Invalid Input", "Type must not be empty");
-                return;
-            }
-            if (date == null) {
-                showAlert(ERROR, "Invalid Input", "Date must not be empty");
-                return;
-            }
-            if (notes == null || notes.trim().length() < 3) {
-                showAlert(ERROR, "Invalid Input", "Notes must be at least 3 characters long.");
-                return;
-            }
-            if (comboBoxHours.getValue() == null || comboBoxMinutes.getValue() == null || comboBoxHours.getValue() + comboBoxMinutes.getValue() == 0) {
-                showAlert(ERROR, "Invalid Input", "Please select both hours and minutes.");
-                return;
-            }
+           if (!validWorkoutData(type, notes, date)) return;
             // Time must be validated before input. NOTE: minutes is divided by 100 for visual representation
             double time = comboBoxHours.getValue() + (comboBoxMinutes.getValue() / 100.0);
 
@@ -156,6 +141,27 @@ public class AppController {
         for (int minutes = 0; minutes < 60; minutes +=5) {
             comboBoxMinutes.getItems().add(minutes);
         }
+    }
+
+
+    private boolean validWorkoutData(String type, String notes, LocalDate date) {
+        if (type == null || type.trim().isEmpty()) {
+            showAlert(ERROR, "Invalid Input", "Type must not be empty");
+            return false;
+        }
+        if (date == null) {
+            showAlert(ERROR, "Invalid Input", "Date must not be empty");
+            return false;
+        }
+        if (notes == null || notes.trim().length() < 3) {
+            showAlert(ERROR, "Invalid Input", "Notes must be at least 3 characters long.");
+            return false;
+        }
+        if (comboBoxHours.getValue() == null || comboBoxMinutes.getValue() == null || comboBoxHours.getValue() + comboBoxMinutes.getValue() == 0) {
+            showAlert(ERROR, "Invalid Input", "Please select both hours and minutes.");
+            return false;
+        }
+        return true;
     }
 
     // ERROR-MESSAGE //
