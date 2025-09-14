@@ -1,22 +1,20 @@
 schemaVersion: 2.2.0
 metadata:
-  name: javafx-app
+  name: gr2528
 components:
-  - name: tools
+  - name: gr2528
     container:
-      image: maven:3.9.6-eclipse-temurin-17
-      memoryLimit: 2Gi
+      image: maven:3.9.6-eclipse-temurin-21
+      memoryLimit: 3Gi
       mountSources: true
-      command: ['tail']
-      args: ['-f', '/dev/null']
 commands:
   - id: test
     exec:
-      component: tools
+      component: gr2528
       commandLine: "mvn test"
       workingDir: "/projects/gr2528/app"
   - id: run
     exec:
-      component: tools
+      component: gr2528
       commandLine: "mvn javafx:run"
       workingDir: "/projects/gr2528/app"
