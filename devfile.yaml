@@ -1,11 +1,11 @@
 schemaVersion: 2.2.0
 metadata:
-  name: gr2528
+  name: workout-tracker
 components:
   - name: gr2528
     container:
-      image: maven:3.9.6-eclipse-temurin-21
-      memoryLimit: 3Gi
+      image: maven:3.9.6-eclipse-temurin-17
+      memoryLimit: 2Gi
       mountSources: true
       command: ["tail"]
       args: ["-f", "/dev/null"]
