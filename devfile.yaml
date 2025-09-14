@@ -7,6 +7,8 @@ components:
       image: maven:3.9.6-eclipse-temurin-21
       memoryLimit: 3Gi
       mountSources: true
+      command: ["tail"]
+      args: ["-f", "/dev/null"]
 commands:
   - id: test
     exec:
