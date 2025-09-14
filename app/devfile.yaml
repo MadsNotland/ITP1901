@@ -1,0 +1,27 @@
+schemaVersion: 2.1.0
+metadata:
+  name: javafx-app
+components:
+  - name: tools
+    container:
+      image: maven:3.9.6-eclipse-temurin-17
+      memoryLimit: 2Gi
+      mountSources: true
+      command: ['tail']
+      args: ['-f', '/dev/null']
+commands:
+  - id: build
+    exec:
+      component: tools
+      commandLine: "mvn package"
+      workingDir: "/projects/app"
+  - id: test
+    exec:
+      component: tools
+      commandLine: "mvn test"
+      workingDir: "/projects/app"
+  - id: run
+    exec:
+      component: tools
+      commandLine: "mvn javafx:run"
+      workingDir: "/projects/app"
