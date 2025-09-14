@@ -10,18 +10,13 @@ components:
       command: ['tail']
       args: ['-f', '/dev/null']
 commands:
-  - id: build
-    exec:
-      component: tools
-      commandLine: "mvn package"
-      workingDir: "/projects/app"
   - id: test
     exec:
       component: tools
       commandLine: "mvn test"
-      workingDir: "/projects/app"
+      workingDir: "/projects/gr2528/app"
   - id: run
     exec:
       component: tools
       commandLine: "mvn javafx:run"
-      workingDir: "/projects/app"
+      workingDir: "/projects/gr2528/app"
