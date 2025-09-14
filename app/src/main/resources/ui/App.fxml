@@ -54,7 +54,7 @@
                <TableColumn fx:id="notesColumn" prefWidth="197.99996948242188" text="Notes" />
            </columns>
          </TableView>
-         <Button layoutX="540.0" layoutY="489.0" mnemonicParsing="false" text="Save" />
+         <Button layoutX="540.0" layoutY="489.0" mnemonicParsing="false" onAction="#handleSave" text="Save" />
       </children>
    </AnchorPane>
    
