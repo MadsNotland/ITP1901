@@ -4,8 +4,7 @@
 ## Group 28: *Alexandra Hügli, Konrad Hogstad Johannessen, Trym Andreas Johnsen, Martin Kringstad, Mads Nøtland, David Rossavik*
 
 ### Overview
-[Open repository in Eclipse Che](https://che.stud.ntnu.no/#https://git.ntnu.no/) # TODO: LEGG TIL SKIKKELIG LENKE
-This is the group project for *IT1901 Informatikk Prosjektarbeid I* (Fall 2025).
+[Open repository in Eclipse Che](https://che.stud.ntnu.no/#https://git.ntnu.no/IT1901-2025-groups/gr2528.git?new) This is the group project for *IT1901 Informatikk Prosjektarbeid I* (Fall 2025).
 Our team is developing a Workout Tracker in JavaFX over three planned releases. The application is located in the [/app](/app) folder and can be run with Maven.
 
 ### Documentation
@@ -31,6 +30,7 @@ Our team is developing a Workout Tracker in JavaFX over three planned releases. 
     │   ├── release1/ai-tools.md       # AI usage documentation
     │   ├── release1/release1.md       # Release 1 documentation
     │   └── release1/mockup.png        # Mockup of release 1
+    ├── devfile.yaml                   # devfile for Eclipse Che
     └── README.md         # This file
 
 ### Releases
