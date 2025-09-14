@@ -59,7 +59,19 @@ public class AppController {
         initializeComboBoxes();
         workoutTracker = new WorkoutTracker();
         setTableView();
-        fileManager = new WorkoutFileManager(Path.of("app/data/workouts.csv"));
+
+
+        // Load workouts from file //
+        String currentDir = System.getProperty("user.dir"); // Set relative filepath, so it will work for both mvn build and IDE
+        if (currentDir == null) throw new IllegalStateException("Cannot determine working directory");
+        Path workoutFilePath;
+        if (currentDir.endsWith("app")) {
+            workoutFilePath = Path.of("data", "workouts.csv");
+        } else {
+            workoutFilePath = Path.of("app", "data", "workouts.csv");
+        }
+
+        fileManager = new WorkoutFileManager(workoutFilePath);
         try {
             var loaded = fileManager.loadWorkouts();
             workoutTracker.getAllWorkouts().setAll(loaded);
@@ -70,7 +82,7 @@ public class AppController {
 
     // "Save" -button //
     @FXML
-    private void handleSave(){
+    private void handleSave() {
         List<Workout> workouts = new ArrayList<>(workoutTracker.getAllWorkouts());
         try {
             fileManager.saveWorkouts(workouts);
@@ -84,7 +96,7 @@ public class AppController {
     @FXML
     private void handleAddWorkout() {
         try {
-            // Retract fields //
+            // Extract fields //
             String type = typeField.getText();
             String notes = notesField.getText();
             LocalDate date = datePicker.getValue();
@@ -107,11 +119,11 @@ public class AppController {
                 return;
             }
             // Time must be validated before input. NOTE: minutes is divided by 100 for visual representation
-            double time = (double) comboBoxHours.getValue() + (comboBoxMinutes.getValue() / 100.0);
+            double time = comboBoxHours.getValue() + (comboBoxMinutes.getValue() / 100.0);
 
             // Create new Workout-object and add to WorkoutTracker //
-            Workout newworkout = new Workout(type, notes, date, time);
-            workoutTracker.addWorkout(newworkout);
+            Workout newWorkout = new Workout(type, notes, date, time);
+            workoutTracker.addWorkout(newWorkout);
             // workoutTable.setItems(workoutTracker.getAllWorkouts()); // Oppdatere TableView
 
         } catch (IllegalArgumentException e) {
@@ -139,7 +151,7 @@ public class AppController {
             comboBoxHours.getItems().add(hours);
         }
         comboBoxMinutes.getItems().clear();
-        for (int minutes = 0; minutes < 60; minutes = minutes += 5){
+        for (int minutes = 0; minutes < 60; minutes +=5) {
             comboBoxMinutes.getItems().add(minutes);
         }
     }
