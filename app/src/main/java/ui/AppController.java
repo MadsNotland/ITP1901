@@ -10,6 +10,8 @@ import core.WorkoutTracker;
 import core.persistence.WorkoutFileManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
@@ -76,7 +78,7 @@ public class AppController {
             var loaded = fileManager.loadWorkouts();
             workoutTracker.getAllWorkouts().setAll(loaded);
         } catch (Exception e) {
-            showLoadError("Could not load workouts from file "+e.getMessage());
+            showAlert(ERROR, "Load Error", "Could not load workouts from file "+e.getMessage());
         }
     }
 
@@ -86,9 +88,9 @@ public class AppController {
         List<Workout> workouts = new ArrayList<>(workoutTracker.getAllWorkouts());
         try {
             fileManager.saveWorkouts(workouts);
-            showInfo("Saved", "Workouts saved to workouts.csv");
+            showAlert(INFORMATION, "Saved", "Workouts saved to workouts.csv");
         } catch (Exception e) {
-            showError("Could not save workouts to file: " + e.getMessage());
+            showAlert(ERROR, "Save Failed", "Could not save workouts to file: " + e.getMessage());
         }
     }
 
@@ -103,19 +105,19 @@ public class AppController {
 
             // Validate fields //
             if (type == null || type.trim().isEmpty()) {
-                showError("Type must not be empty");
+                showAlert(ERROR, "Invalid Input", "Type must not be empty");
                 return;
             }
             if (date == null) {
-                showError("Date must not be empty");
+                showAlert(ERROR, "Invalid Input", "Date must not be empty");
                 return;
             }
             if (notes == null || notes.trim().length() < 3) {
-                showError("Notes must be at least 3 characters long.");
+                showAlert(ERROR, "Invalid Input", "Notes must be at least 3 characters long.");
                 return;
             }
             if (comboBoxHours.getValue() == null || comboBoxMinutes.getValue() == null || comboBoxHours.getValue() + comboBoxMinutes.getValue() == 0) {
-                showError("Please select both hours and minutes.");
+                showAlert(ERROR, "Invalid Input", "Please select both hours and minutes.");
                 return;
             }
             // Time must be validated before input. NOTE: minutes is divided by 100 for visual representation
@@ -157,25 +159,9 @@ public class AppController {
     }
 
     // ERROR-MESSAGE //
-    private void showError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Invalid Input");
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-    // Confirm saved info//
-    private void showInfo(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+    private void showAlert(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
         alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-    // Load error message//
-    private void showLoadError(String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Load Error");
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();
