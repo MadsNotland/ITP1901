@@ -63,3 +63,20 @@ class WorkoutFileManagerTest {
         assertEquals(1, loadedWorkouts.size());
         assertEquals("Swimming", loadedWorkouts.get(0).getType());
     }
+
+    /**
+     * Tests that loading from non-existent file returns empty list.
+     */
+    @Test
+    void testLoadFromNonExistentFile() throws IOException {
+        // Arrange
+        Path nonExistentFile = tempDir.resolve("non-existent.csv");
+        WorkoutFileManager manager = new WorkoutFileManager(nonExistentFile);
+
+        // Act
+        List<Workout> loadedWorkouts = manager.loadWorkouts();
+
+        // Assert
+        assertTrue(loadedWorkouts.isEmpty());
+    }
+}
