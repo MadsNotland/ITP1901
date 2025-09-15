@@ -1,14 +1,14 @@
 package ui;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
 import java.io.IOException;
 
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
 
 /**
  * Empty TestFX test - ready for your UI tests
@@ -33,7 +33,6 @@ public class AppTest extends ApplicationTest {
 
     @Test
     public void testApp() {
-        // Ready for your UI tests
-        // Add your test logic here
+        // Add your test here
     }
 }
