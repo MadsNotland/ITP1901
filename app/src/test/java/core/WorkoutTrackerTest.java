@@ -16,11 +16,6 @@ class WorkoutTrackerTest {
     /**
      * Helper method to create workout objects for testing.
      * 
-     * @param type the workout type
-     * @param notes the workout notes
-     * @param date the workout date as a string (YYYY-MM-DD format)
-     * @param time the workout duration in minutes
-     * @return a new Workout object
      */
     private static Workout w(String type, String notes, String date, double time) {
         return new Workout(type, notes, LocalDate.parse(date), time);
