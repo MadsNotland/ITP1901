@@ -43,4 +43,23 @@ class WorkoutFileManagerTest {
         assertEquals("Running", loadedWorkouts.get(0).getType());
         assertEquals("Gym", loadedWorkouts.get(1).getType());
     }
-}
+
+    /**
+     * Tests that appending a workout works correctly.
+     */
+    @Test
+    void testAppendWorkout() throws IOException {
+        // Arrange
+        Path testFile = tempDir.resolve("test-append.csv");
+        WorkoutFileManager manager = new WorkoutFileManager(testFile);
+        
+        Workout workout = new Workout("Swimming", "Pool session", LocalDate.of(2025, 9, 16), 1.0);
+
+        // Act
+        manager.addWorkout(workout);
+        List<Workout> loadedWorkouts = manager.loadWorkouts();
+
+        // Assert
+        assertEquals(1, loadedWorkouts.size());
+        assertEquals("Swimming", loadedWorkouts.get(0).getType());
+    }
