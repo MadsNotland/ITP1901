@@ -14,12 +14,29 @@ The app will eventually support saving workouts to file so they can be loaded ag
 - **User story 1:** As a user, I want to add a workout to track my progress.
 - **User story 2:** As a user, I want to be able to see previously completed workouts so I can monitor my own progress.
 
-## Screenshot / Mockup
-![UI Mockup](../docs/release1/mockup.png)
-
-*(Replace with wanted image when docs/release1 folders have been added)*
+## Quick Start
+The Workout Tracker is a JavaFX application for tracking workout sessions. Users can add workouts with type, duration, date, and notes, then view their workout history in a table format.
 
 ## How to run
-Use Maven to run the app:
 ```bash
 mvn javafx:run
+```
+
+## How to test
+```bash
+mvn test
+```
+
+## Basic Usage
+1. **Add a Workout**: Fill in the type, select date and time, add notes (minimum 3 characters)
+2. **View Workouts**: All workouts appear in the table below the form
+3. **Save Data**: Click "Save" to persist workouts to `data/workouts.csv`
+
+## Features
+- ✅ Add new workouts with validation
+- ✅ View workout history in table format  
+- ✅ Save/load workouts from CSV file
+- ✅ Input validation and error handling
+- ✅ Modern JavaFX user interface
+
+For detailed documentation, see [Release 1 Documentation](../../docs/release1/release1.md).

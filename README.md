@@ -5,18 +5,17 @@
 
 ### Overview
 [Open repository in Eclipse Che](https://che.stud.ntnu.no/#https://git.ntnu.no/IT1901-2025-groups/gr2528.git?new) This is the group project for *IT1901 Informatikk Prosjektarbeid I* (Fall 2025).
-Our team is developing a Workout Tracker in JavaFX over three planned releases. The application is located in the [/app](/app) folder and can be run with Maven.
+
+Our team is developing a Workout Tracker in JavaFX over three planned releases. The application allows users to track their workout sessions with type, duration, date, and notes, with full data persistence capabilities.
 
 ### Documentation
-- [Application README](app/README.md): Functionality, user stories, and run instructions.
-- Release documentation and mockups: [/docs](/docs) (to be expanded for each release)
+- [Release 1 Documentation](docs/release1/release1.md): Complete feature overview and technical details
+- [Application README](app/README.md): Quick start guide and basic usage
 
 ### Requirements
 - Java: 23
 - Apache Maven: 3.8+
-- Dependencies:
-  - JavaFX
-  - JUnit 5
+- Dependencies: JavaFX, JUnit 5, TestFX
 
 ### Repository structure
     .
