@@ -13,7 +13,7 @@ Our team is developing a Workout Tracker in JavaFX over three planned releases. 
 - [Application README](app/README.md): Quick start guide and basic usage
 
 ### Requirements
-- Java: 23
+- Java: 21
 - Apache Maven: 3.8+
 - Dependencies: JavaFX, JUnit 5, TestFX
 
