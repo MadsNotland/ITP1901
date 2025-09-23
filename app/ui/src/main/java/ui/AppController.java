@@ -7,7 +7,7 @@ import java.util.List;
 
 import core.Workout;
 import core.WorkoutTracker;
-import core.persistence.WorkoutFileManager;
+import persistence.WorkoutFileManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import static javafx.scene.control.Alert.AlertType.ERROR;
