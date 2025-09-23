@@ -88,6 +88,10 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>ui.App</mainClass>
+                    <options>
+                        <option>--add-exports</option>
+                        <option>javafx.base/javafx.collections=ALL-UNNAMED</option>
+                    </options>
                 </configuration>
             </plugin>
         </plugins>
