@@ -1,4 +1,4 @@
-package core.persistence;
+package persistence;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
