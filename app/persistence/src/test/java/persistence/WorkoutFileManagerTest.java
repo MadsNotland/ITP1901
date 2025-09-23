@@ -1,4 +1,4 @@
-package core.persistence;
+package persistence;
 
 import core.Workout;
 import org.junit.jupiter.api.Test;
