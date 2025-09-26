@@ -19,7 +19,13 @@ The Workout Tracker is a JavaFX application for tracking workout sessions. Users
 
 ## How to run
 ```bash
+cd app
+cd ui
 mvn javafx:run
+
+OR
+
+mvn javafx:run -pl ui
 ```
 
 ## How to test

@@ -19,18 +19,29 @@ Our team is developing a Workout Tracker in JavaFX over three planned releases. 
 
 ### Repository structure
     .
-    ├── app/              # Application source and tests
-    │   ├── pom.xml
-    │   ├── src/main/java/core/...     # Core logic
-    │   ├── src/main/java/ui/...       # JavaFX UI
-    │   ├── src/test/java/...          # Unit and UI tests
-    │   └── data/workouts.csv          # Example data file
-    ├── docs/             # Documentation and mockups
-    │   ├── release1/ai-tools.md       # AI usage documentation
-    │   ├── release1/release1.md       # Release 1 documentation
-    │   └── release1/mockup.png        # Mockup of release 1
-    ├── devfile.yaml                   # devfile for Eclipse Che
-    └── README.md         # This file
+    ├── app/                          # Multi-module Maven project
+    │   ├── pom.xml                   # Parent POM (packaging=pom)
+    │   ├── core/                     # Core module (domain logic)
+    │   │   ├── pom.xml               # Core module POM
+    │   │   ├── src/main/java/core/   # Core business logic
+    │   │   └── src/test/java/core/   # Core unit tests
+    │   ├── ui/                       # UI module (JavaFX)
+    │   │   ├── pom.xml               # UI module POM
+    │   │   ├── src/main/java/ui/     # JavaFX UI components
+    │   │   ├── src/main/resources/ui/# FXML files and resources
+    │   │   └── src/test/java/ui/      # UI tests (TestFX)
+    │   ├── persistence/               # Persistence module
+    │   │   ├── pom.xml               # Persistence module POM
+    │   │   ├── src/main/java/persistence/ # Data persistence logic
+    │   │   └── src/test/java/persistence/ # Persistence tests
+    │   └── data/                      # Data files
+    │       └── workouts.csv           # Example data file
+    ├── docs/                         # Documentation and mockups
+    │   ├── release1/ai-tools.md      # AI usage documentation
+    │   ├── release1/release1.md      # Release 1 documentation
+    │   └── release1/screenshots/     # Screenshots and mockups
+    ├── devfile.yaml                  # devfile for Eclipse Che
+    └── README.md                     # This file
 
 ### Releases
 - Release 1: Basic workout creation, list view, save/load
