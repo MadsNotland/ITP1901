@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/POM/4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Arver fra parent-->
+    <parent>
+        <groupId>it1901</groupId>
+        <artifactId>workout-tracker</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>workout-tracker-persistence</artifactId>
+    <packaging>jar</packaging> 
+
+    <!-- Kun modul-spesifikke dependencies -->
+    <dependencies>
+        <!-- Avhengighet til core-modulen-->
+        <dependency>
+            <groupId>it1901</groupId>
+            <artifactId>workout-tracker-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <!-- JUNIT 5 API - grunnleggende test-klasser -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+        <!-- JUNIT 5 ENGINE - kjører testene -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <!-- JUNIT 5 PARAMS - parametriserte testklasser -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+        </dependency>
+    </dependencies>
+</project>

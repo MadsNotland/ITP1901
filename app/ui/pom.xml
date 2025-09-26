@@ -1,0 +1,101 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/POM/4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>it1901</groupId>
+        <artifactId>workout-tracker</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>workout-tracker-ui</artifactId>
+    <packaging>jar</packaging>
+
+    <!-- Kun modul-spesifikke dependencies -->
+    <dependencies>
+        <!-- Avhengighet til andre moduler -->
+        <dependency>
+            <groupId>it1901</groupId>
+            <artifactId>workout-tracker-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>it1901</groupId>
+            <artifactId>workout-tracker-persistence</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- JavaFX dependencies -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+        </dependency>
+        
+        <!-- TestFX for UI testing -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>testfx-junit5</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+        </dependency>
+    </dependencies>
+
+    <!-- Module-spesifikke build konfigurasjon -->
+    <build>
+        <plugins>
+            <!-- Maven SureFire plugin - kjører enhetstester -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <argLine>
+                        --add-opens app/core=ALL-UNNAMED 
+                        --add-opens app/ui=ALL-UNNAMED 
+                        --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
+                    </argLine>
+                    <excludes>
+                        <exclude>**/ui/AppTest.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <!-- JavaFX Maven plugin - kompilerer og pakker JavaFX-applikasjonen -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>ui.App</mainClass>
+                    <options>
+                        <option>--add-exports</option>
+                        <option>javafx.base/javafx.collections=ALL-UNNAMED</option>
+                    </options>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+
+
