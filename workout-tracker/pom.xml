@@ -142,6 +142,41 @@
                     </execution>
                 </executions>
             </plugin>
+
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.9.6.0</version>
+                <configuration>
+                    <xmlOutput>false</xmlOutput>
+                    <htmlOutput>true</htmlOutput>
+                    <excludeFilterFile>../config/spotbugs/exclude.xml</excludeFilterFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>spotbugs-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+      <plugin>
+                 <groupId>org.jacoco</groupId>
+      <artifactId>jacoco-maven-plugin</artifactId>
+      <version>0.8.13</version>
+      <executions>
+        <execution>
+          <id>prepare-agent</id>
+          <goals><goal>prepare-agent</goal></goals> <!-- starter jacoco prosessen-->
+        </execution>
+        <execution>
+          <id>report</id>
+          <phase>test</phase><!--Forteller maven når dette skal skje. Under test-->
+          <goals><goal>report</goal></goals>
+        </execution>
+      </executions>
+      </plugin>
       
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
