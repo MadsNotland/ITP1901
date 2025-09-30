@@ -4,13 +4,15 @@
 ## Group 28: *Alexandra Hügli, Konrad Hogstad Johannessen, Trym Andreas Johnsen, Martin Kringstad, Mads Nøtland, David Rossavik*
 
 ### Overview
-[Open repository in Eclipse Che](https://che.stud.ntnu.no/#https://git.ntnu.no/IT1901-2025-groups/gr2528.git?new) This is the group project for *IT1901 Informatikk Prosjektarbeid I* (Fall 2025).
+This is the group project for *IT1901 Informatikk Prosjektarbeid I* (Fall 2025).
 
 Our team is developing a Workout Tracker in JavaFX over three planned releases. The application allows users to track their workout sessions with type, duration, date, and notes, with full data persistence capabilities.
 
+[Open repository in Eclipse Che](https://che.stud.ntnu.no/#https://git.ntnu.no/IT1901-2025-groups/gr2528.git?new)
+
 ### Documentation
 - [Release 1 Documentation](docs/release1/release1.md): Complete feature overview and technical details
-- [Application README](app/README.md): Quick start guide and basic usage
+- [Application README](workout-tracker/README.md): Quick start guide and basic usage
 
 ### Requirements
 - Java: 17
@@ -19,7 +21,7 @@ Our team is developing a Workout Tracker in JavaFX over three planned releases. 
 
 ### Repository structure
     .
-    ├── app/                          # Multi-module Maven project
+    ├── workout-tracker/                          # Multi-module Maven project
     │   ├── pom.xml                   # Parent POM (packaging=pom)
     │   ├── core/                     # Core module (domain logic)
     │   │   ├── pom.xml               # Core module POM
