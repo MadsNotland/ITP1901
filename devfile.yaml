@@ -14,9 +14,9 @@ commands:
     exec:
       component: gr2528
       commandLine: "mvn test"
-      workingDir: "/projects/gr2528/app"
+      workingDir: "/projects/gr2528/workout-tracker"
   - id: run
     exec:
       component: gr2528
       commandLine: "mvn javafx:run"
-      workingDir: "/projects/gr2528/app"
+      workingDir: "/projects/gr2528/workout-tracker"

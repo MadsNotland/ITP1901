@@ -48,7 +48,7 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-params</artifactId>
         </dependency>
-        
+
         <!-- TestFX for UI testing -->
         <dependency>
             <groupId>org.testfx</groupId>
@@ -73,8 +73,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
-                        --add-opens app/core=ALL-UNNAMED 
-                        --add-opens app/ui=ALL-UNNAMED 
+                        --add-opens workout-tracker/core=ALL-UNNAMED
+                        --add-opens workout-tracker/ui=ALL-UNNAMED
                         --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
                     </argLine>
                     <excludes>
@@ -97,5 +97,3 @@
         </plugins>
     </build>
 </project>
-
-

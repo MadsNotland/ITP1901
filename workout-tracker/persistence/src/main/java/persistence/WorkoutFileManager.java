@@ -21,7 +21,7 @@ public class WorkoutFileManager {
 
     public WorkoutFileManager(Path filePath) {
         if (filePath == null) {
-            this.filePath = Path.of("app/data/workouts.csv");
+            this.filePath = Path.of("workout-tracker/data/workouts.csv");
         } else {
             this.filePath = filePath;
         }
@@ -29,7 +29,7 @@ public class WorkoutFileManager {
 
     /**
      * Saves all workouts to the CSV file, overwriting any existing content.
-     * 
+     *
      * @param workouts the list of workouts to save
      * @throws IOException if an I/O error occurs while writing to the file
      * @throws IllegalArgumentException if workouts list is null
@@ -49,7 +49,7 @@ public class WorkoutFileManager {
     /**
      * Appends a single workout to the end of the CSV file.
      * Creates the file if it doesn't exist.
-     * 
+     *
      * @param workout the workout to append to the file
      * @throws IOException if an I/O error occurs while writing to the file
      */
@@ -63,7 +63,7 @@ public class WorkoutFileManager {
     /**
      * Loads all workouts from the CSV file.
      * Returns an empty list if the file doesn't exist.
-     * 
+     *
      * @return a list of all workouts from the file
      * @throws IOException if an I/O error occurs while reading the file
      */
@@ -86,7 +86,7 @@ public class WorkoutFileManager {
 
     /**
      * Converts a workout object to a CSV line format.
-     * 
+     *
      * @param workout the workout to convert
      * @return a CSV-formatted string representation of the workout
      */
@@ -96,7 +96,7 @@ public class WorkoutFileManager {
 
     /**
      * Converts a CSV line to a workout object.
-     * 
+     *
      * @param line the CSV line to parse
      * @return a workout object created from the CSV data
      * @throws IllegalArgumentException if the CSV line has invalid format
