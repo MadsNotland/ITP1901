@@ -24,11 +24,11 @@ public class Workout {
      * @param time the duration of the workout in hours
      * @throws IllegalArgumentException if any parameter is invalid
      */
-    @JSONCreator
-    public Workout(@JSONProperty("type") String type, 
-                   @JSONProperty("notes") String notes, 
-                   @JSONProperty("date") LocalDate date, 
-                   @JSONProperty("time") double time) {
+    @JsonCreator
+    public Workout(@JsonProperty("type") String type, 
+                   @JsonProperty("notes") String notes, 
+                   @JsonProperty("date") LocalDate date, 
+                   @JsonProperty("time") double time) {
         if (type == null || type.isBlank()) {
             throw new IllegalArgumentException("Type cannot be null or empty");
         }

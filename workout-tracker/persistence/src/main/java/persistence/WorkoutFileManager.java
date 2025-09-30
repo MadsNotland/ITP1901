@@ -11,7 +11,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import core.Workout;
 
 /**
- * Manages persistence of workout data to and from CSV files.
+ * Manages persistence of workout data to and from JSON files.
  * Provides functionality to save, load, and append workout data.
  */
 public class WorkoutFileManager {
@@ -30,7 +30,7 @@ public class WorkoutFileManager {
     }
 
     /**
-     * Saves all workouts to the CSV file, overwriting any existing content.
+     * Saves all workouts to the JSON file, overwriting any existing content.
      *
      * @param workouts the list of workouts to save
      * @throws IOException if an I/O error occurs while writing to the file
@@ -44,7 +44,7 @@ public class WorkoutFileManager {
     }
 
     /**
-     * Appends a single workout to the end of the CSV file.
+     * Appends a single workout to the end of the JSON file.
      * Creates the file if it doesn't exist.
      *
      * @param workout the workout to append to the file
@@ -57,7 +57,7 @@ public class WorkoutFileManager {
     }
 
     /**
-     * Loads all workouts from the CSV file.
+     * Loads all workouts from the JSON file.
      * Returns an empty list if the file doesn't exist.
      *
      * @return a list of all workouts from the file
