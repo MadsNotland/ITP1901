@@ -117,6 +117,7 @@
         <plugins>
             <!-- JavaFX plugin håndteres av UI-modulen -->
             <plugin>
+
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.9.6.0</version>
@@ -135,6 +136,32 @@
                     </execution>
                 </executions>
             </plugin>
+      <plugin>
+                 <groupId>org.jacoco</groupId>
+      <artifactId>jacoco-maven-plugin</artifactId>
+      <version>0.8.13</version>
+      <executions>
+        <execution>
+          <id>prepare-agent</id>
+          <goals><goal>prepare-agent</goal></goals> <!-- starter jacoco prosessen-->
+        </execution>
+        <execution>
+          <id>report</id>
+          <phase>test</phase><!--Forteller maven når dette skal skje. Under test-->
+          <goals><goal>report</goal></goals>
+        </execution>
+      </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${maven.surefire.plugin.version}</version>
+        <configuration>
+        <argLine>${argLine}</argLine>
+      </configuration>
+    </plugin>
+
         </plugins>
     </build>
 </project>
