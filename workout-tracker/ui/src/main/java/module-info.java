@@ -1,18 +1,20 @@
 module workout.tracker.ui {
-    // Avhengigheter til andre moduler
+    // Dependencies on internal modules
     requires workout.tracker.core;
     requires workout.tracker.persistence;
-    
-    // JavaFX avhengigheter
+
+    // JavaFX dependencies
     requires javafx.controls;
     requires javafx.fxml;
-    
-    // Grunnleggende Java
+    // Stage lives in javafx.graphics (referenced in App.java)
+    requires javafx.graphics;
+
+    // Base Java module
     requires java.base;
-    
-    // Eksporterer UI-pakken
+
+    // Export UI package to consumers
     exports ui;
-    
-    // Åpner pakker for JavaFX og testing
+
+    // Open package for JavaFX reflection (FXML) and for testing
     opens ui to javafx.graphics, javafx.fxml, org.junit.jupiter;
 }

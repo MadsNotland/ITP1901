@@ -23,8 +23,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 /**
- * Controller for the Workout Tracker application.
- * Handles user interactions and manages workout data persistence.
+ * Controller for the Workout Tracker JavaFX application.
+ * <p>
+ * Responsibilities:
+ * - Read user input from UI controls
+ * - Validate input before creating {@link core.Workout} instances
+ * - Keep the table view in sync with the underlying {@link core.WorkoutTracker}
+ * - Load and save workout data using {@link persistence.WorkoutFileManager}
+ * </p>
  */
 public class AppController {
 
@@ -57,6 +63,12 @@ public class AppController {
     private WorkoutFileManager fileManager;
 
 
+    /**
+     * JavaFX initialization hook. Called automatically by the FXMLLoader after
+     * the FXML elements have been injected. Prepares the UI widgets, creates the
+     * {@link WorkoutTracker}, binds the table view, and attempts to load data
+     * from a CSV file.
+     */
     @FXML
     void initialize() {
         initializeComboBoxes();
@@ -64,21 +76,22 @@ public class AppController {
         setTableView();
 
 
-        // Load workouts from file
-        String currentDir = System.getProperty("user.dir"); // Set relative filepath, so it will work for both mvn build and IDE
+        // Resolve a CSV path relative to the current working directory so it
+        // works both from an IDE and when built via Maven.
+        String currentDir = System.getProperty("user.dir");
         if (currentDir == null) throw new IllegalStateException("Cannot determine working directory");
 
         Path cwd = Paths.get(currentDir).toAbsolutePath();
-        // Primary: when running from module dir: workout-tracker/ui -> ../data/workouts.csv
+        // Primary: running from the UI module directory: workout-tracker/ui -> ../data/workouts.csv
         Path candidate = cwd.getParent() != null ? cwd.getParent().resolve("data").resolve("workouts.csv") : cwd.resolve("data").resolve("workouts.csv");
-        // Fallback: when running from project root: workout-tracker -> data/workouts.csv
+        // Fallback: running from project root: workout-tracker -> data/workouts.csv
         if (!Files.exists(candidate)) {
             Path projectRootCandidate = cwd.resolve("data").resolve("workouts.csv");
             if (Files.exists(projectRootCandidate)) {
                 candidate = projectRootCandidate;
             }
         }
-        // Last resort: repository layout from older structure if present
+        // Last resort: legacy repository layout if present
         if (!Files.exists(candidate)) {
             Path legacy = cwd.resolve("app").resolve("data").resolve("workouts.csv");
             if (Files.exists(legacy)) {
@@ -97,8 +110,9 @@ public class AppController {
     }
 
     /**
-     * Handles the save button click event.
-     * Saves all workouts to the CSV file.
+     * Handles the Save button click.
+     * Attempts to persist all workouts to the configured CSV file and shows a
+     * confirmation or error dialog.
      */
     @FXML
     private void handleSave() {
@@ -112,8 +126,10 @@ public class AppController {
     }
 
     /**
-     * Handles the add workout button click event.
-     * Validates input and adds a new workout to the tracker.
+     * Handles the Add Workout button click.
+     * Validates the current input fields and, if valid, creates and appends a
+     * new {@link Workout} to the tracker. Any validation problem results in a
+     * user-facing alert.
      */
     @FXML
     private void handleAddWorkout() {
@@ -138,7 +154,8 @@ public class AppController {
     }
 
     /**
-     * Sets up the table view with workout data and column mappings.
+     * Connects the table view to the observable workout list and binds columns
+     * to the corresponding {@link Workout} properties.
      */
     private void setTableView() {
         // Connect table view to workout data
@@ -153,7 +170,7 @@ public class AppController {
 
 
     /**
-     * Initializes the time selection combo boxes with available values.
+     * Populates the hour and minute combo boxes with selectable values.
      */
     private void initializeComboBoxes() {
         comboBoxHours.getItems().clear();
@@ -168,11 +185,13 @@ public class AppController {
 
 
     /**
-     * Validates workout input data and shows error messages if validation fails.
-     * @param type the workout type
-     * @param notes the workout notes
-     * @param date the workout date
-     * @return true if all validation passes, false otherwise
+     * Validates user input for a new workout. If validation fails, an alert is
+     * shown to the user.
+     *
+     * @param type  workout type entered in the text field
+     * @param notes notes entered in the notes area
+     * @param date  date selected in the date picker
+     * @return true if all inputs are valid; false otherwise
      */
     private boolean validWorkoutData(String type, String notes, LocalDate date) {
         if (type == null || type.trim().isEmpty()) {
@@ -195,10 +214,11 @@ public class AppController {
     }
 
     /**
-     * Shows an alert dialog with the specified type, title and message.
-     * @param type the alert type (ERROR, INFORMATION, etc.)
-     * @param title the alert title
-     * @param message the alert message
+     * Shows a modal alert dialog.
+     *
+     * @param type    alert type (e.g., ERROR, INFORMATION)
+     * @param title   alert title
+     * @param message alert message body
      */
     private void showAlert(Alert.AlertType type, String title, String message) {
         Alert alert = new Alert(type);

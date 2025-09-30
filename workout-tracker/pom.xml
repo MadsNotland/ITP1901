@@ -1,5 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!--
+      Parent POM for the Workout Tracker multi-module project.
+      Defines shared properties, dependency versions, and plugin versions used by modules.
+    -->
     <modelVersion>4.0.0</modelVersion>
     <groupId>it1901</groupId>
     <artifactId>workout-tracker</artifactId>
@@ -29,10 +33,10 @@
         <javafx.maven.plugin.version>0.0.8</javafx.maven.plugin.version>
     </properties>
 
-    <!-- Dependency Management - define version for all modules -->
+    <!-- Dependency Management - centralize versions for child modules -->
     <dependencyManagement>
         <dependencies>
-            <!-- JavaFX dependencies-->
+            <!-- JavaFX dependencies -->
             <dependency>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-base</artifactId>
@@ -91,7 +95,7 @@
         </dependencies>
     </dependencyManagement>
 
-    <!-- Plugin Management - define version for all plugins -->
+    <!-- Plugin Management - define versions for plugins used in children -->
     <build>
         <pluginManagement>
             <plugins>
@@ -110,37 +114,43 @@
                     <artifactId>javafx-maven-plugin</artifactId>
                     <version>${javafx.maven.plugin.version}</version>
                 </plugin>
+                <!-- Javadoc plugin for generating aggregated site docs at the parent level -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.7.0</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         
-        <!-- Aktive plugins for parent POM -->
+        <!-- Active plugins for parent POM -->
         <plugins>
-            <!-- JavaFX plugin håndteres av UI-modulen -->
+            <!-- Code coverage reporting (JaCoCo) -->
             <plugin>
-                 <groupId>org.jacoco</groupId>
-      <artifactId>jacoco-maven-plugin</artifactId>
-      <version>0.8.13</version>
-      <executions>
-        <execution>
-          <id>prepare-agent</id>
-          <goals><goal>prepare-agent</goal></goals> <!-- starter jacoco prosessen-->
-        </execution>
-        <execution>
-          <id>report</id>
-          <phase>test</phase><!--Forteller maven når dette skal skje. Under test-->
-          <goals><goal>report</goal></goals>
-        </execution>
-      </executions>
-      </plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.13</version>
+                <executions>
+                    <execution>
+                    <id>prepare-agent</id>
+                    <goals><goal>prepare-agent</goal></goals> <!-- starts JaCoCo agent -->
+                    </execution>
+                    <execution>
+                    <id>report</id>
+                    <phase>test</phase><!-- generate report during the test phase -->
+                    <goals><goal>report</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
       
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${maven.surefire.plugin.version}</version>
-        <configuration>
-        <argLine>${argLine}</argLine>
-      </configuration>
-    </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven.surefire.plugin.version}</version>
+                <configuration>
+                    <argLine>${argLine}</argLine>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

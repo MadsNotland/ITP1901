@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Root layout for the Workout Tracker UI.
+  This FXML declares the view structure and binds controls to the
+  controller class `ui.AppController` via fx:id and event handlers.
+-->
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -15,11 +20,13 @@
 <VBox alignment="CENTER" spacing="100.0" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.AppController">
    <AnchorPane fx:id="rootPane" prefHeight="550.0" prefWidth="700.0" style="-fx-background-color: #F4F6F8; -fx-border-color: #DADFE1;">
       <children>
+        <!-- Application title -->
          <Label alignment="CENTER" layoutX="245.0" layoutY="47.0" style="-fx-text-fill: #2C3E50; -fx-font-weight: bold;" text="Workout Tracker" textAlignment="CENTER">
             <font>
                <Font size="28.0" />
             </font>
          </Label>
+        <!-- Input labels -->
          <Label layoutX="376.0" layoutY="111.0" text="Type">
             <font>
                <Font size="18.0" />
@@ -40,12 +47,15 @@
                <Font size="18.0" />
             </font>
          </Label>
+        <!-- Input controls bound to AppController fields -->
          <TextField fx:id="typeField" layoutX="438.0" layoutY="112.0" prefHeight="25.0" prefWidth="175.0" promptText="Push/Pull" />
          <DatePicker fx:id="datePicker" layoutX="124.0" layoutY="112.0" />
          <ComboBox fx:id="comboBoxHours" layoutX="123.0" layoutY="174.0" prefHeight="28.0" prefWidth="71.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #DADFE1;" />
          <TextArea fx:id="notesField" layoutX="427.0" layoutY="152.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="63.0" prefWidth="198.0" wrapText="true" />
          <ComboBox fx:id="comboBoxMinutes" layoutX="211.0" layoutY="174.0" prefHeight="28.0" prefWidth="71.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #DADFE1;" />
+        <!-- Button actions are handled by AppController methods via onAction -->
          <Button layoutX="306.0" layoutY="237.0" mnemonicParsing="false" onAction="#handleAddWorkout" style="-fx-background-color: #3498DB; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;" text="Add Workout" />
+        <!-- Table displaying the workouts list -->
          <TableView fx:id="workoutTable" layoutX="132.0" layoutY="279.0" prefHeight="200.0" prefWidth="449.0">
            <columns>
              <TableColumn fx:id="dateColumn" prefWidth="75.0" text="Date" />
