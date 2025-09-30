@@ -117,6 +117,26 @@
         <plugins>
             <!-- JavaFX plugin håndteres av UI-modulen -->
             <plugin>
+
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.9.6.0</version>
+                <configuration>
+                    <xmlOutput>false</xmlOutput>
+                    <htmlOutput>true</htmlOutput>
+                    <excludeFilterFile>../config/spotbugs/exclude.xml</excludeFilterFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>spotbugs-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+      <plugin>
                  <groupId>org.jacoco</groupId>
       <artifactId>jacoco-maven-plugin</artifactId>
       <version>0.8.13</version>
@@ -141,6 +161,7 @@
         <argLine>${argLine}</argLine>
       </configuration>
     </plugin>
+
         </plugins>
     </build>
 </project>

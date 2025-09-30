@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <!-- Example: suppress warnings in generated code -->
+  <Match>
+    <Class name="~.*\.generated\..*"/>
+  </Match>
+
+  <!-- Example: allow nulls in DTOs (tweak to your packages) -->
+  <Match>
+    <Package name="com.example.dto"/>
+    <Bug pattern="NP_NULL_PARAM_DEREF,NP_NULL_ON_SOME_PATH"/>
+  </Match>
+</FindBugsFilter>
