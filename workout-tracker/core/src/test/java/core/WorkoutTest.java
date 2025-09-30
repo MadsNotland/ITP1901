@@ -77,6 +77,55 @@ class WorkoutTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new Workout("Run", "ok", LocalDate.parse("2025-09-15"), -1.0));
     }
+    
+    /**
+     * Tests that setters update fields correctly with valid values.
+     */
+    @Test
+    void setters_updateFields_onValidInput() {
+        Workout w = validWorkout();
+
+        w.setType("Gym");
+        w.setNotes("Strength session");
+        w.setDate(LocalDate.parse("2025-09-16"));
+        w.setTime(2.0);
+
+        assertEquals("Gym", w.getType());
+        assertEquals("Strength session", w.getNotes());
+        assertEquals(LocalDate.parse("2025-09-16"), w.getDate());
+        assertEquals(2.0, w.getTime());
+    }
+
+    /**
+     * Tests that setters validate inputs and throw on invalid values.
+     */
+    @Test
+    void setters_throw_onInvalidInput() {
+        Workout w = validWorkout();
+
+        assertThrows(IllegalArgumentException.class, () -> w.setType(null));
+        assertThrows(IllegalArgumentException.class, () -> w.setType("   "));
+        assertThrows(IllegalArgumentException.class, () -> w.setNotes(null));
+        assertThrows(IllegalArgumentException.class, () -> w.setNotes("\n\t "));
+        assertThrows(IllegalArgumentException.class, () -> w.setDate(null));
+        assertThrows(IllegalArgumentException.class, () -> w.setTime(0.0));
+        assertThrows(IllegalArgumentException.class, () -> w.setTime(-1.0));
+    }
+
+    /**
+     * Tests that toString contains the main fields for basic debugging visibility.
+     */
+    @Test
+    void toString_containsAllFields() {
+        Workout w = new Workout("Swim", "Pool", LocalDate.parse("2025-09-17"), 1.25);
+        String s = w.toString();
+        assertAll(
+                () -> assertTrue(s.contains("Swim")),
+                () -> assertTrue(s.contains("Pool")),
+                () -> assertTrue(s.contains("2025-09-17")),
+                () -> assertTrue(s.contains("1.25"))
+        );
+    }
 }
 
 
