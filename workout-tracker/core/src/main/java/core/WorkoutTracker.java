@@ -18,6 +18,12 @@ public class WorkoutTracker {
         this.workouts = FXCollections.observableArrayList();
     }
 
+    /**
+     * Adds a workout at the start of the list.
+     *
+     * @param workout non-null workout to add
+     * @throws IllegalArgumentException if {@code workout} is {@code null}
+     */
     public void addWorkout(Workout workout) {
         if (workout == null) {
             throw new IllegalArgumentException("Workout cannot be null");
@@ -26,21 +32,20 @@ public class WorkoutTracker {
     }
     
     /**
-     * Returns the observable list of all workouts.
-     * This list is live and will automatically update the UI when workouts are added or removed.
-     * 
-     * @return the observable list of workouts
+     * Returns the live observable list of workouts.
+     * Changes to this list are reflected in the internal state and any UI bindings.
+     *
+     * @return the live observable list of workouts
      */
     public ObservableList<Workout> getAllWorkouts() {
         return workouts;
     }
     
     /**
-     * Returns a copy of all workouts as a regular List.
-     * This method creates a defensive copy, so modifications to the returned list
-     * will not affect the internal workout storage.
-     * 
-     * @return a copy of all workouts as a List
+     * Returns a defensive copy of all workouts.
+     * Modifying the returned list does not affect the internal storage.
+     *
+     * @return a copy of all workouts
      */
     public List<Workout> getWorkouts() {
         return new ArrayList<>(workouts);
