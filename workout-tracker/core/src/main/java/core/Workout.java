@@ -25,7 +25,7 @@ public class Workout {
      * @throws IllegalArgumentException if any parameter is invalid
      */
     @JSONCreator
-    public Workout(@JSONProperty("type")String type, 
+    public Workout(@JSONProperty("type") String type, 
                    @JSONProperty("notes") String notes, 
                    @JSONProperty("date") LocalDate date, 
                    @JSONProperty("time") double time) {
