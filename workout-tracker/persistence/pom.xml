@@ -39,7 +39,7 @@
         <!-- Jackson-core for JSON parsing-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
+            <artifactId>jackson-core</artifactId>
             <version>2.15.2</version>
         </dependency>
         <!-- Jackson-databind for konvertering mellom JSOn og java objekter -->
