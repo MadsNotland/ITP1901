@@ -75,8 +75,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <argLine>
-                        --add-opens workout-tracker/core=ALL-UNNAMED
-                        --add-opens workout-tracker/ui=ALL-UNNAMED
+                        ${argLine}
+                        --add-opens workout.tracker.core/core=ALL-UNNAMED
+                        --add-opens workout.tracker.ui/ui=ALL-UNNAMED
                         --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
                     </argLine>
                     <excludes>
