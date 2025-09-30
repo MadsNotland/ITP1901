@@ -1,6 +1,8 @@
 package ui;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,12 +67,25 @@ public class AppController {
         // Load workouts from file
         String currentDir = System.getProperty("user.dir"); // Set relative filepath, so it will work for both mvn build and IDE
         if (currentDir == null) throw new IllegalStateException("Cannot determine working directory");
-        Path workoutFilePath;
-        if (currentDir.endsWith("app")) {
-            workoutFilePath = Path.of("data", "workouts.csv");
-        } else {
-            workoutFilePath = Path.of("app", "data", "workouts.csv");
+
+        Path cwd = Paths.get(currentDir).toAbsolutePath();
+        // Primary: when running from module dir: workout-tracker/ui -> ../data/workouts.csv
+        Path candidate = cwd.getParent() != null ? cwd.getParent().resolve("data").resolve("workouts.csv") : cwd.resolve("data").resolve("workouts.csv");
+        // Fallback: when running from project root: workout-tracker -> data/workouts.csv
+        if (!Files.exists(candidate)) {
+            Path projectRootCandidate = cwd.resolve("data").resolve("workouts.csv");
+            if (Files.exists(projectRootCandidate)) {
+                candidate = projectRootCandidate;
+            }
         }
+        // Last resort: repository layout from older structure if present
+        if (!Files.exists(candidate)) {
+            Path legacy = cwd.resolve("app").resolve("data").resolve("workouts.csv");
+            if (Files.exists(legacy)) {
+                candidate = legacy;
+            }
+        }
+        Path workoutFilePath = candidate;
 
         fileManager = new WorkoutFileManager(workoutFilePath);
         try {
