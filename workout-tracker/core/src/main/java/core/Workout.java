@@ -1,6 +1,8 @@
 package core;
 
 import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Represents a workout session with type, notes, date, and duration.
@@ -22,7 +24,11 @@ public class Workout {
      * @param time the duration of the workout in hours
      * @throws IllegalArgumentException if any parameter is invalid
      */
-    public Workout(String type, String notes, LocalDate date, double time) {
+    @JSONCreator
+    public Workout(@JSONProperty("type")String type, 
+                   @JSONProperty("notes") String notes, 
+                   @JSONProperty("date") LocalDate date, 
+                   @JSONProperty("time") double time) {
         if (type == null || type.isBlank()) {
             throw new IllegalArgumentException("Type cannot be null or empty");
         }
