@@ -45,4 +45,28 @@ class WorkoutTrackerTest {
         copy.clear();
         assertEquals(2, tracker.getAllWorkouts().size(), "Internal list should be unchanged");
     }
+
+    /**
+     * Tests that adding a null workout is not allowed and throws an exception.
+     */
+    @Test
+    void addWorkout_throwsOnNull() {
+        WorkoutTracker tracker = new WorkoutTracker();
+        assertThrows(IllegalArgumentException.class, () -> tracker.addWorkout(null));
+    }
+
+    /**
+     * Tests that getAllWorkouts returns a live list connected to the tracker.
+     * Mutations on this list should reflect in the tracker state.
+     */
+    @Test
+    void getAllWorkouts_isLiveList() {
+        WorkoutTracker tracker = new WorkoutTracker();
+        assertEquals(0, tracker.getAllWorkouts().size());
+
+        // Add via the live list reference
+        tracker.getAllWorkouts().add(new Workout("Bike", "Ride", LocalDate.parse("2025-09-16"), 1.0));
+        assertEquals(1, tracker.getWorkouts().size());
+        assertEquals("Bike", tracker.getWorkouts().get(0).getType());
+    }
 }
