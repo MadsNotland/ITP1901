@@ -138,20 +138,20 @@
             </plugin>
       <plugin>
                  <groupId>org.jacoco</groupId>
-      <artifactId>jacoco-maven-plugin</artifactId>
-      <version>0.8.13</version>
-      <executions>
-        <execution>
-          <id>prepare-agent</id>
-          <goals><goal>prepare-agent</goal></goals> <!-- starter jacoco prosessen-->
-        </execution>
-        <execution>
-          <id>report</id>
-          <phase>test</phase><!--Forteller maven når dette skal skje. Under test-->
-          <goals><goal>report</goal></goals>
-        </execution>
-      </executions>
-      </plugin>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.13</version>
+                <executions>
+                    <execution>
+                    <id>prepare-agent</id>
+                    <goals><goal>prepare-agent</goal></goals> <!-- starter jacoco prosessen-->
+                    </execution>
+                    <execution>
+                    <id>report</id>
+                    <phase>verify</phase><!--Forteller maven når dette skal skje-->
+                    <goals><goal>report</goal></goals>
+                    </execution>
+                </executions>
+            </plugin>
       
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -173,13 +173,9 @@
     <!-- Pek stabilt til rotens config uansett modul -->
     <configLocation>${session.executionRootDirectory}/config/checkstyle/checkstyle.xml</configLocation>
 
-    <!-- Valgfritt: bruk hvis du legger til en suppressions-fil -->
-    <!-- <suppressionsLocation>${session.executionRootDirectory}/config/checkstyle/suppressions.xml</suppressionsLocation> -->
 
     <consoleOutput>true</consoleOutput>
     <failsOnError>true</failsOnError>  <!-- Feil build ved brudd -->
-    <!-- Valgfritt: sjekk også testkode -->
-    <!-- <includeTestSourceDirectory>true</includeTestSourceDirectory> -->
   </configuration>
   <executions>
     <execution>
@@ -193,4 +189,5 @@
 </plugin>
 </plugins>
 </build>
+
 </project>
