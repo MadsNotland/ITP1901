@@ -162,6 +162,35 @@
       </configuration>
     </plugin>
 
-        </plugins>
-    </build>
+        
+    
+    <!-- CHECKSTYLE -->
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-checkstyle-plugin</artifactId>
+  <version>3.3.1</version>
+  <configuration>
+    <!-- Pek stabilt til rotens config uansett modul -->
+    <configLocation>${session.executionRootDirectory}/config/checkstyle/checkstyle.xml</configLocation>
+
+    <!-- Valgfritt: bruk hvis du legger til en suppressions-fil -->
+    <!-- <suppressionsLocation>${session.executionRootDirectory}/config/checkstyle/suppressions.xml</suppressionsLocation> -->
+
+    <consoleOutput>true</consoleOutput>
+    <failsOnError>true</failsOnError>  <!-- Feil build ved brudd -->
+    <!-- Valgfritt: sjekk også testkode -->
+    <!-- <includeTestSourceDirectory>true</includeTestSourceDirectory> -->
+  </configuration>
+  <executions>
+    <execution>
+      <id>checkstyle-verify</id>
+      <phase>verify</phase>     <!-- Kjør sammen med andre kvalitetsverktøy -->
+      <goals>
+        <goal>check</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+</plugins>
+</build>
 </project>
