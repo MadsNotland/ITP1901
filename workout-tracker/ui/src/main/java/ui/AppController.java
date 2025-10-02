@@ -66,7 +66,9 @@ public class AppController {
 
         // Load workouts from file
         String currentDir = System.getProperty("user.dir"); // Set relative filepath, so it will work for both mvn build and IDE
-        if (currentDir == null) throw new IllegalStateException("Cannot determine working directory");
+        if (currentDir == null) {
+            throw new IllegalStateException("Cannot determine working directory");
+        }
 
         Path cwd = Paths.get(currentDir).toAbsolutePath();
         // Primary: when running from module dir: workout-tracker/ui -> ../data/workouts.csv
@@ -124,7 +126,9 @@ public class AppController {
             LocalDate date = datePicker.getValue();
 
             // Validate input fields
-            if (!validWorkoutData(type, notes, date)) return;
+            if (!validWorkoutData(type, notes, date)) {
+                return;
+            }
             // Time must be validated before input. NOTE: minutes is divided by 100 for visual representation
             double time = comboBoxHours.getValue() + (comboBoxMinutes.getValue() / 100.0);
 
@@ -161,7 +165,7 @@ public class AppController {
             comboBoxHours.getItems().add(hours);
         }
         comboBoxMinutes.getItems().clear();
-        for (int minutes = 0; minutes < 60; minutes +=5) {
+        for (int minutes = 0; minutes < 60; minutes += 5) {
             comboBoxMinutes.getItems().add(minutes);
         }
     }

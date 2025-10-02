@@ -22,8 +22,8 @@
     <module name="WhitespaceAfter"/>
     <module name="WhitespaceAround"/>
     <module name="Indentation">
-      <property name="basicOffset" value="2"/>   <!-- bytt til 4 hvis dere vil -->
-      <property name="tabWidth" value="2"/>
+      <property name="basicOffset" value="4"/>   <!-- bytt til 4 hvis dere vil -->
+      <property name="tabWidth" value="4"/>
     </module>
 
     <!-- Fil/klasse-navn -->
