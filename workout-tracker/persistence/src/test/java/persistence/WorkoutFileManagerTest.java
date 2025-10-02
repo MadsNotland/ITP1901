@@ -27,7 +27,7 @@ class WorkoutFileManagerTest {
     @Test
     void testSaveAndLoadWorkouts() throws IOException {
         // Arrange
-        Path testFile = tempDir.resolve("test-workouts.csv");
+        Path testFile = tempDir.resolve("test-workouts.json");
         WorkoutFileManager manager = new WorkoutFileManager(testFile);
         
         Workout workout1 = new Workout("Running", "Morning run", LocalDate.of(2025, 9, 14), 1.5);
@@ -50,7 +50,7 @@ class WorkoutFileManagerTest {
     @Test
     void testAppendWorkout() throws IOException {
         // Arrange
-        Path testFile = tempDir.resolve("test-append.csv");
+        Path testFile = tempDir.resolve("test-append.json");
         WorkoutFileManager manager = new WorkoutFileManager(testFile);
         
         Workout workout = new Workout("Swimming", "Pool session", LocalDate.of(2025, 9, 16), 1.0);
@@ -70,7 +70,7 @@ class WorkoutFileManagerTest {
     @Test
     void testLoadFromNonExistentFile() throws IOException {
         // Arrange
-        Path nonExistentFile = tempDir.resolve("non-existent.csv");
+        Path nonExistentFile = tempDir.resolve("non-existent.json");
         WorkoutFileManager manager = new WorkoutFileManager(nonExistentFile);
 
         // Act

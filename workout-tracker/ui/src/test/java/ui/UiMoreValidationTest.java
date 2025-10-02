@@ -141,5 +141,3 @@ class UiMoreValidationTest extends ApplicationTest {
         assertEquals(0.30, top.getTime());
     }
 }
-
-

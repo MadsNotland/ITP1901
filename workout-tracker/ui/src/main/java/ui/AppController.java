@@ -1,15 +1,14 @@
 package ui;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.Files;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import core.Workout;
 import core.WorkoutTracker;
-import persistence.WorkoutFileManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import static javafx.scene.control.Alert.AlertType.ERROR;
@@ -21,6 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import persistence.WorkoutFileManager;
 
 /**
  * Controller for the Workout Tracker JavaFX application.
@@ -86,14 +86,14 @@ public class AppController {
         Path candidate = cwd.getParent() != null ? cwd.getParent().resolve("data").resolve("workouts.csv") : cwd.resolve("data").resolve("workouts.csv");
         // Fallback: running from project root: workout-tracker -> data/workouts.csv
         if (!Files.exists(candidate)) {
-            Path projectRootCandidate = cwd.resolve("data").resolve("workouts.csv");
+            Path projectRootCandidate = cwd.resolve("data").resolve("workouts.json");
             if (Files.exists(projectRootCandidate)) {
                 candidate = projectRootCandidate;
             }
         }
         // Last resort: legacy repository layout if present
         if (!Files.exists(candidate)) {
-            Path legacy = cwd.resolve("app").resolve("data").resolve("workouts.csv");
+            Path legacy = cwd.resolve("app").resolve("data").resolve("workouts.json");
             if (Files.exists(legacy)) {
                 candidate = legacy;
             }
@@ -105,7 +105,7 @@ public class AppController {
             var loaded = fileManager.loadWorkouts();
             workoutTracker.getAllWorkouts().setAll(loaded);
         } catch (Exception e) {
-            showAlert(ERROR, "Load Error", "Could not load workouts from file " +e.getMessage());
+            showAlert(ERROR, "Load Error", "Could not load workouts from file " + e.getMessage());
         }
     }
 
@@ -119,7 +119,7 @@ public class AppController {
         List<Workout> workouts = new ArrayList<>(workoutTracker.getAllWorkouts());
         try {
             fileManager.saveWorkouts(workouts);
-            showAlert(INFORMATION, "Saved", "Workouts saved to workouts.csv");
+            showAlert(INFORMATION, "Saved", "Workouts saved to workouts.json");
         } catch (Exception e) {
             showAlert(ERROR, "Save Failed", "Could not save workouts to file: " + e.getMessage());
         }
@@ -159,7 +159,7 @@ public class AppController {
      */
     private void setTableView() {
         // Connect table view to workout data
-        workoutTable.setItems(workoutTracker.getAllWorkouts()); 
+        workoutTable.setItems(workoutTracker.getAllWorkouts());
 
         // Map table columns to workout properties
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
