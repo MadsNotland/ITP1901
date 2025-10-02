@@ -1,6 +1,7 @@
 package core;
 
 import java.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -54,7 +55,7 @@ public class Workout {
 
     /** Sets the workout date; rejects {@code null}. */
     public void setDate(LocalDate date) {
-        if(date == null){
+        if (date == null) {
             throw new IllegalArgumentException("Date cannot be null");
         }
         this.date = date;
@@ -67,7 +68,7 @@ public class Workout {
 
     /** Sets the workout duration in hours; must be strictly positive. */
     public void setTime(double time) {
-         if (time <= 0) {
+        if (time <= 0) {
             throw new IllegalArgumentException("Time has to be bigger than 0");
         }
         this.time = time;
@@ -80,7 +81,7 @@ public class Workout {
 
     /** Sets the notes; rejects {@code null} or blank. */
     public void setNotes(String notes) {
-         if (notes == null || notes.isBlank()) {
+        if (notes == null || notes.isBlank()) {
             throw new IllegalArgumentException("Notes cannot be null or empty");
         }
         this.notes = notes;
@@ -93,7 +94,7 @@ public class Workout {
 
     /** Sets the workout type; rejects {@code null} or blank. */
     public void setType(String type) {
-         if (type == null || type.isBlank()) {
+        if (type == null || type.isBlank()) {
             throw new IllegalArgumentException("Type cannot be null or empty");
         }
         this.type = type;

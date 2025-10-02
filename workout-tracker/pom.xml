@@ -136,8 +136,9 @@
                     </execution>
                 </executions>
             </plugin>
-      <plugin>
-                 <groupId>org.jacoco</groupId>
+            <!-- Jacoco -->
+            <plugin>
+                <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.13</version>
                 <executions>
@@ -147,12 +148,12 @@
                     </execution>
                     <execution>
                     <id>report</id>
-                    <phase>test</phase><!--Forteller maven når dette skal skje. Under test-->
+                    <phase>verify</phase><!--Forteller maven når dette skal skje-->
                     <goals><goal>report</goal></goals>
                     </execution>
                 </executions>
             </plugin>
-      
+            <!-- Maven Surefire -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -160,6 +161,29 @@
                 <configuration>
                     <argLine>${argLine}</argLine>
                 </configuration>
+            </plugin>
+
+            <!-- CHECKSTYLE -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <!-- Pek stabilt til rotens config uansett modul -->
+                    <configLocation>${session.executionRootDirectory}/config/checkstyle/checkstyle.xml</configLocation>
+                    <consoleOutput>true</consoleOutput>
+                    <failsOnError>true</failsOnError>  <!-- Feil build ved brudd -->
+                    <excludes>**/module-info.java</excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>checkstyle-verify</id>
+                        <phase>verify</phase>     <!-- Kjør sammen med andre kvalitetsverktøy -->
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
