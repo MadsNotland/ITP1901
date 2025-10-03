@@ -1,6 +1,4 @@
-# Work Practices - Group 28
-
-*Alexandra Hügli, Konrad Hogstad Johannessen, Trym Andreas Johnsen, Martin Kringstad, Mads Nøtland, David Rossavik*
+# Work Practices
 
 ## Coding Habits
 
@@ -8,7 +6,6 @@
 - **Classes**: PascalCase (e.g., `WorkoutTracker`, `AppController`)
 - **Methods**: camelCase with descriptive names (e.g., `addWorkout()`, `validWorkoutData()`)
 - **Variables**: camelCase (e.g., `workoutTracker`, `fileManager`)
-- **Constants**: UPPER_SNAKE_CASE (not currently used extensively)
 - **Packages**: lowercase with dots (e.g., `core`, `persistence`, `ui`)
 
 ### Code Formatting
