@@ -1,4 +1,9 @@
 [ {
+  "type" : "Pull",
+  "notes" : "Workout Session 2",
+  "date" : [ 2025, 10, 2 ],
+  "time" : 1.0
+}, {
   "type" : "Push",
   "notes" : "Workout Session 1",
   "date" : [ 2025, 9, 30 ],

@@ -75,15 +75,19 @@ public class AppController {
         workoutTracker = new WorkoutTracker();
         setTableView();
 
+        // Load workouts from file
 
         // Resolve a CSV path relative to the current working directory so it
         // works both from an IDE and when built via Maven.
         String currentDir = System.getProperty("user.dir");
-        if (currentDir == null) throw new IllegalStateException("Cannot determine working directory");
-
+        if (currentDir == null) {
+            throw new IllegalStateException("Cannot determine working directory");
+        }
+        
         Path cwd = Paths.get(currentDir).toAbsolutePath();
         // Primary: running from the UI module directory: workout-tracker/ui -> ../data/workouts.csv
-        Path candidate = cwd.getParent() != null ? cwd.getParent().resolve("data").resolve("workouts.csv") : cwd.resolve("data").resolve("workouts.csv");
+        Path cwdParent = cwd.getParent();
+        Path candidate = cwdParent != null ? cwdParent.resolve("data").resolve("workouts.csv") : cwd.resolve("data").resolve("workouts.csv");
         // Fallback: running from project root: workout-tracker -> data/workouts.csv
         if (!Files.exists(candidate)) {
             Path projectRootCandidate = cwd.resolve("data").resolve("workouts.json");
@@ -140,7 +144,9 @@ public class AppController {
             LocalDate date = datePicker.getValue();
 
             // Validate input fields
-            if (!validWorkoutData(type, notes, date)) return;
+            if (!validWorkoutData(type, notes, date)) {
+                return;
+            }
             // Time must be validated before input. NOTE: minutes is divided by 100 for visual representation
             double time = comboBoxHours.getValue() + (comboBoxMinutes.getValue() / 100.0);
 
@@ -178,7 +184,7 @@ public class AppController {
             comboBoxHours.getItems().add(hours);
         }
         comboBoxMinutes.getItems().clear();
-        for (int minutes = 0; minutes < 60; minutes +=5) {
+        for (int minutes = 0; minutes < 60; minutes += 5) {
             comboBoxMinutes.getItems().add(minutes);
         }
     }

@@ -10,4 +10,17 @@
     <Package name="com.example.dto"/>
     <Bug pattern="NP_NULL_PARAM_DEREF,NP_NULL_ON_SOME_PATH"/>
   </Match>
+
+  <!-- Allow constructor validation in core.Workout -->
+  <Match>
+    <Class name="core.Workout"/>
+    <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+  </Match>
+
+  <!-- Expose live ObservableList for UI bindings by design -->
+  <Match>
+    <Class name="core.WorkoutTracker"/>
+    <Method name="getAllWorkouts"/>
+    <Bug pattern="EI_EXPOSE_REP"/>
+  </Match>
 </FindBugsFilter>

@@ -31,13 +31,11 @@ class WorkoutTracker {
 %% --------- Persistence ----------
 class WorkoutFileManager {
   - filePath : Path
+  - objectMapper: ObjectMapper
   + WorkoutFileManager(filePath : Path)
   + saveWorkouts(workouts : List~Workout~) : void
   + addWorkout(workout : Workout) : void
   + loadWorkouts() : List~Workout~
-  ..private..
-  - toCsvLine(workout : Workout) : String
-  - fromCsvLine(line : String) : Workout
 }
 
 %% --------- UI Controller (orchestrates) ----------
