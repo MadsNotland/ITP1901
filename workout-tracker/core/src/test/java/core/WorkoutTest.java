@@ -77,7 +77,7 @@ class WorkoutTest {
         assertThrows(IllegalArgumentException.class,
                 () -> new Workout("Run", "ok", LocalDate.parse("2025-09-15"), -1.0));
     }
-    
+
     /**
      * Tests that setters update fields correctly with valid values.
      */
@@ -127,5 +127,3 @@ class WorkoutTest {
         );
     }
 }
-
-

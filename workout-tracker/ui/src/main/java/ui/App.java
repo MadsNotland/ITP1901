@@ -9,18 +9,30 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * JavaFX App
+ * Entry point for the Workout Tracker JavaFX application.
+ * <p>
+ * This class bootstraps the UI by loading the {@code App.fxml} layout and
+ * showing the primary {@link javafx.stage.Stage}. The JavaFX runtime invokes
+ * {@link #start(javafx.stage.Stage)} after initialization.
+ * </p>
  */
 public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        // Load the main FXML and set up the primary scene
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("App.fxml"));
         Parent parent = fxmlLoader.load();
         stage.setScene(new Scene(parent, 700, 550));
         stage.show();
     }
 
+    /**
+     * Standard Java main method. Delegates to {@link Application#launch(String...)}
+     * which initializes the JavaFX runtime and calls {@link #start(Stage)}.
+     *
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         launch();
     }

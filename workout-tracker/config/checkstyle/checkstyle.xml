@@ -4,12 +4,12 @@
   "https://checkstyle.org/dtds/configuration_1_3.dtd">
 
 <module name="Checker">
-  <!-- Enkle filnivå-sjekker -->
+  <!-- Easy file-level checks -->
   <module name="FileTabCharacter"/>
   <module name="NewlineAtEndOfFile"/>
 
   <module name="TreeWalker">
-    <!-- Parenteser -->
+    <!-- Parentheses -->
     <module name="NeedBraces"/>
     <module name="LeftCurly"/>
     <module name="RightCurly"/>
@@ -18,15 +18,15 @@
     <module name="UnusedImports"/>
     <module name="AvoidStarImport"/>
 
-    <!-- Whitespace/innrykk -->
+    <!-- Whitespace/Indentation -->
     <module name="WhitespaceAfter"/>
     <module name="WhitespaceAround"/>
     <module name="Indentation">
-      <property name="basicOffset" value="4"/>   <!-- bytt til 4 hvis dere vil -->
+      <property name="basicOffset" value="4"/>   <!-- change to 4 if you want -->
       <property name="tabWidth" value="4"/>
     </module>
 
-    <!-- Fil/klasse-navn -->
+    <!-- File/Class Name -->
     <module name="OuterTypeFilename"/>
   </module>
 </module>
