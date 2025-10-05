@@ -1,4 +1,3 @@
-
 # Teamwork
 Our team’s planning and coordination has developed gradually through the semester. A clear strength has been our combination of structured meetings and informal communication channels such as Messenger. For each release, we begin with a joint planning session where all issues are created and tasks clarified. Since the releases have been relatively small, this initial planning combined with social media communication and one follow-up meeting was often sufficient. In Release 2, however, we also scheduled a mid-point check-in, which helped ensure alignment. What we have learned is that the balance between formal meetings and flexible communication has given us efficiency without unnecessary overhead.
 
