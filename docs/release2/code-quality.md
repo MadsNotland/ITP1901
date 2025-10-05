@@ -65,7 +65,7 @@ This file documents the **chosen tools**, their **configurations**, and **how th
 
 **Applied:** The agent is attached to tests; coverage **reports are generated** per module under `target/site/jacoco/`. **No coverage gate is configured** (the build does not fail on low coverage).
 
-Example jacoco report: ![alt text](assets/jacoco-report.png)
+Example jacoco report: ![core](assets/jacoco-core-report.png), ![persistence](assets/jacoco-persistance-report.png), ![UI](assets/jacoco-ui-report.png)
 
 ---
 
