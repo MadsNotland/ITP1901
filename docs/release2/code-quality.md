@@ -100,22 +100,37 @@ This file documents the **chosen tools**, their **configurations**, and **how th
 
 ---
 
-## How They’re Applied in the Build
+### 5) Checkstyle (formatting & style)
 
-* **Command:** `mvn verify` from gr2528/workout-tracker.
-* **Phases & effects:**
+**Plugin:** `org.apache.maven.plugins:maven-checkstyle-plugin:3.3.1`
 
-  * **`test`**: Surefire runs tests; JaCoCo attaches the agent and produces coverage data; JaCoCo **report** is generated.
-  * **`verify`**: SpotBugs `check` runs; the build **fails** on SpotBugs findings. (No coverage threshold is enforced by JaCoCo.)
+**Configuration (parent POM):**
 
-**Reports/outputs (per module):**
+```xml
+<!-- CHECKSTYLE -->
+<plugin>
+  <groupId>org.apache.maven.plugins</groupId>
+  <artifactId>maven-checkstyle-plugin</artifactId>
+  <version>3.3.1</version>
+  <configuration>
+    <!-- Points to the root config regardless of module -->
+    <configLocation>${session.executionRootDirectory}/config/checkstyle/checkstyle.xml</configLocation>
+    <consoleOutput>true</consoleOutput>
+    <failsOnError>true</failsOnError>  <!-- Fails build on violation -->
+    <excludes>**/module-info.java</excludes>
+  </configuration>
+  <executions>
+    <execution>
+      <id>checkstyle-verify</id>
+      <phase>verify</phase>     <!-- Runs alongside other quality tools -->
+      <goals>
+        <goal>check</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+```
 
-* SpotBugs HTML report → `target/spotbugs.html`
-* JaCoCo coverage site → `target/site/jacoco/index.html`
-* Surefire test reports → `target/surefire-reports/`
+**Applied:** Runs during **`verify`** for each module. Uses a shared ruleset at `config/checkstyle/checkstyle.xml`. **Fails the build** on any reported violation. `module-info.java` files are excluded.
 
 ---
-
-## Scope
-
-This document intentionally includes **only** the chosen tools, their **configurations**, and **how they are applied** in the build lifecycle, as defined by the parent POM for Release 2.
