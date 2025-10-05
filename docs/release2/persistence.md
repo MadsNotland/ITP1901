@@ -1,27 +1,27 @@
 # Persistence
 
-Denne filen dokumenterer filformatet for brukerdata og den valgte persistensmodellen i **Workout Tracker**-applikasjonen.
+This file documents the file format for user data and the chosen persistence model in the **Workout Tracker** application.
 
-## Oversikt
+## Overview
 
-- **Kode som håndterer lagring**: `workout-tracker/persistence/src/main/java/persistence/WorkoutFileManager.java`
-- **UI som trigger lagring/lasting**: 
-  - Lasting ved oppstart i `ui/AppController.initialize()` (via `WorkoutFileManager.loadWorkouts()`).
-  - Manuell lagring via knapp i `ui/App.fxml` → `AppController.handleSave()`.
-- **Standard filsti for data**: `workout-tracker/data/workouts.json`
-- **Innstillinger**: Ingen egen settings-fil per nå.
+- **Code handling storage**: `workout-tracker/persistence/src/main/java/persistence/WorkoutFileManager.java`
+- **UI that triggers load/save**:
+  - Loading at startup in `ui/AppController.initialize()` (via `WorkoutFileManager.loadWorkouts()`).
+  - Manual save via button in `ui/App.fxml` → `AppController.handleSave()`.
+- **Default data file path**: `workout-tracker/data/workouts.json`
+- **Settings**: No separate settings file at the moment.
 
-## Filformat (brukerdata)
+## File format (user data)
 
 - **Format**: JSON
-- **Struktur**: Hele filen er en **liste** av `Workout`-objekter.
-- **Felter per element** (fra `core/Workout.java`):
+- **Structure**: The entire file is a **list** of `Workout` objects.
+- **Fields per element** (from `core/Workout.java`):
   - `type`: `string`
   - `notes`: `string`
-  - `date`: `array[int,int,int]` = `[YYYY, MM, DD]` (fra Jackson `JavaTimeModule` sin standard for `LocalDate`)
-  - `time`: `number` (timer)
+  - `date`: `array[int,int,int]` = `[YYYY, MM, DD]` (from Jackson `JavaTimeModule`’s default for `LocalDate`)
+  - `time`: `number` (hours)
 
-**Eksempel** (fra `data/workouts.json`):
+**Example** (from `data/workouts.json`):
 
 ```json
 [
@@ -48,42 +48,39 @@ Denne filen dokumenterer filformatet for brukerdata og den valgte persistensmode
 ]
 ```
 
-## Persistensmodell
+## Persistence model
+- **Choice**: Hybrid
+- **Implicit load**: On startup, any existing sessions are automatically loaded from workouts.json.
+- **Explicit save**: The user must press the Save button to write the current list to file (no autosave).
 
-- **Valg**: **Hybrid**
-  - **Implicit last**: Ved oppstart lastes eventuelle eksisterende økter automatisk fra `workouts.json`.
-  - **Explicit save**: Brukeren må trykke **Save**-knappen for å skrive nåværende liste til fil (ingen autosave).
-- **Begrunnelse**:
-  - Minimal friksjon ved oppstart (data dukker opp uten brukerhandling).
-  - Tydelig kontroll og “milepæl”-følelse ved lagring (bruker vet når filen oppdateres).
-  - Reduserer risikoen for å overskrive med halvferdige endringer sammenlignet med ren autosave.
+## Rationale:
+- Minimal friction at startup (data appears without user action).
+- Clear control and a “milestone” feeling when saving (the user knows when the file is updated).
+- Reduces the risk of overwriting with half-finished changes compared to pure autosave.
 
-### Trade-offs og alternativer
+## Trade-offs and alternatives
+**Document/explicit (manual only)**
+- Clear save points, good for version control.
+- Requires the user to remember to save; risk of data loss on crashes.
 
-- **Document/explicit (kun manuelt)**  
-  + Klare lagringspunkt, godt for versjonskontroll.  
-  − Krever at brukeren husker å lagre; fare for datatap ved krasj.
+**Implicit/app (autosave only)**
+- Zero friction; lower risk of loss on crashes.
+- Less predictability; harder to “discard” work.
 
-- **Implicit/app (kun autosave)**  
-  + Null friksjon; lav risiko for tap ved krasj.  
-  − Mindre forutsigbarhet; vanskeligere å “forkaste” arbeid.
+**Hybrid (chosen)**
+- Combines easy startup with deliberate saving.
+- Changes not saved before exit can be lost.
 
-- **Hybrid (valgt)**  
-  + Kombinerer enkel oppstart med bevisst lagring.  
-  − Endringer som ikke blir lagret før avslutning kan gå tapt.
+## Why JSON?
+- Advantages: Human-readable, Git-friendly diffs, easy export/import, broad library support (Jackson).
+- Disadvantages: No comments in the format; can become heavy as a single large file for very big datasets.
 
-## Hvorfor JSON?
+**Considered alternatives (brief)**:
+- YAML: More human-friendly syntax, but parsing is more fragile.
+- SQLite: Scales well and enables queries; poorer git-diff and “document” workflow.
+- Binary/Protobuf: Compact and versionable; not human-readable.
 
-- **Fordeler**: Lesbart, diff-vennlig i Git, enkel eksport/import, bred biblioteksstøtte (Jackson).
-- **Ulemper**: Ingen kommentarer i formatet; kan bli tungt som monofil ved veldig store datamengder.
-- **Mulige alternativer (kort)**:
-  - **YAML**: Mer menneskevennlig syntaks, men mer skjør parsing.
-  - **SQLite**: Skaler godt og muliggjør spørringer; dårligere git-diff og “dokument”-flyt.
-  - **Binary/Protobuf**: Kompakt og versjonerbart; ikke menneskelesbart.
-
-## Tekniske detaljer
-
-- **Skriving/lesing**: Utføres i `WorkoutFileManager` med `ObjectMapper`. `LocalDate` støttes via `JavaTimeModule`.
-- **Filoppløsning**: `AppController.initialize()` velger `workouts.json` relativt til prosjektkatalogen.
-- **Validering**: `core.Workout` validerer felter i konstruktør/settere; innleste objekter må passere denne valideringen.
-
+## Technical details
+- Read/write: Performed in WorkoutFileManager using ObjectMapper. LocalDate is supported via JavaTimeModule.
+- File path resolution: AppController.initialize() resolves workouts.json relative to the project directory (with sensible fallbacks).
+- Validation: core.Workout validates fields in constructors/setters; deserialized objects must pass this validation.
