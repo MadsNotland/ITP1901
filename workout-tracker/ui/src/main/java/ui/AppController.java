@@ -67,7 +67,7 @@ public class AppController {
      * JavaFX initialization hook. Called automatically by the FXMLLoader after
      * the FXML elements have been injected. Prepares the UI widgets, creates the
      * {@link WorkoutTracker}, binds the table view, and attempts to load data
-     * from a CSV file.
+     * from a JSON file.
      */
     @FXML
     void initialize() {
@@ -77,7 +77,7 @@ public class AppController {
 
         // Load workouts from file
 
-        // Resolve a CSV path relative to the current working directory so it
+        // Resolve a JSON path relative to the current working directory so it
         // works both from an IDE and when built via Maven.
         String currentDir = System.getProperty("user.dir");
         if (currentDir == null) {
@@ -85,10 +85,10 @@ public class AppController {
         }
         
         Path cwd = Paths.get(currentDir).toAbsolutePath();
-        // Primary: running from the UI module directory: workout-tracker/ui -> ../data/workouts.csv
+        // Primary: running from the UI module directory: workout-tracker/ui -> ../data/workouts.json
         Path cwdParent = cwd.getParent();
-        Path candidate = cwdParent != null ? cwdParent.resolve("data").resolve("workouts.csv") : cwd.resolve("data").resolve("workouts.csv");
-        // Fallback: running from project root: workout-tracker -> data/workouts.csv
+        Path candidate = cwdParent != null ? cwdParent.resolve("data").resolve("workouts.json") : cwd.resolve("data").resolve("workouts.json");
+        // Fallback: running from project root: workout-tracker -> data/workouts.json
         if (!Files.exists(candidate)) {
             Path projectRootCandidate = cwd.resolve("data").resolve("workouts.json");
             if (Files.exists(projectRootCandidate)) {
@@ -115,7 +115,7 @@ public class AppController {
 
     /**
      * Handles the Save button click.
-     * Attempts to persist all workouts to the configured CSV file and shows a
+     * Attempts to persist all workouts to the configured JSON file and shows a
      * confirmation or error dialog.
      */
     @FXML
