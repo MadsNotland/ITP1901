@@ -3,7 +3,7 @@
 
 ## Description
 The Workout Tracker is a simple training diary where users can register workouts and view previously completed ones.
-The app will eventually support saving workouts to file so they can be loaded again later.
+The app supports saving workouts to JSON so they can be loaded again later.
 
 ## Expected functionality (Release 1)
 - Add a new workout with title, description, date and time.
@@ -39,16 +39,23 @@ cd workout-tracker
 mvn test
 ```
 
+To run full verification (tests, static analysis, style checks, coverage):
+```bash
+cd workout-tracker
+mvn verify
+```
+JaCoCo coverage report: open `target/site/jacoco/index.html` inside each module (e.g., `core/target/site/jacoco/index.html`).
+
 ## Basic Usage
 1. **Add a Workout**: Fill in the type, select date and time, add notes (minimum 3 characters)
 2. **View Workouts**: All workouts appear in the table below the form
-3. **Save Data**: Click "Save" to persist workouts to `data/workouts.csv`
+3. **Save Data**: Click "Save" to persist workouts to `data/workouts.json`
 
 ## Features
 - ✅ Add new workouts with validation
 - ✅ View workout history in table format
-- ✅ Save/load workouts from CSV file
+- ✅ Save/load workouts from JSON file
 - ✅ Input validation and error handling
 - ✅ Modern JavaFX user interface
 
-For detailed documentation, see [Release 1 Documentation](../../docs/release1/release1.md).
+For detailed documentation, see [Release 1 Documentation](../../docs/release1/release1.md) and [Release 2 Documentation](../../docs/release2/release2.md).

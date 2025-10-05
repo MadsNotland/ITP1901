@@ -45,7 +45,7 @@ mvn javafx:run
     │   │   ├── src/main/java/persistence/ # Data persistence logic
     │   │   └── src/test/java/persistence/ # Persistence tests
     │   └── data/                      # Data files
-    │       └── workouts.csv               # Example data file
+    │       └── workouts.json              # Example data file
     ├── docs/                      # Documentation and mockups
     │   ├── release1                   # Release 1
     │   │   ├── release1.md                # Release 1 documentation
