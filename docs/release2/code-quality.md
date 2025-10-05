@@ -65,6 +65,8 @@ This file documents the **chosen tools**, their **configurations**, and **how th
 
 **Applied:** The agent is attached to tests; coverage **reports are generated** per module under `target/site/jacoco/`. **No coverage gate is configured** (the build does not fail on low coverage).
 
+Example jacoco report: ![alt text](assets/jacoco-report.png)
+
 ---
 
 ### 3) Maven Surefire (test execution)
