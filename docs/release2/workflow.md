@@ -21,7 +21,9 @@ Google Drive and Docs is used to structure todos and store meeting notes before 
 
 All code should be documented by the person who writes it.
 
-Team templates in [/.github](../../.github) include [issue_template.md](../../.github/issue_template.md) and [pull_request_template.md](../../.github/pull_request_template.md) for consistency.
+Github templates in [/.github](../../.github) include [issue_template.md](../../.github/issue_template.md) and [pull_request_template.md](../../.github/pull_request_template.md) for consistency. 
+
+All branches are created in Github, by clicking "Create a branch" in the issue you are going to be working on. That way we get a consistent naming convention of all branches, and every branch is connected to an issue.
 
 ## Commit & PR Conventions
 
@@ -29,4 +31,4 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)
 
 All issues, pull requests, commits, and code documentation follow the same structure to maintain clarity and traceability.
 
-Every pull request requires at least one reviewer before it is merged.
+Every pull request requires at least one reviewer before it is merged. When a branch is merged into main, we delete it from GitHub, so that we have a clean workspace.
