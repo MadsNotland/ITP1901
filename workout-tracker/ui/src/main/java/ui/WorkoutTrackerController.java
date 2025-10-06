@@ -32,7 +32,7 @@ import persistence.WorkoutFileManager;
  * - Load and save workout data using {@link persistence.WorkoutFileManager}
  * </p>
  */
-public class AppController {
+public class WorkoutTrackerController {
 
     // Input components
     @FXML

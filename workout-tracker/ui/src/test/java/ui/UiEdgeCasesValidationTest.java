@@ -29,13 +29,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * - Insertion order: newest workout appears at top of the table
  * - Table shows the values we entered
  */
-class UiMoreValidationTest extends ApplicationTest {
+class UiEdgeCasesValidationTest extends ApplicationTest {
 
     private Parent root;
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("App.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("WorkoutTrackerView.fxml"));
         root = fxmlLoader.load();
         stage.setScene(new Scene(root));
         stage.show();
