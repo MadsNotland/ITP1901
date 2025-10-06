@@ -1,3 +1,4 @@
+
 # Persistence
 
 This file documents the file format for user data and the chosen persistence model in the **Workout Tracker** application.
@@ -6,8 +7,8 @@ This file documents the file format for user data and the chosen persistence mod
 
 - **Code handling storage**: `workout-tracker/persistence/src/main/java/persistence/WorkoutFileManager.java`
 - **UI that triggers load/save**:
-  - Loading at startup in `ui/AppController.initialize()` (via `WorkoutFileManager.loadWorkouts()`).
-  - Manual save via button in `ui/App.fxml` → `AppController.handleSave()`.
+  - Loading at startup in `ui/WorkoutTrackerController.initialize()` (via `WorkoutFileManager.loadWorkouts()`).
+  - Manual save via button in `ui/WorkoutTrackerView.fxml` → `WorkoutTrackerController.handleSave()`.
 - **Default data file path**: `workout-tracker/data/workouts.json`
 - **Settings**: No separate settings file at the moment.
 
@@ -82,5 +83,5 @@ This file documents the file format for user data and the chosen persistence mod
 
 ## Technical details
 - Read/write: Performed in WorkoutFileManager using ObjectMapper. LocalDate is supported via JavaTimeModule.
-- File path resolution: AppController.initialize() resolves workouts.json relative to the project directory (with sensible fallbacks).
+- File path resolution: WorkoutTrackerController.initialize() resolves workouts.json relative to the project directory (with sensible fallbacks).
 - Validation: core.Workout validates fields in constructors/setters; deserialized objects must pass this validation.

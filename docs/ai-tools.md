@@ -1,3 +1,4 @@
+
 # Usage of AI tools
 
 We use AI tools selectively, focusing on situations where they add efficiency without replacing core problem-solving. AI is useful for structuring issues and pull requests, since it helps make descriptions clearer and more consistent, saving time for reviewers. Here we use whichever LLM the individual developer prefers. We also rely on built-in IDE support, such as IntelliSense, for quick code completion, error detection and linting, which reduces trivial mistakes and speeds up development. AI can also be helpful in drafting documentation or generating boilerplate code where creativity is less important. We use it somewhat to write comments and Javadoc. Everything AI-generated has to be reviewed by a human, and responsibility for correctness lies fully with the developer.

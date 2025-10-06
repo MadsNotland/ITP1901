@@ -1,3 +1,4 @@
+
 # Code Quality – Release 2 (Java/Maven)
 
 > Location: `gr2528/docs/release2/code-quality.md`

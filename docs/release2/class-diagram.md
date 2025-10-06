@@ -46,7 +46,7 @@ class WorkoutFileManager {
 }
 
 %% --------- UI Controller (orchestrates) ----------
-class AppController {
+class WorkoutTrackerController {
   - workoutTracker : WorkoutTracker
   - fileManager : WorkoutFileManager
   + initialize() : void
@@ -63,8 +63,8 @@ class AppController {
 WorkoutTracker o-- "0..*" Workout : manages
 WorkoutFileManager ..> Workout : uses (I/O)
 
-AppController --> "1" WorkoutTracker
-AppController --> "1" WorkoutFileManager
-AppController ..> Workout : creates/uses
+WorkoutTrackerController --> "1" WorkoutTracker
+WorkoutTrackerController --> "1" WorkoutFileManager
+WorkoutTrackerController ..> Workout : creates/uses
 
 ```
