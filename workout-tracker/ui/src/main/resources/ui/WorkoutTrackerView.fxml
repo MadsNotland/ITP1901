@@ -2,7 +2,7 @@
 <!--
   Root layout for the Workout Tracker UI.
   This FXML declares the view structure and binds controls to the
-  controller class `ui.AppController` via fx:id and event handlers.
+  controller class `ui.WorkoutTrackerController` via fx:id and event handlers.
 -->
 
 <?import javafx.scene.control.Button?>
@@ -47,13 +47,13 @@
                <Font size="18.0" />
             </font>
          </Label>
-        <!-- Input controls bound to AppController fields -->
+        <!-- Input controls bound to WorkoutTrackerController fields -->
          <TextField fx:id="typeField" layoutX="438.0" layoutY="112.0" prefHeight="25.0" prefWidth="175.0" promptText="Push/Pull" />
          <DatePicker fx:id="datePicker" layoutX="124.0" layoutY="112.0" />
          <ComboBox fx:id="comboBoxHours" layoutX="123.0" layoutY="174.0" prefHeight="28.0" prefWidth="71.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #DADFE1;" />
          <TextArea fx:id="notesField" layoutX="427.0" layoutY="152.0" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="63.0" prefWidth="198.0" wrapText="true" />
          <ComboBox fx:id="comboBoxMinutes" layoutX="211.0" layoutY="174.0" prefHeight="28.0" prefWidth="71.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #DADFE1;" />
-        <!-- Button actions are handled by AppController methods via onAction -->
+        <!-- Button actions are handled by WorkoutTrackerController methods via onAction -->
          <Button layoutX="306.0" layoutY="237.0" mnemonicParsing="false" onAction="#handleAddWorkout" style="-fx-background-color: #3498DB; -fx-text-fill: #FFFFFF; -fx-font-weight: bold;" text="Add Workout" />
         <!-- Table displaying the workouts list -->
          <TableView fx:id="workoutTable" layoutX="132.0" layoutY="279.0" prefHeight="200.0" prefWidth="449.0">
