@@ -1,19 +1,34 @@
 package persistence;
 
-import core.Workout;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
+import core.Workout;
 
 /**
  * Test class for WorkoutFileManager functionality.
- * Tests basic file operations: save, load, and append.
+ * 
+ * <p>Tests the persistence layer's ability to save, load and append workout data,
+ * using Jackson JSON serialization. Covers both happy path scenarios and edge cases
+ * like non-existent files and empty data.
+ * 
+ * Test strategy:
+ * <ul>
+ *   <li>Verify that workout data can be saved and loaded correctly</li>
+ *   <li>Test that all workout fields are preserved through save/load cycle</li>
+ *   <li>Test edge cases (non-existent files)</li>
+ *   <li>Test integration between load and save operations</li>
+ * </ul>
+ * 
+ * <p>Uses JUnit 5 @TempDir for isolated test file operations.
  */
 class WorkoutFileManagerTest {
 
@@ -21,8 +36,18 @@ class WorkoutFileManagerTest {
     Path tempDir;
 
     /**
-     * Tests that workouts can be saved and loaded correctly.
-     * This is the core functionality of the file manager.
+     * Tests that workout data can be saved and loaded correctly with data integrity.
+     * 
+     * <p>Verifies that:
+     * <ul>
+     *   <li>Multiple workouts can be saved to file and loaded back</li>
+     *   <li>All workout fields (type, notes, date, time) are preserved through save/load cycle</li>
+     *   <li>Workout objects maintain their exact values after serialization/deserialization</li>
+     *   <li>The number of workouts is preserved</li>
+     * </ul>
+     * 
+     * <p>Note: This test verifies data integrity but does not specifically test
+     * JSON format or Jackson serialization details.
      */
     @Test
     void testSaveAndLoadWorkouts() throws IOException {
@@ -39,13 +64,29 @@ class WorkoutFileManagerTest {
         List<Workout> loadedWorkouts = manager.loadWorkouts();
 
         // Assert
-        assertEquals(2, loadedWorkouts.size());
-        assertEquals("Running", loadedWorkouts.get(0).getType());
-        assertEquals("Gym", loadedWorkouts.get(1).getType());
+        assertAll("First workout data integrity",
+            () -> assertEquals(workout1.getType(), loadedWorkouts.get(0).getType()),
+            () -> assertEquals(workout1.getNotes(), loadedWorkouts.get(0).getNotes()),
+            () -> assertEquals(workout1.getDate(), loadedWorkouts.get(0).getDate()),
+            () -> assertEquals(workout1.getTime(), loadedWorkouts.get(0).getTime())
+        );
+
+        assertAll("Second workout data integrity",
+            () -> assertEquals(workout2.getType(), loadedWorkouts.get(1).getType()),
+            () -> assertEquals(workout2.getNotes(), loadedWorkouts.get(1).getNotes()),
+            () -> assertEquals(workout2.getDate(), loadedWorkouts.get(1).getDate()),
+            () -> assertEquals(workout2.getTime(), loadedWorkouts.get(1).getTime())
+        );
     }
 
     /**
-     * Tests that appending a workout works correctly.
+     * Tests that adding a single workout works correctly.
+     * 
+     * <p>Verifies the complete workflow: add single workout, then load all workouts.
+     * This tests the integration between loadWorkouts() and saveWorkouts() methods.
+     * 
+     * <p>Note: This is more of an integration test than a unit test, as it
+     * combines multiple operations in sequence.
      */
     @Test
     void testAppendWorkout() throws IOException {
@@ -66,6 +107,12 @@ class WorkoutFileManagerTest {
 
     /**
      * Tests that loading from non-existent file returns empty list.
+     * 
+     * <p>Verifies graceful handling of missing files, which is important for
+     * first-time application startup when no data file exists yet.
+     * 
+     * <p>This edge case prevents application crashes when users run the app
+     * for the first time.
      */
     @Test
     void testLoadFromNonExistentFile() throws IOException {

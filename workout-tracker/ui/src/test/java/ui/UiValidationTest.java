@@ -101,5 +101,3 @@ class UiValidationTest extends ApplicationTest {
         assertEquals(before + 1, after);
     }
 }
-
-

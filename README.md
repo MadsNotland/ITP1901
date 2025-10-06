@@ -45,16 +45,16 @@ mvn javafx:run
     │   │   ├── src/main/java/persistence/ # Data persistence logic
     │   │   └── src/test/java/persistence/ # Persistence tests
     │   └── data/                      # Data files
-    │       └── workouts.csv               # Example data file
+    │       └── workouts.json              # Example data file
     ├── docs/                      # Documentation and mockups
     │   ├── release1                   # Release 1
-    │   │   ├── ai-tools.md                # AI usage documentation
     │   │   ├── release1.md                # Release 1 documentation
     │   │   └── screenshots/               # Screenshots and mockups
-    │   └── release2/                  # Release 2
-    │       ├── classDiagram.md            # Class diagram
-    │       ├── release2.md                # Release 2 documentation
-    │       └── # more documentation...
+    │   ├── release2/                  # Release 2
+    │   │    ├── classDiagram.md            # Class diagram
+    │   │    ├── release2.md                # Release 2 documentation
+    │   │    └── # more documentation...
+    │   └── ai-tools.md                # AI usage documentation
     ├── devfile.yaml               # devfile for Eclipse Che
     └── README.md                  # This file
 
