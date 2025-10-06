@@ -25,6 +25,8 @@ Github templates in [/.github](../../.github) include [issue_template.md](../../
 
 All branches are created in Github, by clicking "Create a branch" in the issue you are going to be working on. That way we get a consistent naming convention of all branches, and every branch is connected to an issue.
 
+For coding conventions and testing principles, see [work-practices.md](work-practices.md).
+
 ## Commit & PR Conventions
 
 We follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for consistent commit messages.
