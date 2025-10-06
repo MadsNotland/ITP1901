@@ -30,12 +30,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class UiValidationTest extends ApplicationTest {
 
-    private AppController controller;
+    private WorkoutTrackerController controller;
     private Parent root;
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("App.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("WorkoutTrackerView.fxml"));
         root = fxmlLoader.load();
         controller = fxmlLoader.getController();
         stage.setScene(new Scene(root));

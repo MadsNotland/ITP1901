@@ -11,17 +11,17 @@ import javafx.stage.Stage;
 /**
  * Entry point for the Workout Tracker JavaFX application.
  * <p>
- * This class bootstraps the UI by loading the {@code App.fxml} layout and
+ * This class bootstraps the UI by loading the {@code WorkoutTrackerView.fxml} layout and
  * showing the primary {@link javafx.stage.Stage}. The JavaFX runtime invokes
  * {@link #start(javafx.stage.Stage)} after initialization.
  * </p>
  */
-public class App extends Application {
+public class WorkoutTrackerApp extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
         // Load the main FXML and set up the primary scene
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("App.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("WorkoutTrackerView.fxml"));
         Parent parent = fxmlLoader.load();
         stage.setScene(new Scene(parent, 700, 550));
         stage.show();

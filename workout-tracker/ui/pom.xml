@@ -81,7 +81,7 @@
                         --add-exports javafx.graphics/com.sun.javafx.application=ALL-UNNAMED
                     </argLine>
                     <excludes>
-                        <exclude>**/ui/AppTest.java</exclude>
+                        <exclude>**/ui/WorkoutTrackerAppTest.java</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -90,7 +90,7 @@
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ui.App</mainClass>
+                    <mainClass>ui.WorkoutTrackerApp</mainClass>
                     <options>
                         <option>--add-exports</option>
                         <option>javafx.base/javafx.collections=ALL-UNNAMED</option>

@@ -6,7 +6,7 @@ module workout.tracker.ui {
     // JavaFX dependencies
     requires javafx.controls;
     requires javafx.fxml;
-    // Stage lives in javafx.graphics (referenced in App.java)
+    // Stage lives in javafx.graphics (referenced in WorkoutTrackerApp.java)
     requires javafx.graphics;
 
     // Base Java module

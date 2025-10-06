@@ -50,7 +50,7 @@ Release 1 delivers a fully functional workout tracking application with a JavaFX
 - **`Workout`**: Data model representing a single workout session
 - **`WorkoutTracker`**: Business logic for managing workout collections
 - **`WorkoutFileManager`**: Handles CSV file persistence operations
-- **`AppController`**: JavaFX controller managing UI interactions
+- **`WorkoutTrackerController`**: JavaFX controller managing UI interactions
 
 ### Data Model
 ```java

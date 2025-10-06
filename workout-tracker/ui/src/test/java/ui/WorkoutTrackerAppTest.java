@@ -13,14 +13,14 @@ import javafx.stage.Stage;
 /**
  * Empty TestFX test - ready for your UI tests
  */
-public class AppTest extends ApplicationTest {
+public class WorkoutTrackerAppTest extends ApplicationTest {
 
-    private AppController controller;
+    private WorkoutTrackerController controller;
     private Parent root;
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("App.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("WorkoutTrackerView.fxml"));
         root = fxmlLoader.load();
         controller = fxmlLoader.getController();
         stage.setScene(new Scene(root));
