@@ -142,6 +142,13 @@
                             <goal>check</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>spotbugs-check-direct</id>
+                        <phase>none</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <!-- Jacoco -->
