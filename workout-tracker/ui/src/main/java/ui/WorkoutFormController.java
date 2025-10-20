@@ -1,8 +1,10 @@
 package ui;
 
+import java.io.IOException;
 import java.time.LocalDate;
 
 import core.Workout;
+import core.WorkoutTracker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import static javafx.scene.control.Alert.AlertType.ERROR;
@@ -25,6 +27,21 @@ public class WorkoutFormController {
     @FXML
     private DatePicker datePicker;
 
+    // Core components
+    private WorkoutTracker workoutTracker;
+
+    // Navigation component
+    private MainController mainController;
+
+    public void setMainController (MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    public void setWorkoutTracker(WorkoutTracker workoutTracker) {
+        this.workoutTracker = workoutTracker;
+    }
+
+
     @FXML
     void initialize() {
         initializeComboBoxes();
@@ -37,7 +54,7 @@ public class WorkoutFormController {
      * user-facing alert.
      */
     @FXML
-    private void handleAddWorkout() {
+    private void handleAddWorkout() throws IOException {
         try {
             // Extract input fields
             String type = typeField.getText();
@@ -55,9 +72,17 @@ public class WorkoutFormController {
             Workout newWorkout = new Workout(type, notes, date, time);
             workoutTracker.addWorkout(newWorkout);
 
+            // Navigate back to Table-View
+            mainController.showWorkoutTable();
+
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void handleCancel() throws IOException {
+        mainController.showWorkoutTable();
     }
 
     /**

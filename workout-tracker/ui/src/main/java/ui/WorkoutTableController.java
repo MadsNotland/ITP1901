@@ -1,5 +1,6 @@
 package ui;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -45,6 +46,16 @@ public class WorkoutTableController {
     // Core business logic components
     private WorkoutTracker workoutTracker;
     private WorkoutFileManager fileManager;
+    private MainController mainController;
+
+    // Control management for workoutTracker object
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    public void setWorkoutTracker(WorkoutTracker workoutTracker) {
+        this.workoutTracker = workoutTracker;
+    }
 
 
     /**
@@ -54,10 +65,50 @@ public class WorkoutTableController {
      * from a JSON file.
      */
     @FXML
-    void initialize() {
-        workoutTracker = new WorkoutTracker();
+    void initializeData() {
         setTableView();
+        // loadWorkoutsFromFile();
+    }
 
+
+    @FXML
+    private void handleAddButton() throws IOException {
+        mainController.showWorkoutForm();
+    }
+
+
+    /**
+     * Handles the Save button click.
+     * Attempts to persist all workouts to the configured JSON file and shows a
+     * confirmation or error dialog.
+     */
+    @FXML
+    private void handleSave() {
+        List<Workout> workouts = new ArrayList<>(workoutTracker.getAllWorkouts());
+        try {
+            fileManager.saveWorkouts(workouts);
+            showAlert(INFORMATION, "Saved", "Workouts saved to workouts.json");
+        } catch (Exception e) {
+            showAlert(ERROR, "Save Failed", "Could not save workouts to file: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Connects the table view to the observable workout list and binds columns
+     * to the corresponding {@link Workout} properties.
+     */
+    private void setTableView() {
+        // Connect table view to workout data
+        workoutTable.setItems(workoutTracker.getAllWorkouts());
+
+        // Map table columns to workout properties
+        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
+        timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
+        notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
+    }
+
+    private void loadWorkoutsFromFile() {
         // Load workouts from file
 
         // Resolve a JSON path relative to the current working directory so it
@@ -94,37 +145,6 @@ public class WorkoutTableController {
         } catch (Exception e) {
             showAlert(ERROR, "Load Error", "Could not load workouts from file " + e.getMessage());
         }
-    }
-
-    /**
-     * Handles the Save button click.
-     * Attempts to persist all workouts to the configured JSON file and shows a
-     * confirmation or error dialog.
-     */
-    @FXML
-    private void handleSave() {
-        List<Workout> workouts = new ArrayList<>(workoutTracker.getAllWorkouts());
-        try {
-            fileManager.saveWorkouts(workouts);
-            showAlert(INFORMATION, "Saved", "Workouts saved to workouts.json");
-        } catch (Exception e) {
-            showAlert(ERROR, "Save Failed", "Could not save workouts to file: " + e.getMessage());
-        }
-    }
-
-    /**
-     * Connects the table view to the observable workout list and binds columns
-     * to the corresponding {@link Workout} properties.
-     */
-    private void setTableView() {
-        // Connect table view to workout data
-        workoutTable.setItems(workoutTracker.getAllWorkouts());
-
-        // Map table columns to workout properties
-        dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
-        typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
-        timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
-        notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
     }
 
     /**
