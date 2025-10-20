@@ -55,8 +55,8 @@ class WorkoutFileManagerTest {
         Path testFile = tempDir.resolve("test-workouts.json");
         WorkoutFileManager manager = new WorkoutFileManager(testFile);
         
-        Workout workout1 = new Workout("Running", "Morning run", LocalDate.of(2025, 9, 14), 1.5);
-        Workout workout2 = new Workout("Gym", "Strength training", LocalDate.of(2025, 9, 15), 2.0);
+        Workout workout1 = new Workout("Running", "Morning run", LocalDate.of(2025, 9, 14), 1.5,null);
+        Workout workout2 = new Workout("Gym", "Strength training", LocalDate.of(2025, 9, 15), 2.0,null);
         List<Workout> workouts = List.of(workout1, workout2);
 
         // Act
@@ -94,7 +94,7 @@ class WorkoutFileManagerTest {
         Path testFile = tempDir.resolve("test-append.json");
         WorkoutFileManager manager = new WorkoutFileManager(testFile);
         
-        Workout workout = new Workout("Swimming", "Pool session", LocalDate.of(2025, 9, 16), 1.0);
+        Workout workout = new Workout("Swimming", "Pool session", LocalDate.of(2025, 9, 16), 1.0,null);
 
         // Act
         manager.addWorkout(workout);

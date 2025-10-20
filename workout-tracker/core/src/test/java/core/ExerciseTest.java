@@ -21,7 +21,7 @@ public class ExerciseTest {
      * Helper to create a valid Exercise reused across tests.
      */
     private static Exercise validExercise() {
-        return new Exercise("Bench Press", 8, 60.0);
+        return new Exercise("Bench Press", 8, 60.0,null);
     }
 
     /**
@@ -29,7 +29,7 @@ public class ExerciseTest {
      */
     @Test
     void constructor_setsAllFields_onValidInput() {
-        Exercise e = new Exercise("Squat", 5, 100.0);
+        Exercise e = new Exercise("Squat", 5, 100.0,null);
 
         assertEquals("Squat", e.getName());
         assertEquals(5, e.getRepetitions());
@@ -41,7 +41,7 @@ public class ExerciseTest {
      */
     @Test
     void constructor_acceptsZeroForRepetitionsAndWeight() {
-        Exercise e = new Exercise("Plank", 0, 0.0);
+        Exercise e = new Exercise("Plank", 0, 0.0,null);
 
         assertEquals("Plank", e.getName());
         assertEquals(0, e.getRepetitions());
@@ -53,8 +53,8 @@ public class ExerciseTest {
      */
     @Test
     void constructor_throws_whenNameIsNullOrBlank() {
-        assertThrows(IllegalArgumentException.class, () -> new Exercise(null, 1, 1.0));
-        assertThrows(IllegalArgumentException.class, () -> new Exercise("   ", 1, 1.0));
+        assertThrows(IllegalArgumentException.class, () -> new Exercise(null, 1, 1.0,null));
+        assertThrows(IllegalArgumentException.class, () -> new Exercise("   ", 1, 1.0,null));
     }
 
      /**
@@ -62,7 +62,7 @@ public class ExerciseTest {
      */
     @Test
     void constructor_throws_whenRepetitionsNegative() {
-        assertThrows(IllegalArgumentException.class, () -> new Exercise("Pushup", -1, 10.0));
+        assertThrows(IllegalArgumentException.class, () -> new Exercise("Pushup", -1, 10.0,null));
     }
 
     /**
@@ -70,7 +70,7 @@ public class ExerciseTest {
      */
     @Test
     void constructor_throws_whenWeightNegative() {
-        assertThrows(IllegalArgumentException.class, () -> new Exercise("Deadlift", 3, -0.1));
+        assertThrows(IllegalArgumentException.class, () -> new Exercise("Deadlift", 3, -0.1,null));
     }
 
     /**
@@ -121,7 +121,7 @@ public class ExerciseTest {
      */
     @Test
     void toString_containsAllFields() {
-        Exercise e = new Exercise("Row", 12, 55.5);
+        Exercise e = new Exercise("Row", 12, 55.5,null);
         String s = e.toString();
         assertAll(
                 () -> assertTrue(s.contains("Row")),

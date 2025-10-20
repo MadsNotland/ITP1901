@@ -14,6 +14,7 @@ public class Exercise {
     private String name;
     private int repetitions;
     private double weight;
+    private final String id;
 
     /**
      * Creates a new {@code Exercise} with the specified parameters.
@@ -29,7 +30,8 @@ public class Exercise {
     @JsonCreator
     public Exercise(@JsonProperty("name") String name, 
                     @JsonProperty("repetitions") int repetitions, 
-                    @JsonProperty("weight") double weight) {
+                    @JsonProperty("weight") double weight,
+                    @JsonProperty("id") String id) {
         if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("Name cannot be null or empty");
         }
@@ -42,6 +44,7 @@ public class Exercise {
         this.name = name;
         this.repetitions = repetitions;
         this.weight = weight;
+        this.id = (id == null || id.isBlank()) ? java.util.UUID.randomUUID().toString() : id;
     }
 
     /** Returns the exercise name. */
@@ -96,6 +99,21 @@ public class Exercise {
             throw new IllegalArgumentException("Weight cannot be negative");
         }
         this.weight = weight;
+    }
+
+    /** Returns the unique identifier of this exercise. */
+    @JsonProperty("id")
+    public String getId() {
+        return id;
+    }
+
+    /** Checks equality based on the unique identifier. */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Exercise)) return false;
+        Exercise other = (Exercise) o;
+        return this.id.equals(other.id);
     }
 
     /** Returns a concise string representation of this exercise. */

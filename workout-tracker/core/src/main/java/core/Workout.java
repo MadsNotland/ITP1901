@@ -114,12 +114,11 @@ public class Workout {
         return new ArrayList<>(exercises);
     }
 
-    /** Finds and returns an exercise by its fields; returns {@code null} if not found. */
-    public Exercise findExercise(String name, int repetitions, double weight) {
+    /** Finds and returns an exercise by its id; returns {@code null} if not found. */
+    public Exercise findExerciseById(String id) {
+        if (id == null || id.isBlank()) return null;
         for (Exercise e : exercises) {
-            if (e.getName().equals(name) && e.getRepetitions() == repetitions && e.getWeight() == weight) {
-                return e;
-            }
+            if (e.getId().equals(id)) return e;
         }
         return null;
     }
@@ -137,10 +136,11 @@ public class Workout {
         if (exercise == null) {
             throw new IllegalArgumentException("Exercise cannot be null");
         }
-        if (!this.exercises.contains(exercise)) {
-            throw new IllegalArgumentException("Exercise not found in the workout");
+        Exercise toRemove = findExerciseById(exercise.getId());
+        if (toRemove == null) {
+            throw new IllegalArgumentException("Exercise not found in workout");
         }
-        this.exercises.remove(exercise);
+        exercises.remove(toRemove);
     }
 
     @Override

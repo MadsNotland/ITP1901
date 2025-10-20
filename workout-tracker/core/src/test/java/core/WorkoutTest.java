@@ -18,10 +18,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class WorkoutTest {
 
     /**
-     * Helper method to create an Exercise with a given name for reuse across tests.
+     * Helper method to create an Exercise with a given name, sets and reps for reuse across tests.
+     * Pass null for id to trigger auto-UUID generation.
      */
     private static Exercise exercise(String name, int reps, double weight) {
-        return new Exercise(name, reps, weight);
+        return new Exercise(name, reps, weight,null);
     }
 
     /**
@@ -101,6 +102,7 @@ class WorkoutTest {
     /**
      * Tests that a null or empty exercises list is rejected by the constructor.
      */
+    @Test
     void constructor_throws_whenExercisesNullOrEmpty() {
         assertThrows(IllegalArgumentException.class,
                 () -> new Workout("Run", "ok", LocalDate.parse("2025-09-15"), 1.0, null));
@@ -119,17 +121,28 @@ class WorkoutTest {
         w.setNotes("Strength session");
         w.setDate(LocalDate.parse("2025-09-16"));
         w.setTime(2.0);
-        w.addExercise(exercise("Deadlift", 5, 100.0));
 
         assertEquals("Gym", w.getType());
         assertEquals("Strength session", w.getNotes());
         assertEquals(LocalDate.parse("2025-09-16"), w.getDate());
         assertEquals(2.0, w.getTime());
-        assertEquals(2, w.getExercises().size());
-        assertEquals("Deadlift", w.getExercises().get(1).getName());
+    }
 
-        w.removeExercise(w.findExercise("Deadlift", 5, 100.0));
+    /**
+     * Tests that adding and removing exercises works as expected.
+     */
+    @Test
+    void addExercise_andRemoveExercise_workAsExpected() {
+        Workout w = validWorkout();
+        Exercise squat = exercise("Squat", 5, 80.0);
+
+        w.addExercise(squat);
+        assertEquals(2, w.getExercises().size());
+        assertSame(squat, w.findExerciseById(squat.getId()));
+
+        w.removeExercise(squat);
         assertEquals(1, w.getExercises().size());
+        assertNull(w.findExerciseById(squat.getId()));
     }
 
     /**

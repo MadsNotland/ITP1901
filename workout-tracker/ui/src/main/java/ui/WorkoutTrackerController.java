@@ -151,7 +151,7 @@ public class WorkoutTrackerController {
             double time = comboBoxHours.getValue() + (comboBoxMinutes.getValue() / 100.0);
 
             // Create and add new workout
-            Workout newWorkout = new Workout(type, notes, date, time);
+            Workout newWorkout = new Workout(type, notes, date, time,null);
             workoutTracker.addWorkout(newWorkout);
 
         } catch (IllegalArgumentException e) {
