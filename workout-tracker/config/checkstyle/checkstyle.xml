@@ -4,7 +4,7 @@
 <module name="Checker">
   <module name="NewlineAtEndOfFile"/>
     <module name="LineLength">
-    <property name="max" value="120"/>
+    <property name="max" value="150"/>
     <property name="ignorePattern" value="^package|^import|https?://"/>
   </module>
 

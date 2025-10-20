@@ -1,5 +1,8 @@
 package ui;
 
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -11,8 +14,6 @@ import core.Workout;
 import core.WorkoutTracker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
@@ -108,7 +109,8 @@ public class WorkoutTrackerController {
         try {
             var loaded = fileManager.loadWorkouts();
             workoutTracker.getAllWorkouts().setAll(loaded);
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             showAlert(ERROR, "Load Error", "Could not load workouts from file " + e.getMessage());
         }
     }
@@ -124,7 +126,8 @@ public class WorkoutTrackerController {
         try {
             fileManager.saveWorkouts(workouts);
             showAlert(INFORMATION, "Saved", "Workouts saved to workouts.json");
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             showAlert(ERROR, "Save Failed", "Could not save workouts to file: " + e.getMessage());
         }
     }
@@ -154,7 +157,8 @@ public class WorkoutTrackerController {
             Workout newWorkout = new Workout(type, notes, date, time);
             workoutTracker.addWorkout(newWorkout);
 
-        } catch (IllegalArgumentException e) {
+        } 
+        catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
     }
