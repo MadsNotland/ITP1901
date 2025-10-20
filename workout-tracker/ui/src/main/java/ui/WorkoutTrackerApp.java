@@ -18,13 +18,29 @@ import javafx.stage.Stage;
  */
 public class WorkoutTrackerApp extends Application {
 
+    private static Scene scene;
+
     @Override
     public void start(Stage stage) throws IOException {
-        // Load the main FXML and set up the primary scene
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("WorkoutTrackerView.fxml"));
         Parent parent = fxmlLoader.load();
-        stage.setScene(new Scene(parent, 700, 550));
+
+        // assign the static field instead of creating a local variable
+        scene = new Scene(parent, 700, 550);
+        stage.setScene(scene);
+
         stage.show();
+    }
+
+    static void setRoot(String fxml) throws IOException {
+        System.out.println("Entered setRoot");
+        scene.setRoot(loadFXML(fxml));
+    }
+
+    private static Parent loadFXML(String fxml) throws IOException {
+        System.out.println("Entered loadFXML");
+        FXMLLoader fxmlLoader = new FXMLLoader(WorkoutTrackerApp.class.getResource(fxml + ".fxml"));
+        return fxmlLoader.load();
     }
 
     /**

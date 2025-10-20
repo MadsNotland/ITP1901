@@ -1,5 +1,6 @@
 package ui;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,6 +21,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import persistence.WorkoutFileManager;
 
 /**
@@ -128,6 +130,19 @@ public class WorkoutTrackerController {
             showAlert(ERROR, "Save Failed", "Could not save workouts to file: " + e.getMessage());
         }
     }
+
+    @FXML
+    private void handleTableDoubleclick(MouseEvent event) throws IOException {
+        if (event.getClickCount() != 2) return;
+        Workout workout = workoutTable.getSelectionModel().getSelectedItem();
+        if (workout == null) return;
+
+        // (Optional) quick proof you got here
+        System.out.println("Entered handleTableDoubleclick: " + workout);
+
+        WorkoutTrackerApp.setRoot("WorkoutExerciseView");
+    }
+
 
     /**
      * Handles the Add Workout button click.
