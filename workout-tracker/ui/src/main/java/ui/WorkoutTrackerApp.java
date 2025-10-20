@@ -33,12 +33,10 @@ public class WorkoutTrackerApp extends Application {
     }
 
     static void setRoot(String fxml) throws IOException {
-        System.out.println("Entered setRoot");
         scene.setRoot(loadFXML(fxml));
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
-        System.out.println("Entered loadFXML");
         FXMLLoader fxmlLoader = new FXMLLoader(WorkoutTrackerApp.class.getResource(fxml + ".fxml"));
         return fxmlLoader.load();
     }

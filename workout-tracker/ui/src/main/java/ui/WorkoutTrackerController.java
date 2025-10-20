@@ -137,9 +137,6 @@ public class WorkoutTrackerController {
         Workout workout = workoutTable.getSelectionModel().getSelectedItem();
         if (workout == null) return;
 
-        // (Optional) quick proof you got here
-        System.out.println("Entered handleTableDoubleclick: " + workout);
-
         WorkoutTrackerApp.setRoot("WorkoutExerciseView");
     }
 
