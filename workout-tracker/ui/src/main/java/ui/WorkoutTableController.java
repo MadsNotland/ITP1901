@@ -1,9 +1,6 @@
 package ui;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +54,10 @@ public class WorkoutTableController {
         this.workoutTracker = workoutTracker;
     }
 
+    public void setFileManager(WorkoutFileManager fileManager) {
+        this.fileManager = fileManager;
+    }
+
 
     /**
      * JavaFX initialization hook. Called automatically by the FXMLLoader after
@@ -67,7 +68,6 @@ public class WorkoutTableController {
     @FXML
     void initializeData() {
         setTableView();
-        // loadWorkoutsFromFile();
     }
 
 
@@ -106,45 +106,6 @@ public class WorkoutTableController {
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
-    }
-
-    private void loadWorkoutsFromFile() {
-        // Load workouts from file
-
-        // Resolve a JSON path relative to the current working directory so it
-        // works both from an IDE and when built via Maven.
-        String currentDir = System.getProperty("user.dir");
-        if (currentDir == null) {
-            throw new IllegalStateException("Cannot determine working directory");
-        }
-        
-        Path cwd = Paths.get(currentDir).toAbsolutePath();
-        // Primary: running from the UI module directory: workout-tracker/ui -> ../data/workouts.json
-        Path cwdParent = cwd.getParent();
-        Path candidate = cwdParent != null ? cwdParent.resolve("data").resolve("workouts.json") : cwd.resolve("data").resolve("workouts.json");
-        // Fallback: running from project root: workout-tracker -> data/workouts.json
-        if (!Files.exists(candidate)) {
-            Path projectRootCandidate = cwd.resolve("data").resolve("workouts.json");
-            if (Files.exists(projectRootCandidate)) {
-                candidate = projectRootCandidate;
-            }
-        }
-        // Last resort: legacy repository layout if present
-        if (!Files.exists(candidate)) {
-            Path legacy = cwd.resolve("app").resolve("data").resolve("workouts.json");
-            if (Files.exists(legacy)) {
-                candidate = legacy;
-            }
-        }
-        Path workoutFilePath = candidate;
-
-        fileManager = new WorkoutFileManager(workoutFilePath);
-        try {
-            var loaded = fileManager.loadWorkouts();
-            workoutTracker.getAllWorkouts().setAll(loaded);
-        } catch (Exception e) {
-            showAlert(ERROR, "Load Error", "Could not load workouts from file " + e.getMessage());
-        }
     }
 
     /**
