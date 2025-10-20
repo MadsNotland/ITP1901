@@ -24,10 +24,10 @@ public class MainController {
         contentArea.setCenter(tableView);
     }
 
-    // public void showWorkoutForm() throws IOException {
-    //     FXMLLoader loader = new FXMLLoader(getClass().getResource("WorkoutFormView.fxml"));
-    //     Region formView = loader.load();
+    public void showWorkoutForm() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("WorkoutFormView.fxml"));
+        Region formView = loader.load();
 
-    //     contentArea.setCenter(formView);
-    // }
+        contentArea.setCenter(formView);
+    }
 }
