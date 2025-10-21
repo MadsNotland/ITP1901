@@ -36,7 +36,7 @@ import ui.base.BaseController;
  * @see core.Workout
  * @see core.WorkoutTracker
  */
-public class WorkoutTableController extends BaseController{
+public class WorkoutTableController extends BaseController {
 
     // Table view components
     @FXML
@@ -133,4 +133,3 @@ public class WorkoutTableController extends BaseController{
         notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
     }
 }
-

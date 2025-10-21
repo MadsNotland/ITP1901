@@ -14,26 +14,74 @@ import javafx.scene.layout.Region;
 import persistence.WorkoutFileManager;
 import ui.base.BaseController;
 
+/**
+ * Main controller responsible for coordinating view navigation and shared data management.
+ * <p>
+ * This controller acts as the central hub of the application, managing transitions between
+ * different UI views (e.g., {@link ui.WorkoutTableController} and {@link ui.WorkoutFormController})
+ * and maintaining shared references to the {@link core.WorkoutTracker} model and
+ * {@link persistence.WorkoutFileManager} used for persistence.
+ * </p>
+ * <p>
+ * Responsibilities:
+ * <ul>
+ *   <li>Initialize the main application state on startup</li>
+ *   <li>Handle navigation between the workout table and form views</li>
+ *   <li>Load and persist workout data to the JSON storage file</li>
+ * </ul>
+ * </p>
+ *
+ * @see ui.WorkoutTableController
+ * @see ui.WorkoutFormController
+ * @see core.WorkoutTracker
+ * @see persistence.WorkoutFileManager
+ */
 public class MainController extends BaseController {
 
+    // The root layout container for swapping UI views
     @FXML
     private BorderPane contentArea;
     
-    // One common WorkoutTracker for the entire application
+    // Shared workout tracker instance used across all controllers.
     private final WorkoutTracker workoutTracker = new WorkoutTracker();
+    // File manager used for persisting and loading workout data
     private WorkoutFileManager fileManager;
 
-
-    public WorkoutTracker getWorkoutTracker() {
-        return workoutTracker;
-    }
-
+    /**
+     * Called automatically after the FXML file is loaded.
+     * Initializes the application by showing the main table view
+     * and attempting to load workout data from file.
+     *
+     * @throws IOException if an error occurs while loading the initial view
+     */
     @FXML
     private void initialize() throws IOException {
         showWorkoutTable();
         loadWorkoutsFromFile();
     }
 
+    /**
+     * Returns the shared {@link WorkoutTracker} instance.
+     * <p>
+     * This instance is shared between all controllers to maintain a consistent
+     * state across views.
+     * </p>
+     *
+     * @return the shared workout tracker
+     */
+    public WorkoutTracker getWorkoutTracker() {
+        return workoutTracker;
+    }
+
+    /**
+     * Loads and displays the {@code WorkoutTableView.fxml} view in the center of the layout.
+     * <p>
+     * This method also injects the shared {@link WorkoutTracker} and
+     * {@link WorkoutFileManager} instances into the {@link WorkoutTableController}.
+     * </p>
+     *
+     * @throws IOException if the FXML resource cannot be loaded
+     */
     public void showWorkoutTable() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("WorkoutTableView.fxml"));
         Region tableView = loader.load();
@@ -48,6 +96,15 @@ public class MainController extends BaseController {
         contentArea.setCenter(tableView);
     }
 
+    /**
+     * Loads and displays the {@code WorkoutFormView.fxml} view in the center of the layout.
+     * <p>
+     * This method injects the shared {@link WorkoutTracker} instance into the
+     * {@link WorkoutFormController} for adding new workouts.
+     * </p>
+     *
+     * @throws IOException if the FXML resource cannot be loaded
+     */
     public void showWorkoutForm() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("WorkoutFormView.fxml"));
         Region formView = loader.load();
@@ -60,9 +117,18 @@ public class MainController extends BaseController {
         contentArea.setCenter(formView);
     }
 
-    private void loadWorkoutsFromFile() {
-        // Load workouts from file
 
+    /**
+     * Loads existing workouts from the JSON file on disk into the shared {@link WorkoutTracker}.
+     * <p>
+     * The method attempts to locate the data file using several common project layouts to ensure
+     * compatibility both when running from an IDE and when packaged with Maven.
+     * </p>
+     * <p>
+     * If loading fails, an error dialog is displayed to the user.
+     * </p>
+     */
+    private void loadWorkoutsFromFile() {
         // Resolve a JSON path relative to the current working directory so it
         // works both from an IDE and when built via Maven.
         String currentDir = System.getProperty("user.dir");
