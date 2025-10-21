@@ -24,26 +24,32 @@ import static org.junit.jupiter.api.Assertions.*;
  * TestFX tests for the Workout Tracker UI.
  *
  * Focus:
- * - ComboBox initialization values
+ * - ComboBox initialization values in WorkoutFormView
  * - Validation alert on empty type
- * - Successful add inserts a row into the table
+ * - End-to-end flow: Add -> navigate back -> verify row in table
  */
 class UiValidationTest extends ApplicationTest {
 
-    private WorkoutTrackerController controller;
+    private MainController controller;
     private Parent root;
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("WorkoutTrackerView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("MainView.fxml"));
         root = fxmlLoader.load();
         controller = fxmlLoader.getController();
         stage.setScene(new Scene(root));
         stage.show();
     }
 
+     /**
+     * Verifies that the ComboBoxes in the WorkoutFormView are initialized correctly.
+     */
     @Test
     void comboBoxes_areInitializedWithValues() {
+        // Navigate to form view
+        clickOn("#add_workout");
+
         ComboBox<Integer> hours = lookup("#comboBoxHours").query();
         ComboBox<Integer> minutes = lookup("#comboBoxMinutes").query();
 
@@ -56,9 +62,13 @@ class UiValidationTest extends ApplicationTest {
         assertTrue(minutes.getItems().contains(55), "Minutes should contain 55");
     }
 
+    /**
+     * Ensures that an alert dialog is shown when the user tries to add a workout without a type.
+     */
     @Test
     void validation_showsAlert_onEmptyType() {
-        // Fill other fields validly, leave type empty
+        clickOn("#add_workout"); // navigate to form
+
         DatePicker datePicker = lookup("#datePicker").query();
         ComboBox<Integer> hours = lookup("#comboBoxHours").query();
         ComboBox<Integer> minutes = lookup("#comboBoxMinutes").query();
@@ -77,14 +87,23 @@ class UiValidationTest extends ApplicationTest {
         assertTrue(dialog.getContentText().toLowerCase().contains("type"));
     }
 
+    /**
+     * Tests the full user flow:
+     * Add a workout through the form, navigate back, and verify that it appears in the table.
+     */
     @Test
     void addWorkout_success_addsRowToTable() {
+        // Start in table view
+        TableView<?> table = lookup("#workoutTable").queryTableView();
+        int before = table.getItems().size();
+
+        clickOn("#add_workout"); // Go to form
+
         TextField typeField = lookup("#typeField").query();
         TextArea notesField = lookup("#notesField").query();
         DatePicker datePicker = lookup("#datePicker").query();
         ComboBox<Integer> hours = lookup("#comboBoxHours").query();
         ComboBox<Integer> minutes = lookup("#comboBoxMinutes").query();
-        TableView<?> table = lookup("#workoutTable").queryTableView();
 
         interact(() -> {
             typeField.setText("Run");
@@ -94,10 +113,10 @@ class UiValidationTest extends ApplicationTest {
             minutes.setValue(30);
         });
 
-        int before = table.getItems().size();
-        clickOn("Add Workout");
-        int after = table.getItems().size();
+        clickOn("Add Workout"); // should navigate back to table
+        TableView<?> updatedTable = lookup("#workoutTable").queryTableView();
+        int after = updatedTable.getItems().size();
 
-        assertEquals(before + 1, after);
+        assertEquals(before + 1, after, "Table should have one more workout after adding");
     }
 }

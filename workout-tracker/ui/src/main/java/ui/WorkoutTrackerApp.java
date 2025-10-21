@@ -21,7 +21,7 @@ public class WorkoutTrackerApp extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // Load the main FXML and set up the primary scene
-        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("WorkoutTrackerView.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("MainView.fxml"));
         Parent parent = fxmlLoader.load();
         stage.setScene(new Scene(parent, 700, 550));
         stage.show();
