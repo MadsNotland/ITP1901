@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -24,12 +25,17 @@ public class WorkoutFileManager {
 
     private final Path filePath;
     private final ObjectMapper objectMapper;
-
-    // Creates a new WorkoutFileManager with the spesified file path.
+/**
+ * Creates a new {@code WorkoutFileManager}.
+ *
+ * @param filePath path to the JSON file; if {@code null}, defaults to
+ *                 {@code workout-tracker/data/workouts.json}
+ */
     public WorkoutFileManager(Path filePath) {
         if (filePath == null) {
             this.filePath = Path.of("workout-tracker/data/workouts.json");
-        } else {
+        } 
+        else {
             this.filePath = filePath;
         }
         this.objectMapper = new ObjectMapper();
