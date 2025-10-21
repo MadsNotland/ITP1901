@@ -39,5 +39,15 @@
     <Class name="ui.WorkoutTableController"/>
     <Bug pattern="EI_EXPOSE_REP2"/>
   </Match>
+
+  <Match>
+    <Class name="ui.service.WorkoutService"/>
+    <Bug pattern="EI_EXPOSE_REP"/>
+  </Match>
+
+  <Match>
+    <Class name="ui.service.WorkoutService"/>
+    <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+  </Match>
   
 </FindBugsFilter>

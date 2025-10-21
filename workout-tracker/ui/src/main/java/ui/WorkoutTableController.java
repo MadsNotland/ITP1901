@@ -4,17 +4,14 @@ import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import core.Workout;
-import core.WorkoutTracker;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import persistence.WorkoutFileManager;
 import ui.base.BaseController;
+import ui.service.WorkoutService;
 
 /**
  * Controller class for the {@code WorkoutTableView.fxml} view.
@@ -28,13 +25,13 @@ import ui.base.BaseController;
  * <ul>
  *   <li>Bind {@link core.Workout} data to the table columns</li>
  *   <li>Delegate navigation to {@link MainController}</li>
- *   <li>Persist workout data via {@link persistence.WorkoutFileManager}</li>
+ *   <li>Persist workout data via {@link ui.service.WorkoutService}</li>
  * </ul>
  * </p>
  *
  * @see ui.WorkoutFormController
  * @see core.Workout
- * @see core.WorkoutTracker
+ * @see ui.service.WorkoutService
  */
 public class WorkoutTableController extends BaseController {
 
@@ -51,9 +48,8 @@ public class WorkoutTableController extends BaseController {
     private TableColumn<Workout, String> notesColumn;
 
     // Core dependencies (injected by MainController)
-    private WorkoutTracker workoutTracker;
-    private WorkoutFileManager fileManager;
     private MainController mainController;
+    private WorkoutService workoutService;
 
     /**
      * Initializes the table view once dependencies have been injected.
@@ -74,24 +70,8 @@ public class WorkoutTableController extends BaseController {
         this.mainController = mainController;
     }
 
-    /**
-     * Injects the shared {@link WorkoutTracker} instance containing
-     * all workouts managed by the application.
-     *
-     * @param workoutTracker the shared workout tracker
-     */
-    public void setWorkoutTracker(WorkoutTracker workoutTracker) {
-        this.workoutTracker = workoutTracker;
-    }
-
-    /**
-     * Injects the {@link WorkoutFileManager} responsible for reading and writing
-     * workout data to a persistent JSON file.
-     *
-     * @param fileManager the file manager instance used for persistence
-     */
-    public void setFileManager(WorkoutFileManager fileManager) {
-        this.fileManager = fileManager;
+    public void setWorkoutService(WorkoutService workoutService) {
+        this.workoutService = workoutService;
     }
     
 
@@ -112,9 +92,8 @@ public class WorkoutTableController extends BaseController {
      */
     @FXML
     private void handleSave() {
-        List<Workout> workouts = new ArrayList<>(workoutTracker.getAllWorkouts());
         try {
-            fileManager.saveWorkouts(workouts);
+            workoutService.saveWorkouts();
             showAlert(INFORMATION, "Saved", "Workouts saved to workouts.json");
         } 
         catch (Exception e) {
@@ -127,7 +106,7 @@ public class WorkoutTableController extends BaseController {
      * the table to the observable list of workouts.
      */
     private void setTableView() {
-        workoutTable.setItems(workoutTracker.getAllWorkouts());
+        workoutTable.setItems(workoutService.getWorkoutTracker().getAllWorkouts());
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));

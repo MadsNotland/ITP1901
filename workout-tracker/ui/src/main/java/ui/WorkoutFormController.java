@@ -12,6 +12,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import ui.base.BaseController;
+import ui.service.WorkoutService;
 
 /**
  * Controller class for the {@code WorkoutFormView.fxml} view.
@@ -49,8 +50,8 @@ public class WorkoutFormController extends BaseController {
     private DatePicker datePicker;
 
     // Core dependencies (injected by MainController)
-    private WorkoutTracker workoutTracker;
     private MainController mainController;
+    private WorkoutService workoutService;
 
     @FXML
     void initialize() {
@@ -72,17 +73,17 @@ public class WorkoutFormController extends BaseController {
     }
 
     /**
-     * Injects the shared {@link WorkoutTracker} instance used to store and manage
-     * all workouts in the application.
+     * Injects the shared {@link WorkoutService} instance used to store and manage
+     * all workouts in the application via the {@link WorkoutTracker}.
      * <p>
      * This reference is provided by the {@link MainController} after FXML loading,
      * ensuring that all controllers operate on the same underlying data model.
      * </p>
      *
-     * @param workoutTracker the shared {@link WorkoutTracker} instance
+     * @param workoutService the shared {@link WorkoutService} instance
      */
-    public void setWorkoutTracker(WorkoutTracker workoutTracker) {
-        this.workoutTracker = workoutTracker;
+    public void setWorkoutService(WorkoutService workoutService) {
+        this.workoutService = workoutService;
     }
 
     /**
@@ -108,7 +109,7 @@ public class WorkoutFormController extends BaseController {
 
             // Create and add new workout
             Workout newWorkout = new Workout(type, notes, date, time);
-            workoutTracker.addWorkout(newWorkout);
+            workoutService.addWorkout(newWorkout);
 
             // Navigate back to Table-View
             mainController.showWorkoutTable();
