@@ -4,11 +4,32 @@ metadata:
 components:
   - name: gr2528
     container:
-      image: maven:3.9.6-eclipse-temurin-17
-      memoryLimit: 2Gi
+      image: adrianstoica/it1901:latest
+      memoryLimit: 3Gi
       mountSources: true
       command: ["tail"]
       args: ["-f", "/dev/null"]
+      endpoints:
+        - exposure: public
+          name: 6080-desktop-ui
+          protocol: https
+          targetPort: 6080
+        - exposure: public
+          name: 5900-tcp
+          protocol: http
+          targetPort: 5900
+        - exposure: public
+          name: 5901-tcp
+          protocol: http
+          targetPort: 5901
+        - exposure: public
+          name: 8080-tcp
+          protocol: http
+          targetPort: 8080
+        - exposure: public
+          name: 5500-tcp
+          protocol: http
+          targetPort: 5500
 commands:
   - id: test
     exec:
@@ -19,4 +40,4 @@ commands:
     exec:
       component: gr2528
       commandLine: "mvn javafx:run"
-      workingDir: "/projects/gr2528/workout-tracker"
+      workingDir: "/projects/gr2528/workout-tracker/ui"
