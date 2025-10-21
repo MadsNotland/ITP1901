@@ -1,5 +1,7 @@
 package ui;
 
+import static javafx.scene.control.Alert.AlertType.ERROR;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,7 +10,6 @@ import java.nio.file.Paths;
 import core.WorkoutTracker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import static javafx.scene.control.Alert.AlertType.ERROR;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import persistence.WorkoutFileManager;
@@ -160,7 +161,8 @@ public class MainController extends BaseController {
         try {
             var loaded = fileManager.loadWorkouts();
             workoutTracker.getAllWorkouts().setAll(loaded);
-        } catch (IOException e) {
+        } 
+        catch (IOException e) {
             showAlert(ERROR, "Load Error", "Could not load workouts from file " + e.getMessage());
         }
     }

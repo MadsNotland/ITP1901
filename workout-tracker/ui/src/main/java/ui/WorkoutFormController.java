@@ -1,4 +1,5 @@
 package ui;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -6,7 +7,6 @@ import java.time.LocalDate;
 import core.Workout;
 import core.WorkoutTracker;
 import javafx.fxml.FXML;
-import static javafx.scene.control.Alert.AlertType.ERROR;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
@@ -113,7 +113,8 @@ public class WorkoutFormController extends BaseController {
             // Navigate back to Table-View
             mainController.showWorkoutTable();
 
-        } catch (IllegalArgumentException e) {
+        } 
+        catch (IllegalArgumentException e) {
             e.printStackTrace();
         }
     }

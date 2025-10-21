@@ -1,4 +1,6 @@
 package ui;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -8,8 +10,6 @@ import java.util.List;
 import core.Workout;
 import core.WorkoutTracker;
 import javafx.fxml.FXML;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -116,7 +116,8 @@ public class WorkoutTableController extends BaseController {
         try {
             fileManager.saveWorkouts(workouts);
             showAlert(INFORMATION, "Saved", "Workouts saved to workouts.json");
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             showAlert(ERROR, "Save Failed", "Could not save workouts to file: " + e.getMessage());
         }
     }
