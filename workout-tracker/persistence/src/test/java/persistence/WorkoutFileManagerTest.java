@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import core.Exercise;
 import core.Workout;
 
 /**
@@ -36,6 +37,14 @@ class WorkoutFileManagerTest {
     Path tempDir;
 
     /**
+     * Helper to create an Exercise with a given name, sets and reps for reuse across tests.
+     * Pass null for id to trigger auto-UUID generation.
+     */
+    private Exercise ex(String name, int reps, double weight) {
+        return new Exercise(name, reps, weight,null);
+    }
+
+    /**
      * Tests that workout data can be saved and loaded correctly with data integrity.
      * 
      * <p>Verifies that:
@@ -55,8 +64,8 @@ class WorkoutFileManagerTest {
         Path testFile = tempDir.resolve("test-workouts.json");
         WorkoutFileManager manager = new WorkoutFileManager(testFile);
         
-        Workout workout1 = new Workout("Running", "Morning run", LocalDate.of(2025, 9, 14), 1.5,null);
-        Workout workout2 = new Workout("Gym", "Strength training", LocalDate.of(2025, 9, 15), 2.0,null);
+        Workout workout1 = new Workout("Running", "Morning run", LocalDate.of(2025, 9, 14), 1.5,List.of(ex("Sprints", 10, 0.0)));
+        Workout workout2 = new Workout("Gym", "Strength training", LocalDate.of(2025, 9, 15), 2.0,List.of(ex("Bench Press", 8, 60.0), ex("Squats", 10, 80.0)));
         List<Workout> workouts = List.of(workout1, workout2);
 
         // Act
@@ -94,7 +103,7 @@ class WorkoutFileManagerTest {
         Path testFile = tempDir.resolve("test-append.json");
         WorkoutFileManager manager = new WorkoutFileManager(testFile);
         
-        Workout workout = new Workout("Swimming", "Pool session", LocalDate.of(2025, 9, 16), 1.0,null);
+        Workout workout = new Workout("Swimming", "Pool session", LocalDate.of(2025, 9, 16), 1.0,List.of(ex("Freestyle", 20, 0.0)));
 
         // Act
         manager.addWorkout(workout);
