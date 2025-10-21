@@ -8,10 +8,10 @@
 
 <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WorkoutTableController">
 
-    <!-- Tittel -->
+    <!-- Title -->
     <Label style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2C3E50;" text="Workout Sessions" />
 
-    <!-- Tabell -->
+    <!-- Table -->
     <TableView fx:id="workoutTable" prefHeight="300" prefWidth="449">
         <columns>
             <TableColumn fx:id="dateColumn" prefWidth="100" text="Date" />
@@ -21,10 +21,10 @@
         </columns>
     </TableView>
 
-    <!-- Knapp for å legge til ny økt -->
+    <!-- Button for adding workout session -->
     <Button fx:id="addButton" onAction="#handleAddButton" style="-fx-background-color: #3498DB; -fx-text-fill: white; -fx-font-weight: bold;" text="Add Workout" />
 
-    <!-- (Valgfritt) Lagre-knapp -->
+    <!-- Save Button -->
     <Button onAction="#handleSave" style="-fx-background-color: #2ECC71; -fx-text-fill: white;" text="Save" />
 
 </VBox>

@@ -8,13 +8,13 @@ import java.nio.file.Paths;
 import core.WorkoutTracker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import persistence.WorkoutFileManager;
+import ui.base.BaseController;
 
-public class MainController {
+public class MainController extends BaseController {
 
     @FXML
     private BorderPane contentArea;
@@ -94,23 +94,8 @@ public class MainController {
         try {
             var loaded = fileManager.loadWorkouts();
             workoutTracker.getAllWorkouts().setAll(loaded);
-        } catch (Exception e) {
+        } catch (IOException e) {
             showAlert(ERROR, "Load Error", "Could not load workouts from file " + e.getMessage());
         }
-    }
-    
-    /**
-     * Shows a modal alert dialog.
-     *
-     * @param type    alert type (e.g., ERROR, INFORMATION)
-     * @param title   alert title
-     * @param message alert message body
-     */
-    private void showAlert(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

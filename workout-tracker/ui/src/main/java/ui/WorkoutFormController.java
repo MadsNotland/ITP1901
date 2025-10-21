@@ -6,14 +6,35 @@ import java.time.LocalDate;
 import core.Workout;
 import core.WorkoutTracker;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import ui.base.BaseController;
 
-public class WorkoutFormController {
+/**
+ * Controller class for the {@code WorkoutFormView.fxml} view.
+ * <p>
+ * This controller manages the user interface for adding new workouts. 
+ * Upon initialization, it configures the hour and minute {@link javafx.scene.control.ComboBox} components 
+ * used to represent workout duration.
+ * </p>
+ * <p>
+ * Its primary responsibility is to:
+ * <ul>
+ *   <li>Read and validate user input from the form fields</li>
+ *   <li>Create a new {@link core.Workout} instance if the input is valid</li>
+ *   <li>Append the created workout to the shared {@link core.WorkoutTracker} list</li>
+ * </ul>
+ * </p>
+ *
+ * @see ui.WorkoutTableController
+ * @see core.Workout
+ * @see core.WorkoutTracker
+ */
+
+public class WorkoutFormController extends BaseController {
 
     // Input components
     @FXML
@@ -27,24 +48,41 @@ public class WorkoutFormController {
     @FXML
     private DatePicker datePicker;
 
-    // Core components
+    // Core dependencies (injected by MainController)
     private WorkoutTracker workoutTracker;
-
-    // Navigation component
     private MainController mainController;
-
-    public void setMainController (MainController mainController) {
-        this.mainController = mainController;
-    }
-
-    public void setWorkoutTracker(WorkoutTracker workoutTracker) {
-        this.workoutTracker = workoutTracker;
-    }
-
 
     @FXML
     void initialize() {
         initializeComboBoxes();
+    }
+
+    /**
+     * Injects a reference to the {@link MainController}, allowing this controller 
+     * to request navigation actions (e.g., switching back to the workout table view).
+     * <p>
+     * This method is called manually by the {@link MainController} after the FXML 
+     * has been loaded, since the FXMLLoader does not support constructor injection.
+     * </p>
+     *
+     * @param mainController the instance of {@link MainController} that manages view navigation
+     */
+    public void setMainController (MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    /**
+     * Injects the shared {@link WorkoutTracker} instance used to store and manage
+     * all workouts in the application.
+     * <p>
+     * This reference is provided by the {@link MainController} after FXML loading,
+     * ensuring that all controllers operate on the same underlying data model.
+     * </p>
+     *
+     * @param workoutTracker the shared {@link WorkoutTracker} instance
+     */
+    public void setWorkoutTracker(WorkoutTracker workoutTracker) {
+        this.workoutTracker = workoutTracker;
     }
 
     /**
@@ -80,6 +118,11 @@ public class WorkoutFormController {
         }
     }
 
+    /**
+     * Switches to workout-table if cancel-button is pressed.
+     * 
+     * @throws IOException
+     */
     @FXML
     private void handleCancel() throws IOException {
         mainController.showWorkoutTable();
@@ -126,20 +169,5 @@ public class WorkoutFormController {
             return false;
         }
         return true;
-    }
-
-    /**
-     * Shows a modal alert dialog.
-     *
-     * @param type    alert type (e.g., ERROR, INFORMATION)
-     * @param title   alert title
-     * @param message alert message body
-     */
-    private void showAlert(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }   

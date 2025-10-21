@@ -8,25 +8,35 @@ import java.util.List;
 import core.Workout;
 import core.WorkoutTracker;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import persistence.WorkoutFileManager;
+import ui.base.BaseController;
 
 /**
- * Controller for the Workout Tracker JavaFX application.
+ * Controller class for the {@code WorkoutTableView.fxml} view.
+ * <p>
+ * Displays all recorded workouts in a table and provides controls
+ * for adding and saving workouts. This view serves as the main 
+ * overview screen of the application.
+ * </p>
  * <p>
  * Responsibilities:
- * - Read user input from UI controls
- * - Validate input before creating {@link core.Workout} instances
- * - Keep the table view in sync with the underlying {@link core.WorkoutTracker}
- * - Load and save workout data using {@link persistence.WorkoutFileManager}
+ * <ul>
+ *   <li>Bind {@link core.Workout} data to the table columns</li>
+ *   <li>Delegate navigation to {@link MainController}</li>
+ *   <li>Persist workout data via {@link persistence.WorkoutFileManager}</li>
+ * </ul>
  * </p>
+ *
+ * @see ui.WorkoutFormController
+ * @see core.Workout
+ * @see core.WorkoutTracker
  */
-public class WorkoutTableController {
+public class WorkoutTableController extends BaseController{
 
     // Table view components
     @FXML
@@ -40,30 +50,14 @@ public class WorkoutTableController {
     @FXML
     private TableColumn<Workout, String> notesColumn;
 
-    // Core business logic components
+    // Core dependencies (injected by MainController)
     private WorkoutTracker workoutTracker;
     private WorkoutFileManager fileManager;
     private MainController mainController;
 
-    // Control management for workoutTracker object
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
-    }
-
-    public void setWorkoutTracker(WorkoutTracker workoutTracker) {
-        this.workoutTracker = workoutTracker;
-    }
-
-    public void setFileManager(WorkoutFileManager fileManager) {
-        this.fileManager = fileManager;
-    }
-
-
     /**
-     * JavaFX initialization hook. Called automatically by the FXMLLoader after
-     * the FXML elements have been injected. Prepares the UI widgets, creates the
-     * {@link WorkoutTracker}, binds the table view, and attempts to load data
-     * from a JSON file.
+     * Initializes the table view once dependencies have been injected.
+     * Called manually by {@link MainController} after FXML loading.
      */
     @FXML
     void initializeData() {
@@ -71,6 +65,41 @@ public class WorkoutTableController {
     }
 
 
+    /**
+     * Injects the {@link MainController} to enable view navigation.
+     *
+     * @param mainController reference to the parent {@link MainController}
+     */
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
+    }
+
+    /**
+     * Injects the shared {@link WorkoutTracker} instance containing
+     * all workouts managed by the application.
+     *
+     * @param workoutTracker the shared workout tracker
+     */
+    public void setWorkoutTracker(WorkoutTracker workoutTracker) {
+        this.workoutTracker = workoutTracker;
+    }
+
+    /**
+     * Injects the {@link WorkoutFileManager} responsible for reading and writing
+     * workout data to a persistent JSON file.
+     *
+     * @param fileManager the file manager instance used for persistence
+     */
+    public void setFileManager(WorkoutFileManager fileManager) {
+        this.fileManager = fileManager;
+    }
+    
+
+    /**
+     * Navigates to the workout form view when the user presses the "Add" button.
+     *
+     * @throws IOException if the form view cannot be loaded
+     */
     @FXML
     private void handleAddButton() throws IOException {
         mainController.showWorkoutForm();
@@ -78,9 +107,8 @@ public class WorkoutTableController {
 
 
     /**
-     * Handles the Save button click.
-     * Attempts to persist all workouts to the configured JSON file and shows a
-     * confirmation or error dialog.
+     * Saves all current workouts to file when the "Save" button is pressed.
+     * Displays a confirmation or error alert depending on the result.
      */
     @FXML
     private void handleSave() {
@@ -94,33 +122,15 @@ public class WorkoutTableController {
     }
 
     /**
-     * Connects the table view to the observable workout list and binds columns
-     * to the corresponding {@link Workout} properties.
+     * Binds table columns to {@link Workout} properties and connects
+     * the table to the observable list of workouts.
      */
     private void setTableView() {
-        // Connect table view to workout data
         workoutTable.setItems(workoutTracker.getAllWorkouts());
-
-        // Map table columns to workout properties
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
-    }
-
-    /**
-     * Shows a modal alert dialog.
-     *
-     * @param type    alert type (e.g., ERROR, INFORMATION)
-     * @param title   alert title
-     * @param message alert message body
-     */
-    private void showAlert(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }
 
