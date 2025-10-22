@@ -116,9 +116,13 @@ public class Workout {
 
     /** Finds and returns an exercise by its id; returns {@code null} if not found. */
     public Exercise findExerciseById(String id) {
-        if (id == null || id.isBlank()) return null;
+        if (id == null || id.isBlank()) {
+            return null;
+        }
         for (Exercise e : exercises) {
-            if (e.getId().equals(id)) return e;
+            if (e.getId().equals(id)) {
+                return e;
+            }
         }
         return null;
     }

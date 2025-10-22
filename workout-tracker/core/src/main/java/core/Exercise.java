@@ -10,7 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * <p>Jackson annotations are used to support JSON (de)serialization.</p>
  */
 
-public class Exercise {
+public final class Exercise {
     private String name;
     private int repetitions;
     private double weight;
@@ -110,10 +110,20 @@ public class Exercise {
     /** Checks equality based on the unique identifier. */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Exercise)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Exercise)) {
+            return false;
+        }
         Exercise other = (Exercise) o;
-        return this.id.equals(other.id);
+        return java.util.Objects.equals(this.id, other.id);
+    }
+
+    /** Computes hash code based on the unique identifier. */
+    @Override
+    public int hashCode() {
+        return java.util.Objects.hash(id);
     }
 
     /** Returns a concise string representation of this exercise. */

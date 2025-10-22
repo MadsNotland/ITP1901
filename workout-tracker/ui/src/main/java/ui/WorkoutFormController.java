@@ -3,6 +3,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.List;
 
 import core.Workout;
 import core.WorkoutTracker;
@@ -108,7 +109,8 @@ public class WorkoutFormController extends BaseController {
             double time = comboBoxHours.getValue() + (comboBoxMinutes.getValue() / 100.0);
 
             // Create and add new workout
-            Workout newWorkout = new Workout(type, notes, date, time);
+            // HARD-CODED EXERCISE FOR NOW - NEEDS TO BE REPLACED LATER!
+            Workout newWorkout = new Workout(type, notes, date, time, List.of(new core.Exercise("Sample Exercise", 10, 20.0, null)));
             workoutService.addWorkout(newWorkout);
 
             // Navigate back to Table-View
