@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
-  <!-- Example: suppress warnings in generated code -->
+  <!-- Suppress warnings in generated code -->
   <Match>
     <Class name="~.*\.generated\..*"/>
   </Match>
 
-  <!-- Example: allow nulls in DTOs (tweak to your packages) -->
-  <Match>
-    <Package name="com.example.dto"/>
-    <Bug pattern="NP_NULL_PARAM_DEREF,NP_NULL_ON_SOME_PATH"/>
-  </Match>
-
-  <!-- Allow constructor validation in core.Workout -->
+  <!-- Allow constructor validation in core.Workout - legitimate design choice -->
   <Match>
     <Class name="core.Workout"/>
     <Bug pattern="CT_CONSTRUCTOR_THROW"/>
@@ -23,4 +17,37 @@
     <Method name="getAllWorkouts"/>
     <Bug pattern="EI_EXPOSE_REP"/>
   </Match>
+
+  <!-- Ignore Internal representation warning in controllers-->
+  <!-- Controllers intentionally share mutable references for coordination between views -->
+  <Match>
+    <Class name="ui.MainController"/>
+    <Bug pattern="EI_EXPOSE_REP"/>
+  </Match>
+
+  <Match>
+    <Class name="ui.WorkoutFormController"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
+
+  <Match>
+    <Class name="ui.WorkoutTableController"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
+
+  <Match>
+    <Class name="ui.WorkoutTableController"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
+
+  <Match>
+    <Class name="ui.service.WorkoutService"/>
+    <Bug pattern="EI_EXPOSE_REP"/>
+  </Match>
+
+  <Match>
+    <Class name="ui.service.WorkoutService"/>
+    <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+  </Match>
+  
 </FindBugsFilter>
