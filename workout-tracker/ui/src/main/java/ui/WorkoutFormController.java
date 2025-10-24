@@ -43,6 +43,8 @@ public class WorkoutFormController extends BaseController {
     @FXML
     private ComboBox<Integer> comboBoxMinutes;
     @FXML
+    private ComboBox<Integer> comboBoxReps;
+    @FXML
     private TextField typeField;
     @FXML
     private TextArea notesField;
@@ -142,6 +144,10 @@ public class WorkoutFormController extends BaseController {
         for (int minutes = 0; minutes < 60; minutes += 5) {
             comboBoxMinutes.getItems().add(minutes);
         }
+        comboBoxReps.getItems().clear();
+          for (int i = 1; i <= 20; i++) {
+            comboBoxReps.getItems().add(i);
+    }
     }
 
     /**
