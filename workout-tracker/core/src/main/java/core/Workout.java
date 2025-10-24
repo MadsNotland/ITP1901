@@ -132,6 +132,11 @@ public class Workout {
         if (exercise == null) {
             throw new IllegalArgumentException("Exercise cannot be null");
         }
+        for (Exercise e : exercises) {
+            if (e.getId().equals(exercise.getId())) {
+                throw new IllegalArgumentException("Exercise already exists in workout");
+            }
+        }
         this.exercises.add(exercise);
     }
 

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Represents a single exercise with validated fields for name, repetitions, and weight.
+ * Represents a single exercise with validated fields for name, repetitions, weight and id.
  * All mutators enforce input validation so instances maintain a consistent, valid state.
  *
  * <p>Jackson annotations are used to support JSON (de)serialization.</p>
@@ -23,6 +23,7 @@ public final class Exercise {
      * @param name        the exercise name (e.g., "Bench Press"); must not be {@code null} or blank
      * @param repetitions the number of repetitions; must be {@code >= 0}
      * @param weight      the weight used per repetition (e.g., in kilograms); must be {@code >= 0}
+     * @param id          the unique identifier of the exercise; if {@code null} or blank, a random UUID will be generated
      * @throws IllegalArgumentException if {@code name} is {@code null} or blank,
      *                                  if {@code repetitions} is negative,
      *                                  or if {@code weight} is negative
@@ -36,7 +37,7 @@ public final class Exercise {
             throw new IllegalArgumentException("Name cannot be null or empty");
         }
         if (repetitions < 0) {
-            throw new IllegalArgumentException("Repetitions must be greater tham or equal to 0");
+            throw new IllegalArgumentException("Repetitions must be greater than or equal to 0");
         }
         if (weight < 0) {
             throw new IllegalArgumentException("Weight cannot be negative");
@@ -129,7 +130,7 @@ public final class Exercise {
     /** Returns a concise string representation of this exercise. */
     @Override
     public String toString() {
-        return "Exercise{name='" + name + "', repetitions=" + repetitions + ", weight=" + weight + "}";
+        return "Exercise{name='" + name + "', repetitions=" + repetitions + ", weight=" + weight + ", id=" + id +"}";
     }
 
 }
