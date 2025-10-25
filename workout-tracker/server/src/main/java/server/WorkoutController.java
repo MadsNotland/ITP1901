@@ -2,6 +2,8 @@ package server;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import core.Workout;
+import java.util.List;
 
 
 @RestController
@@ -10,31 +12,31 @@ import org.springframework.web.bind.annotation.*;
 public class WorkoutController {
 
     @GetMapping
-    public String getAllWorkouts() {
-        return "World, Hello! alle workouts";
+    public ResponseEntity<List<Workout>> getAllWorkouts() {
+        // Returns empty list for now
+        return ResponseEntity.ok(List.of());
     }
 
     @PostMapping
-    public ResponseEntity<String> createWorkout(@RequestBody String workoutJson) {
-        // Returns 201 Created med melding
-        return ResponseEntity.status(201).body("Workout created: " + workoutJson);
+    public ResponseEntity<Workout> createWorkout(@RequestBody Workout workout) {
+        return ResponseEntity.status(201).body(workout);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<String> getWorkout(@PathVariable Long id) {
-        // Returns 200 OK eller 404 Not Found
-        return ResponseEntity.ok("Workout with ID: " + id);
+    public ResponseEntity<Workout> getWorkout(@PathVariable Long id) {
+        // For now return null - we will implement repository later
+        return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateWorkout(@PathVariable Long id, @RequestBody String workoutJson) {
-        // Returns 200 OK eller 404 Not Found
-        return ResponseEntity.ok("Workout updated: " + id + " with data: " + workoutJson);
+    public ResponseEntity<Workout> updateWorkout(@PathVariable Long id, @RequestBody Workout workout) {
+        // For now return workout - we will implement repository later
+        return ResponseEntity.ok(workout);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteWorkout(@PathVariable Long id) {
-        // Returns 204 No Content eller 404 Not Found
+    public ResponseEntity<Void> deleteWorkout(@PathVariable Long id) {
+        // For now return 204 No Content - we will implement repository later
         return ResponseEntity.noContent().build();
-    }
+    }   
 }

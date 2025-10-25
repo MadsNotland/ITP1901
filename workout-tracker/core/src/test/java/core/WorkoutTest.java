@@ -85,11 +85,13 @@ class WorkoutTest {
     void setters_updateFields_onValidInput() {
         Workout w = validWorkout();
 
+        w.setId(1L);
         w.setType("Gym");
         w.setNotes("Strength session");
         w.setDate(LocalDate.parse("2025-09-16"));
         w.setTime(2.0);
 
+        assertEquals(1L, w.getId());
         assertEquals("Gym", w.getType());
         assertEquals("Strength session", w.getNotes());
         assertEquals(LocalDate.parse("2025-09-16"), w.getDate());
@@ -120,6 +122,7 @@ class WorkoutTest {
         Workout w = new Workout("Swim", "Pool", LocalDate.parse("2025-09-17"), 1.25);
         String s = w.toString();
         assertAll(
+                () -> assertTrue(s.contains("id=")),
                 () -> assertTrue(s.contains("Swim")),
                 () -> assertTrue(s.contains("Pool")),
                 () -> assertTrue(s.contains("2025-09-17")),

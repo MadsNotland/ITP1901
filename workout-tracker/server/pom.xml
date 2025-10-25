@@ -40,18 +40,17 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- Legg til disse senere når vi skal bruke domenet/lagring fra prosjektet:
     <dependency>
-      <groupId>it1901</groupId>
-      <artifactId>core</artifactId>
-      <version>${project.version}</version>
+        <groupId>it1901</groupId>
+        <artifactId>workout-tracker-core</artifactId>
+        <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>it1901</groupId>
-      <artifactId>persistence</artifactId>
-      <version>${project.version}</version>
+        <groupId>it1901</groupId>
+        <artifactId>workout-tracker-persistence</artifactId>
+        <version>${project.version}</version>
     </dependency>
-    -->
+   
 
     <!-- Tester -->
     <dependency>

@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * All mutators enforce input validation so instances maintain a consistent, valid state.
  */
 public class Workout {
+    private Long id;
     private LocalDate date;
     private double time;
     private String notes;
@@ -46,6 +47,16 @@ public class Workout {
         this.notes = notes;
         this.date = date;
         this.time = time;
+    }
+
+    /** Returns the workout ID. */
+    public Long getId() {
+        return id;
+    }
+
+    /** Sets the workout ID. */
+    public void setId(Long id) {
+        this.id = id;
     }
 
     /** Returns the workout date. */
@@ -103,7 +114,8 @@ public class Workout {
     @Override
     public String toString() {
         return "Workout{" +
-                "type='" + type + '\'' +
+                "id=" + id +
+                ", type='" + type + '\'' +
                 ", notes='" + notes + '\'' +
                 ", date=" + date +
                 ", time=" + time +
