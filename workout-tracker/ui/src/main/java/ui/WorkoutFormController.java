@@ -147,9 +147,9 @@ public class WorkoutFormController extends BaseController {
             comboBoxMinutes.getItems().add(minutes);
         }
         comboBoxReps.getItems().clear();
-          for (int i = 1; i <= 20; i++) {
+        for (int i = 1; i <= 20; i++) {
             comboBoxReps.getItems().add(i);
-    }
+        }
     }
 
     /**
