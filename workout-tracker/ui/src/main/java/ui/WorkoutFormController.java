@@ -10,6 +10,8 @@ import core.WorkoutTracker;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import ui.base.BaseController;
@@ -51,6 +53,9 @@ public class WorkoutFormController extends BaseController {
     private TextArea notesField;
     @FXML
     private DatePicker datePicker;
+    @FXML
+    private Spinner<Double> spinnerWeight;
+    
 
     // Core dependencies (injected by MainController)
     private MainController mainController;
@@ -150,6 +155,9 @@ public class WorkoutFormController extends BaseController {
         for (int i = 1; i <= 20; i++) {
             comboBoxReps.getItems().add(i);
         }
+        SpinnerValueFactory.DoubleSpinnerValueFactory weightFactory =
+        new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 500, 0, 2.5);
+        spinnerWeight.setValueFactory(weightFactory);
     }
 
     /**

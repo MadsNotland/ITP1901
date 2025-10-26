@@ -4,21 +4,24 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WorkoutFormController">
+<VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;" translateY="-40" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WorkoutFormController">
 
     <!-- Screen title -->
     <Label style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2C3E50;" text="Input Workout Session" />
     
     <!-- Input forms -->
-    <GridPane hgap="20" translateX="60" vgap="10">
+    <GridPane hgap="20"  vgap="10" alignment="CENTER">
         <columnConstraints>
             <ColumnConstraints halignment="RIGHT" minWidth="100" />
             <ColumnConstraints halignment="LEFT" minWidth="100" />
@@ -40,7 +43,6 @@
             <ComboBox fx:id="comboBoxMinutes" prefWidth="80" />
             <Label text="minutes" />
         </HBox>
-
         <!-- Row 3: Notes -->
         <Label style="-fx-font-size: 16;" text="Notes:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
         <TextArea fx:id="notesField" prefRowCount="3" prefWidth="250" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
@@ -58,15 +60,36 @@
                         prefWidth="80"
                         style="-fx-font-size: 14;" />
                         <Label text="reps" />
-            <TextField fx:id="exerciseWeightField"
-                       promptText="Weight (kg)"
-                       prefWidth="100"
-                       style="-fx-font-size: 14;" />
+            <Spinner fx:id="spinnerWeight"
+                prefWidth="100"
+                style="-fx-font-size: 14;" />
+                <Label text="kg" /> 
+            <Button fx:id="addExerciseButton"
+                    text="Add Exercise"
+                    style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-font-weight: bold;" />
         </HBox>
-      
-      <rowConstraints>
-         <RowConstraints />
-         <RowConstraints />
+          <TableView fx:id="exerciseTable"
+           prefWidth="400"
+           maxHeight="150"
+           GridPane.columnIndex="1"
+           GridPane.rowIndex="5">
+    <columns>
+        <TableColumn fx:id="colName"
+                     text="Name"
+                     prefWidth="150" />
+        <TableColumn fx:id="colReps"
+                     text="Repetitions"
+                     prefWidth="120" />
+        <TableColumn fx:id="colWeight"
+                     text="Weight (kg)"
+                     prefWidth="120" />
+    </columns>
+</TableView>
+   
+
+    <rowConstraints>
+       <RowConstraints />
+       <RowConstraints />
          <RowConstraints />
          <RowConstraints />
       </rowConstraints>
