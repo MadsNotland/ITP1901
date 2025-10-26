@@ -66,6 +66,7 @@
                 <Label text="kg" /> 
             <Button fx:id="addExerciseButton"
                     text="Add Exercise"
+                    onAction="#handleAddExercise"
                     style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-font-weight: bold;" />
         </HBox>
           <TableView fx:id="exerciseTable"

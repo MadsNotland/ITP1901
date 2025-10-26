@@ -5,13 +5,22 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+import core.Exercise;
 import core.Workout;
 import core.WorkoutTracker;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import ui.base.BaseController;
@@ -55,7 +64,19 @@ public class WorkoutFormController extends BaseController {
     private DatePicker datePicker;
     @FXML
     private Spinner<Double> spinnerWeight;
-    
+    @FXML
+    private TableView<Exercise> exerciseTable;
+    @FXML
+    private TableColumn<Exercise, String> colName;
+    @FXML
+    private TableColumn<Exercise, Integer> colReps;
+    @FXML
+    private TableColumn<Exercise, Double> colWeight;
+    @FXML
+    private TextField exerciseNameField;
+
+    private final ObservableList<Exercise> currentExercises =
+        FXCollections.observableArrayList();
 
     // Core dependencies (injected by MainController)
     private MainController mainController;
@@ -64,6 +85,7 @@ public class WorkoutFormController extends BaseController {
     @FXML
     void initialize() {
         initializeComboBoxes();
+        initializeExerciseTable();
     }
 
     /**
@@ -114,10 +136,12 @@ public class WorkoutFormController extends BaseController {
             }
             // Time must be validated before input. NOTE: minutes is divided by 100 for visual representation
             double time = comboBoxHours.getValue() + (comboBoxMinutes.getValue() / 100.0);
-
+            if (currentExercises.isEmpty()) {
+                showAlert(ERROR, "Invalid Input", "Please add at least one exercise before saving the workout.");
+                return;
+            }
             // Create and add new workout
-            // HARD-CODED EXERCISE FOR NOW - NEEDS TO BE REPLACED LATER!
-            Workout newWorkout = new Workout(type, notes, date, time, List.of(new core.Exercise("Sample Exercise", 10, 20.0, null)));
+            Workout newWorkout = new Workout(type, notes, date, time, currentExercises);
             workoutService.addWorkout(newWorkout);
 
             // Navigate back to Table-View
@@ -126,6 +150,44 @@ public class WorkoutFormController extends BaseController {
         } 
         catch (IllegalArgumentException e) {
             e.printStackTrace();
+        }
+    }
+    /**
+     * Handles adding a new exercise to the current workout draft.
+     * Validates the exercise input fields (name, repetitions, weight) and enforces
+     * a maximum of five exercises. If the input is valid, a new {@link Exercise}
+     * is created and added to the observable list backing the exercise table.
+     * If validation fails, an alert is shown and the exercise is not added.
+     */
+    @FXML
+    public void handleAddExercise() {
+        String exerciseName =  exerciseNameField.getText();
+        Integer repetitions = comboBoxReps.getValue();
+        Double weight = spinnerWeight.getValue();
+    // validate input
+    if (exerciseName == null || exerciseName.isBlank()) {
+        showAlert(ERROR, "Invalid Input", "Exercise name cannot be empty.");
+        return;
+    }
+    if (repetitions == null) {
+        showAlert(ERROR, "Invalid Input", "Please select repetitions.");
+        return;
+    }
+    if (weight == null || weight < 0) {
+        showAlert(ERROR, "Invalid Input", "Weight must be 0 or more.");
+        return;
+    }
+
+    // max 5 exercises  
+    if (currentExercises.size() >= 5) {
+        showAlert(ERROR, "Limit reached", "You can only add up to 5 exercises.");
+        return;
+    }
+        try {
+            Exercise newExercise = new Exercise(exerciseName, repetitions, weight, null);
+            currentExercises.add(newExercise);
+        } catch (IllegalArgumentException e) {
+            showAlert(ERROR, "Invalid Input", e.getMessage());
         }
     }
 
@@ -156,9 +218,37 @@ public class WorkoutFormController extends BaseController {
             comboBoxReps.getItems().add(i);
         }
         SpinnerValueFactory.DoubleSpinnerValueFactory weightFactory =
-        new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 500, 0, 2.5);
+            new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 500, 0, 2.5);
         spinnerWeight.setValueFactory(weightFactory);
     }
+
+        /**
+     * Configures the exercise table and binds it to the current list of exercises.
+     * Defines how each column retrieves its value from the {@link Exercise} model
+     * and ensures the table updates automatically when the list changes.
+     *
+     * Sets a constrained resize policy for consistent layout and a placeholder
+     * message when no exercises are present.
+     */
+    private void initializeExerciseTable() {
+    // Defines what data each column should show
+    colName.setCellValueFactory(cell ->
+        new SimpleStringProperty(cell.getValue().getName())
+    );
+    colReps.setCellValueFactory(cell ->
+        new SimpleIntegerProperty(cell.getValue().getRepetitions()).asObject()
+    );
+    colWeight.setCellValueFactory(cell ->
+        new SimpleDoubleProperty(cell.getValue().getWeight()).asObject()
+    );
+
+    // Bind the table to the list
+    exerciseTable.setItems(currentExercises);
+
+    exerciseTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    exerciseTable.setPlaceholder(new Label("No exercises added yet"));
+}
+
 
     /**
      * Validates user input for a new workout. If validation fails, an alert is
