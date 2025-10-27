@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Represents a workout session with validated fields for type, notes, date, duration and exercises.
  * All mutators enforce input validation so instances maintain a consistent, valid state.
+ * This ID is only meant to be assigned internally by persistence layer
  */
 public class Workout {
     private Long id;
