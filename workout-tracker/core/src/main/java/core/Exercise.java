@@ -130,7 +130,7 @@ public final class Exercise {
     /** Returns a concise string representation of this exercise. */
     @Override
     public String toString() {
-        return "Exercise{name='" + name + "', repetitions=" + repetitions + ", weight=" + weight + ", id=" + id +"}";
+        return "Exercise{name='" + name + "', repetitions=" + repetitions + ", weight=" + weight + ", id=" + id + "}";
     }
 
 }
