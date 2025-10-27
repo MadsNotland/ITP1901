@@ -257,6 +257,8 @@ When request validation fails, the server returns a 400 Bad Request with details
 
 ### Complete Workflow
 
+start server with: mvn spring-boot:run -pl server
+
 1. **Get all workouts** (initially empty):
    ```bash
    GET /api/workouts
