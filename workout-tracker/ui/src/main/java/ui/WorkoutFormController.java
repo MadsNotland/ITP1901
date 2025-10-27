@@ -3,7 +3,6 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 
 import core.Exercise;
 import core.Workout;
@@ -165,28 +164,29 @@ public class WorkoutFormController extends BaseController {
         Integer repetitions = comboBoxReps.getValue();
         Double weight = spinnerWeight.getValue();
     // validate input
-    if (exerciseName == null || exerciseName.isBlank()) {
-        showAlert(ERROR, "Invalid Input", "Exercise name cannot be empty.");
-        return;
-    }
-    if (repetitions == null) {
-        showAlert(ERROR, "Invalid Input", "Please select repetitions.");
-        return;
-    }
-    if (weight == null || weight < 0) {
-        showAlert(ERROR, "Invalid Input", "Weight must be 0 or more.");
-        return;
-    }
+        if (exerciseName == null || exerciseName.isBlank()) {
+            showAlert(ERROR, "Invalid Input", "Exercise name cannot be empty.");
+            return;
+        }
+        if (repetitions == null) {
+            showAlert(ERROR, "Invalid Input", "Please select repetitions.");
+            return;
+        }
+        if (weight == null || weight < 0) {
+            showAlert(ERROR, "Invalid Input", "Weight must be 0 or more.");
+            return;
+        }
 
     // max 5 exercises  
-    if (currentExercises.size() >= 5) {
-        showAlert(ERROR, "Limit reached", "You can only add up to 5 exercises.");
-        return;
-    }
+        if (currentExercises.size() >= 5) {
+            showAlert(ERROR, "Limit reached", "You can only add up to 5 exercises.");
+            return;
+        }
         try {
             Exercise newExercise = new Exercise(exerciseName, repetitions, weight, null);
             currentExercises.add(newExercise);
-        } catch (IllegalArgumentException e) {
+        } 
+        catch (IllegalArgumentException e) {
             showAlert(ERROR, "Invalid Input", e.getMessage());
         }
     }
@@ -231,23 +231,22 @@ public class WorkoutFormController extends BaseController {
      * message when no exercises are present.
      */
     private void initializeExerciseTable() {
-    // Defines what data each column should show
-    colName.setCellValueFactory(cell ->
-        new SimpleStringProperty(cell.getValue().getName())
-    );
-    colReps.setCellValueFactory(cell ->
-        new SimpleIntegerProperty(cell.getValue().getRepetitions()).asObject()
-    );
-    colWeight.setCellValueFactory(cell ->
-        new SimpleDoubleProperty(cell.getValue().getWeight()).asObject()
-    );
+        colName.setCellValueFactory(cell ->
+            new SimpleStringProperty(cell.getValue().getName())
+        );
+        colReps.setCellValueFactory(cell ->
+            new SimpleIntegerProperty(cell.getValue().getRepetitions()).asObject()
+        );
+        colWeight.setCellValueFactory(cell ->
+            new SimpleDoubleProperty(cell.getValue().getWeight()).asObject()
+        );
 
     // Bind the table to the list
-    exerciseTable.setItems(currentExercises);
+        exerciseTable.setItems(currentExercises);
 
-    exerciseTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-    exerciseTable.setPlaceholder(new Label("No exercises added yet"));
-}
+        exerciseTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        exerciseTable.setPlaceholder(new Label("No exercises added yet"));
+    }
 
 
     /**
