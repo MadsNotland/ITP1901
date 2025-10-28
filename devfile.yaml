@@ -41,3 +41,11 @@ commands:
       component: gr2528
       commandLine: "mvn javafx:run"
       workingDir: "/projects/gr2528/workout-tracker/ui"
+  - id: start-desktop
+    exec:
+      component: gr2528
+      commandLine: "bash -lc 'bash /projects/gr2528/.che/start-desktop.sh'"
+      workingDir: "/projects/gr2528"
+events:
+  postStart:
+    - start-desktop
