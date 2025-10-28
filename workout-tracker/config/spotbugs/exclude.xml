@@ -49,5 +49,11 @@
     <Class name="ui.service.WorkoutService"/>
     <Bug pattern="CT_CONSTRUCTOR_THROW"/>
   </Match>
+
+  <!-- Ignore Internal representation warning in Spring Boot controllers -->
+  <Match>
+    <Class name="server.WorkoutController"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
   
 </FindBugsFilter>

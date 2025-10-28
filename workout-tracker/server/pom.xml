@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <!-- Arv fra rot-POM -->
+  <!-- Inherits from root POM -->
   <parent>
     <groupId>it1901</groupId>
     <artifactId>workout-tracker</artifactId>
@@ -20,7 +20,7 @@
     <spring-boot.version>3.3.4</spring-boot.version>
   </properties>
 
-  <!-- BOM: gjør at vi slipper å versjonsfeste hver Spring-dependency -->
+  <!-- BOM: allows us to avoid versioning each Spring dependency -->
   <dependencyManagement>
     <dependencies>
       <dependency>
