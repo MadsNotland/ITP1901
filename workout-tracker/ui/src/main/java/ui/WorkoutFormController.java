@@ -1,6 +1,4 @@
 package ui;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-
 import java.io.IOException;
 import java.time.LocalDate;
 
@@ -13,6 +11,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -115,6 +114,9 @@ public class WorkoutFormController extends BaseController {
         this.workoutService = workoutService;
     }
 
+
+
+    
     /**
      * Handles the Add Workout button click.
      * Validates the current input fields and, if valid, creates and appends a
@@ -163,25 +165,11 @@ public class WorkoutFormController extends BaseController {
         String exerciseName =  exerciseNameField.getText();
         Integer repetitions = comboBoxReps.getValue();
         Double weight = spinnerWeight.getValue();
-    // validate input
-        if (exerciseName == null || exerciseName.isBlank()) {
-            showAlert(ERROR, "Invalid Input", "Exercise name cannot be empty.");
-            return;
-        }
-        if (repetitions == null) {
-            showAlert(ERROR, "Invalid Input", "Please select repetitions.");
-            return;
-        }
-        if (weight == null || weight < 0) {
-            showAlert(ERROR, "Invalid Input", "Weight must be 0 or more.");
+
+        if (!validExerciseData(exerciseName, repetitions, weight)) {
             return;
         }
 
-    // max 5 exercises  
-        if (currentExercises.size() >= 5) {
-            showAlert(ERROR, "Limit reached", "You can only add up to 5 exercises.");
-            return;
-        }
         try {
             Exercise newExercise = new Exercise(exerciseName, repetitions, weight, null);
             currentExercises.add(newExercise);
@@ -201,28 +189,30 @@ public class WorkoutFormController extends BaseController {
         mainController.showWorkoutTable();
     }
 
+
+
     /**
      * Populates the hour and minute combo boxes with selectable values.
      */
     private void initializeComboBoxes() {
         comboBoxHours.getItems().clear();
-        for (int hours = 0; hours <= 10; hours++) {
+        for (int hours = 0; hours <= uiConstants.MAX_HOURS; hours++) {
             comboBoxHours.getItems().add(hours);
         }
         comboBoxMinutes.getItems().clear();
-        for (int minutes = 0; minutes < 60; minutes += 5) {
+        for (int minutes = 0; minutes < 60; minutes += uiConstants.MINUTES_STEP) {
             comboBoxMinutes.getItems().add(minutes);
         }
         comboBoxReps.getItems().clear();
-        for (int i = 1; i <= 20; i++) {
+        for (int i = 1; i <= uiConstants.MAX_REPS; i++) {
             comboBoxReps.getItems().add(i);
         }
         SpinnerValueFactory.DoubleSpinnerValueFactory weightFactory =
-            new SpinnerValueFactory.DoubleSpinnerValueFactory(0, 500, 0, 2.5);
+            new SpinnerValueFactory.DoubleSpinnerValueFactory(0, uiConstants.MAX_REPS, 0, uiConstants.WEIGHT_STEP);
         spinnerWeight.setValueFactory(weightFactory);
     }
 
-        /**
+    /**
      * Configures the exercise table and binds it to the current list of exercises.
      * Defines how each column retrieves its value from the {@link Exercise} model
      * and ensures the table updates automatically when the list changes.
@@ -241,12 +231,13 @@ public class WorkoutFormController extends BaseController {
             new SimpleDoubleProperty(cell.getValue().getWeight()).asObject()
         );
 
-    // Bind the table to the list
+        // Bind the table to the list
         exerciseTable.setItems(currentExercises);
 
         exerciseTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         exerciseTable.setPlaceholder(new Label("No exercises added yet"));
     }
+
 
 
     /**
@@ -267,12 +258,46 @@ public class WorkoutFormController extends BaseController {
             showAlert(ERROR, "Invalid Input", "Date must not be empty");
             return false;
         }
-        if (notes == null || notes.trim().length() < 3) {
+        if (notes == null || notes.trim().length() < uiConstants.MIN_NOTE_LENGTH) {
             showAlert(ERROR, "Invalid Input", "Notes must be at least 3 characters long.");
+            return false;
+        }
+        else if (notes.trim().length() > uiConstants.MAX_NOTE_LENGTH) {
+            showAlert(ERROR, "Invalid Input", "Notes must be less than" + uiConstants.MAX_NOTE_LENGTH + "characters long");
             return false;
         }
         if (comboBoxHours.getValue() == null || comboBoxMinutes.getValue() == null || comboBoxHours.getValue() + comboBoxMinutes.getValue() == 0) {
             showAlert(ERROR, "Invalid Input", "Please select both hours and minutes.");
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * Validates user input for a new Exercises. If validation fails, an alert is
+     * shown to the user.
+     *
+     * @param exerciseName name of exercise entered in the text field
+     * @param repetitions repetitions entered in the repetitions area
+     * @param weight weight selected in the weight picker
+     * @return true if all inputs are valid; false otherwise
+     */
+    private boolean validExerciseData(String exerciseName, Integer repetitions, Double weight) {
+        if (exerciseName == null || exerciseName.isBlank()) {
+            showAlert(ERROR, "Invalid Input", "Exercise name cannot be empty.");
+            return false;
+        }
+        if (repetitions == null) {
+            showAlert(ERROR, "Invalid Input", "Please select repetitions.");
+            return false;
+        }
+        if (weight == null || weight < 0) {
+            showAlert(ERROR, "Invalid Input", "Weight must be 0 or more.");
+            return false;
+        }
+        if (currentExercises.size() >= uiConstants.MAX_EXERCISES_PER_WORKOUT) {
+            showAlert(ERROR, "Limit reached", "You can only add up to 5 exercises.");
             return false;
         }
         return true;
