@@ -1,107 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;" translateY="-40" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WorkoutFormController">
+<VBox alignment="CENTER" styleClass="form-container" stylesheets="@workout-form.css" translateY="-40" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WorkoutFormController">
 
     <!-- Screen title -->
-    <Label style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2C3E50;" text="Input Workout Session" />
+    <Label styleClass="label-title" text="Workout Session Input" />
     
     <!-- Input forms -->
-    <GridPane hgap="20"  vgap="10" alignment="CENTER">
+    <GridPane alignment="CENTER" hgap="20" vgap="10">
         <columnConstraints>
-            <ColumnConstraints halignment="RIGHT" minWidth="100" />
-            <ColumnConstraints halignment="LEFT" minWidth="100" />
+            <ColumnConstraints halignment="RIGHT" maxWidth="95.33334350585938" minWidth="15.333343505859375" prefWidth="52.666656494140625" />
+            <ColumnConstraints halignment="LEFT" maxWidth="532.6666564941406" minWidth="100.0" prefWidth="496.00001017252606" />
         </columnConstraints>
 
         <!-- Row 0: Date -->
-        <Label style="-fx-font-size: 16;" text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <DatePicker fx:id="datePicker" prefHeight="25.0" prefWidth="251.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label styleClass="label-field" text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <DatePicker fx:id="datePicker" prefHeight="31.0" prefWidth="375.0" styleClass="date-picker" GridPane.columnIndex="1" GridPane.rowIndex="0">
+         <GridPane.margin>
+            <Insets left="25.0" />
+         </GridPane.margin></DatePicker>
 
         <!-- Row 1: Type -->
-        <Label style="-fx-font-size: 16;" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <TextField fx:id="typeField" promptText="Push / Pull" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Label styleClass="label-field" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="typeField" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="375.0" promptText="Push / Pull" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="25.0" />
+         </GridPane.margin></TextField>
 
         <!-- Row 2: Time -->
-        <Label style="-fx-font-size: 16;" text="Time:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-        <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
-            <ComboBox fx:id="comboBoxHours" prefWidth="80" />
-            <Label text="hours" />
-            <ComboBox fx:id="comboBoxMinutes" prefWidth="80" />
-            <Label text="minutes" />
+        <Label styleClass="label-field" text="Time:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <HBox maxWidth="-Infinity" minWidth="-Infinity" spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <!-- Hours -->
+            <ComboBox fx:id="comboBoxHours" prefWidth="80" styleClass="combo-box" />
+            <Label styleClass="label-description" text="hours" />
+            <!-- Minutes -->
+            <ComboBox fx:id="comboBoxMinutes" prefWidth="80" styleClass="combo-box" />
+            <Label styleClass="label-description" text="minutes" />
+         <GridPane.margin>
+            <Insets left="85.0" />
+         </GridPane.margin>
         </HBox>
-        <!-- Row 3: Notes -->
-        <Label style="-fx-font-size: 16;" text="Notes:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <TextArea fx:id="notesField" prefRowCount="3" prefWidth="250" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-        <!-- Row 4: Exercise -->
-        <Label style="-fx-font-size: 16;" text="Exercise:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
-        <HBox spacing="10"
-              GridPane.columnIndex="1"
-              GridPane.rowIndex="4">
-            <TextField fx:id="exerciseNameField"
-                       promptText="Exercise name"
-                       prefWidth="150"
-                       style="-fx-font-size: 14;" />
 
-            <ComboBox fx:id="comboBoxReps"
-                        prefWidth="80"
-                        style="-fx-font-size: 14;" />
-                        <Label text="reps" />
-            <Spinner fx:id="spinnerWeight"
-                prefWidth="100"
-                style="-fx-font-size: 14;" />
-                <Label text="kg" /> 
-            <Button fx:id="addExerciseButton"
-                    text="Add Exercise"
-                    onAction="#handleAddExercise"
-                    style="-fx-background-color: #27AE60; -fx-text-fill: white; -fx-font-weight: bold;" />
+        <!-- Row 3: Notes -->
+        <Label styleClass="label-field" text="Notes:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <TextArea fx:id="notesField" maxWidth="-Infinity" minWidth="-Infinity" prefRowCount="3" prefWidth="375.0" styleClass="text-area" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets left="25.0" />
+         </GridPane.margin></TextArea>
+
+        <!-- Row 4: Exercise Title -->
+        <Label prefHeight="44.0" prefWidth="138.0" styleClass="label-undertitle" text="Exercises" GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <GridPane.margin>
+            <Insets left="140.0" />
+        </GridPane.margin>
+         <padding>
+            <Insets left="30.0" />
+         </padding></Label>
+
+        <!-- Row 5: Exercise Input-labels -->
+        <HBox maxWidth="-Infinity" minWidth="-Infinity" spacing="60.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <Label styleClass="label-description" text="Name" />
+            <Label styleClass="label-description" text="Reps">
+            <padding>
+               <Insets left="70.0" />
+            </padding></Label>
+            <Label styleClass="label-description" text="Weight (kg)">
+            <padding>
+               <Insets right="50.0" />
+            </padding></Label>
+         <GridPane.margin>
+            <Insets left="30.0" />
+         </GridPane.margin>
         </HBox>
-          <TableView fx:id="exerciseTable"
-           prefWidth="400"
-           maxHeight="150"
-           GridPane.columnIndex="1"
-           GridPane.rowIndex="5">
-    <columns>
-        <TableColumn fx:id="colName"
-                     text="Name"
-                     prefWidth="150" />
-        <TableColumn fx:id="colReps"
-                     text="Repetitions"
-                     prefWidth="120" />
-        <TableColumn fx:id="colWeight"
-                     text="Weight (kg)"
-                     prefWidth="120" />
-    </columns>
-</TableView>
+
+        <!-- Row 6: Exercise Input -->
+        <Label styleClass="label-field" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="6">
+            <TextField fx:id="exerciseNameField" prefWidth="150" promptText="Exercise name" style="-fx-font-size: 14;" />
+
+            <ComboBox fx:id="comboBoxReps" prefWidth="80" style="-fx-font-size: 14;" />
+            <Spinner fx:id="spinnerWeight" prefWidth="100" styleClass="spinner" />
+            <Button fx:id="addExerciseButton" onAction="#handleAddExercise" prefHeight="32.0" prefWidth="95.0" styleClass="button-success" text="Add Exercise" />
+         <GridPane.margin>
+            <Insets top="5.0" />
+         </GridPane.margin>
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+        </HBox>
+
+        <!-- Row 6: Exercise Table -->
+        <TableView fx:id="exerciseTable" styleClass="exercise-table" maxHeight="179.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="179.0" prefWidth="375.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
+            <columns>
+                <TableColumn fx:id="colName" prefWidth="150" text="Name" />
+                <TableColumn fx:id="colReps" prefWidth="120" text="Repetitions" />
+                <TableColumn fx:id="colWeight" prefWidth="120" text="Weight (kg)" />
+            </columns>
+         <GridPane.margin>
+            <Insets left="25.0" />
+         </GridPane.margin>
+        </TableView>
    
 
     <rowConstraints>
        <RowConstraints />
        <RowConstraints />
          <RowConstraints />
-         <RowConstraints />
+         <RowConstraints maxHeight="72.66670735677083" minHeight="53.33333333333333" prefHeight="64.6666768391927" />
+         <RowConstraints maxHeight="51.33331298828125" minHeight="10.0" prefHeight="34.666656494140625" />
+         <RowConstraints maxHeight="51.33331298828125" minHeight="0.0" prefHeight="0.0" />
+         <RowConstraints maxHeight="76.6666310628255" minHeight="36.666656494140625" prefHeight="50.666666666666686" />
+         <RowConstraints maxHeight="195.33333333333331" minHeight="154.66668701171875" prefHeight="195.33333333333331" />
       </rowConstraints>
     </GridPane>
      
 
     <!-- Buttons -->
     <HBox alignment="CENTER" spacing="10">
-        <Button onAction="#handleCancel" style="-fx-background-color: #E74C3C; -fx-text-fill: white;" text="Cancel" />
-        <Button onAction="#handleAddWorkout" style="-fx-background-color: #3498DB; -fx-text-fill: white; -fx-font-weight: bold;" text="Add Workout" />
-        
+        <Button onAction="#handleCancel" styleClass="button-danger" text="Cancel" />
+        <Button onAction="#handleAddWorkout" styleClass="button-primary" text="Add Workout" />
     </HBox>
 
 </VBox>
