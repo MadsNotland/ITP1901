@@ -26,24 +26,24 @@
 
         <!-- Row 1: Date -->
         <Label style="-fx-font-size: 16;" text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <DatePicker fx:id="datePicker" prefHeight="25.0" prefWidth="251.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <DatePicker fx:id="datePicker" id="datePicker" prefHeight="25.0" prefWidth="251.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
         <!-- Row 2: Type -->
         <Label style="-fx-font-size: 16;" text="Type:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-        <TextField fx:id="typeField" promptText="Push / Pull" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <TextField fx:id="typeField" id="typeField" promptText="Push / Pull" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
         <!-- Row 3: Time -->
         <Label style="-fx-font-size: 16;" text="Time:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
         <HBox spacing="5" GridPane.columnIndex="1" GridPane.rowIndex="2">
-            <ComboBox fx:id="comboBoxHours" prefWidth="80" />
+            <ComboBox fx:id="comboBoxHours" id="comboBoxHours" prefWidth="80" />
             <Label text="hours" />
-            <ComboBox fx:id="comboBoxMinutes" prefWidth="80" />
+            <ComboBox fx:id="comboBoxMinutes" id="comboBoxMinutes" prefWidth="80" />
             <Label text="minutes" />
         </HBox>
 
         <!-- Row 4: Notes -->
         <Label style="-fx-font-size: 16;" text="Notes:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <TextArea fx:id="notesField" prefRowCount="3" prefWidth="250" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <TextArea fx:id="notesField" id="notesField" prefRowCount="3" prefWidth="250" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3" />
       <rowConstraints>
          <RowConstraints />
          <RowConstraints />

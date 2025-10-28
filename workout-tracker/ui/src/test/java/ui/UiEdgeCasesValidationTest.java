@@ -22,7 +22,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-
 /**
  * Extended TestFX UI tests for the redesigned Workout Tracker application.
  * <p>
@@ -52,6 +51,7 @@ class UiEdgeCasesValidationTest extends ApplicationTest {
     @Test
     void validation_showsAlert_onNullDate() {
         clickOn("#add_workout"); // Navigate to form first
+        WaitForAsyncUtils.waitForFxEvents();
 
         TextField typeField = lookup("#typeField").query();
         TextArea notesField = lookup("#notesField").query();
@@ -77,6 +77,8 @@ class UiEdgeCasesValidationTest extends ApplicationTest {
     @Test
     void validation_showsAlert_onShortNotes() {
         clickOn("#add_workout"); // Navigate to FormView
+        WaitForAsyncUtils.waitForFxEvents();
+        WaitForAsyncUtils.waitForFxEvents(); // Additional wait for form to be ready
 
         TextField typeField = lookup("#typeField").query();
         DatePicker datePicker = lookup("#datePicker").query();
@@ -102,6 +104,9 @@ class UiEdgeCasesValidationTest extends ApplicationTest {
     @Test
     void validation_showsAlert_onZeroTime() {
         clickOn("#add_workout"); // Navigate to formview
+        WaitForAsyncUtils.waitForFxEvents();
+        WaitForAsyncUtils.waitForFxEvents(); // Additional wait for form to be ready
+
 
         TextField typeField = lookup("#typeField").query();
         TextArea notesField = lookup("#notesField").query();
@@ -136,7 +141,11 @@ class UiEdgeCasesValidationTest extends ApplicationTest {
         // Step 2: Navigate to form view
         clickOn("#add_workout");
         WaitForAsyncUtils.waitForFxEvents();
-
+        
+        // Wait for form to be loaded and verify elements exist
+        WaitForAsyncUtils.waitForFxEvents();
+        sleep(100); // Give extra time for form to load
+        
         // Step 3: Fill in workout data
         TextField typeField = lookup("#typeField").query();
         TextArea notesField = lookup("#notesField").query();
@@ -157,6 +166,7 @@ class UiEdgeCasesValidationTest extends ApplicationTest {
         // Step 4: Submit form
         clickOn("Add Workout");
         WaitForAsyncUtils.waitForFxEvents(); // back to table view
+        WaitForAsyncUtils.waitForFxEvents(); // additional wait for table to be ready
 
         // Step 5: Verify table updated
         TableView<Workout> updatedTable = lookup("#workoutTable").queryTableView();
