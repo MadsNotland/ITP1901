@@ -1,6 +1,7 @@
 package ui;
 
 import java.io.IOException;
+import java.util.List;
 
 import core.Exercise;
 import core.Workout;
@@ -13,94 +14,100 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import ui.base.BaseController;
 
 /**
- * Controller class for the {@code ExerciseTableView.fxml} view.
- * <p>
- * Displays all exercises belonging to a selected {@link core.Workout}.
- * Provides controls for adding, editing, and saving exercises.
- * </p>
+ * Controller for {@code ExerciseTableView.fxml}.
  *
- * <p><b>Responsibilities</b></p>
+ * <p>Shows the list of {@link Exercise} items that belong to a given {@link Workout}.
+ * This controller is intentionally <b>read-only</b>: it receives a Workout and
+ * copies its exercises into an internal ObservableList (a snapshot) rather than
+ * holding a reference to the Workout. </p>
+ *
+ * <p>Responsibilities:</p>
  * <ul>
- *   <li>Bind {@link core.Exercise} data to the table columns</li>
- *   <li>Navigate to exercise form / back to workouts via {@link MainController}</li>
- *   <li>Persist data via {@link ui.service.WorkoutService}</li>
+ *   <li>Bind Exercise properties to table columns</li>
+ *   <li>Compute and display a 1-based "Set #" column based on row index</li>
+ *   <li>Support navigation back to the workout table via {@link MainController}</li>
  * </ul>
- *
- * @see ui.ExerciseFormController
- * @see core.Exercise
- * @see core.Workout
- * @see ui.service.WorkoutService
  */
 public class ExerciseTableController extends BaseController {
 
-    // Table view components
-    @FXML
-    private TableView<Exercise> exerciseTable;
-    @FXML
-    private TableColumn<Exercise, String> nameColumn;
-    @FXML
-    private TableColumn<Exercise, Integer> repsColumn;
-    @FXML
-    private TableColumn<Exercise, Double> weightColumn;
-    @FXML
-    private TableColumn<Exercise, Number> setColumn;
+    /** Table showing the exercises snapshot. */
+    @FXML private TableView<Exercise> exerciseTable;
 
-    // Core dependencies (injected by MainController)
+    @FXML private TableColumn<Exercise, String>  nameColumn;
+    @FXML private TableColumn<Exercise, Integer> repsColumn;
+    @FXML private TableColumn<Exercise, Double>  weightColumn;
+
+    /**
+     * Computed "Set #" column—shows a 1-based index for each visible row.
+     * This is not a model property; it is derived from the row position.
+     */
+    @FXML private TableColumn<Exercise, Number>  setColumn;
+
+    /** Reference used only for navigation; set by {@link MainController} after loading. */
     private MainController mainController;
 
-    // The workout whose exercises we display
-    private Workout currentWorkout;
-
-    // Backing list for the table; we refresh from currentWorkout when needed
+    /**
+     * Items displayed in the table. We populate this list from {@link #setWorkout(Workout)}
+     * using a snapshot of the Workout's exercises, so later edits elsewhere won't mutate
+     * what's shown here unless {@code setWorkout(...)} is called again.
+     */
     private final ObservableList<Exercise> exerciseItems = FXCollections.observableArrayList();
 
     /**
-     * Initializes column bindings. Call {@link #initializeData()} after dependencies are set.
+     * Called automatically by the FXMLLoader after FXML fields are injected.
+     * Wires up column bindings and connects the table to {@link #exerciseItems}.
      */
     @FXML
     private void initialize() {
-        // Bind columns to Exercise properties
+        // Bind columns to Exercise bean properties (via JavaFX PropertyValueFactory reflection).
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         repsColumn.setCellValueFactory(new PropertyValueFactory<>("repetitions"));
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
 
+        // Show the observable items in the table.
         exerciseTable.setItems(exerciseItems);
 
-        setColumn.setCellValueFactory(cellData ->
+        // Compute "Set #" as 1-based row index; use current items to look up the item's position.
+        setColumn.setCellValueFactory(cd ->
             new javafx.beans.property.ReadOnlyObjectWrapper<>(
-                exerciseTable.getItems().indexOf(cellData.getValue()) + 1
+                exerciseTable.getItems().indexOf(cd.getValue()) + 1
             )
         );
+        // Sorting doesn't make sense for an index column derived from position.
+        setColumn.setSortable(false);
     }
 
     /**
-     * Called by {@link MainController} after it sets dependencies and the current workout.
-     * Ensures the table reflects the latest exercises for {@link #currentWorkout}.
+     * Injects the parent controller for navigation.
+     * Must be called by {@link MainController} after loading this controller.
+     *
+     * @param mainController parent controller used to navigate back
      */
-    @FXML
-    public void initializeData() {
-        refreshTable();
-    }
-
-    /** Injects the {@link MainController} to enable view navigation. */
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
 
-    // /** Sets which workout's exercises to display. Must be called before {@link #initializeData()}. */
+    /**
+     * Populates the table with a snapshot of the given workout's exercises.
+     * <p><b>Important:</b> This method does not store the {@code Workout} reference,
+     * only copies its current exercises into {@link #exerciseItems}.</p>
+     *
+     * @param workout workout to read exercises from; if {@code null}, the table is cleared
+     */
     public void setWorkout(Workout workout) {
-        this.currentWorkout = workout;
+        // Workout#getExercises() already returns a defensive copy in your model.
+        List<Exercise> snapshot = (workout == null) ? List.of() : workout.getExercises();
+        exerciseItems.setAll(snapshot);
     }
 
     /**
-     * Refreshes the visible table items from the underlying current workout.
+     * Handles the Back button: navigates to the workout table view.
+     *
+     * @throws IOException if the destination view fails to load
      */
-    public void refreshTable() {
-        exerciseItems.setAll(currentWorkout != null ? currentWorkout.getExercises() : FXCollections.observableArrayList());
-    }
-
     @FXML
     private void handleBack() throws IOException {
+        // Assumes MainController was injected; if not, this will NPE—caller must set it.
         mainController.showWorkoutTable();
     }
 }

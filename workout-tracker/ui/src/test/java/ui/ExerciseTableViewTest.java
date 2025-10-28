@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
@@ -20,23 +19,19 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 /**
- * TestFX UI tests for the Exercise table view.
- *
- * This test loads ExerciseTableView.fxml directly (no app navigation),
- * injects a sample Workout into the controller, and verifies:
- *  - The table shows the exercises from the Workout
- *  - The "Set #" column renders sequential 1-based indices
- *
- * Tools used match the rest of the project tests: JUnit 5 + TestFX only.
+ * TestFX UI tests for ExerciseTableView.
+ * Loads the view directly, injects a snapshot of exercises, and verifies
+ * that rows and the computed "Set #" column render as expected.
  */
 class ExerciseTableViewTest extends ApplicationTest {
 
     private ExerciseTableController controller;
 
     /**
-     * TestFX lifecycle hook.
-     * Loads the ExerciseTableView FXML, grabs the controller,
-     * injects a sample Workout, and shows the scene.
+     * TestFX setup:
+     * - Load ExerciseTableView.fxml
+     * - Get controller and inject a sample Workout (snapshot into table)
+     * - Show the scene
      */
     @Override
     public void start(Stage stage) throws Exception {
@@ -44,28 +39,16 @@ class ExerciseTableViewTest extends ApplicationTest {
         Parent root = loader.load();
         controller = loader.getController();
 
-        // Inject data directly—no navigation from MainView needed
+        // Populate the table via snapshot (no navigation / services involved)
         controller.setWorkout(sampleWorkout());
-        controller.initializeData();
+        // Ensure FX bindings/cell factories have run before assertions
+        WaitForAsyncUtils.waitForFxEvents();
 
         stage.setScene(new Scene(root, 800, 500));
         stage.show();
     }
 
-    /**
-     * Ensure the table is refreshed and all FX events are processed
-     * before each test runs (keeps assertions deterministic).
-     */
-    @BeforeEach
-    void sync() {
-        controller.refreshTable();
-        WaitForAsyncUtils.waitForFxEvents();
-    }
-
-    /**
-     * Verifies that the Exercise table is populated with the two
-     * exercises from the injected Workout and preserves their names.
-     */
+    /** Table should list both exercises from the injected snapshot, in order. */
     @Test
     void table_populates_withExercises() {
         TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
@@ -74,15 +57,12 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals("Bench Press", table.getItems().get(1).getName());
     }
 
-    /**
-     * Verifies the computed "Set #" column shows sequential indices
-     * (1-based) matching the row order.
-     */
+    /** First column is the computed 1-based "Set #" index; verify values for first two rows. */
     @Test
     void setColumn_showsSequentialIndices() {
         TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
 
-        // First column is "Set #"; cast to the correct type for value access
+        // Column 0 is "Set #"; cast so we can access cell values by row index
         @SuppressWarnings("unchecked")
         TableColumn<Exercise, Number> setCol =
                 (TableColumn<Exercise, Number>) table.getColumns().get(0);
@@ -94,10 +74,7 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals(2, second, "Second row should display set #2");
     }
 
-    /**
-     * Helper: build a minimal, valid Workout with two exercises
-     * to drive the UI without touching persistence.
-     */
+    /** Minimal, valid Workout with two exercises for driving the UI. */
     private static Workout sampleWorkout() {
         Exercise e1 = new Exercise("Warmup", 0, 0.0, "ex-1");
         Exercise e2 = new Exercise("Bench Press", 5, 80.0, "ex-2");
