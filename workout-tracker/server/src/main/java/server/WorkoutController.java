@@ -18,7 +18,7 @@ import core.Workout;
 
 @RestController
 @RequestMapping("/api/workouts")
-@CrossOrigin(origins = "*") // tillater alle klienter
+@CrossOrigin(origins = "*") // allows all clients
 public class WorkoutController {
 
     private final WorkoutService workoutService;
