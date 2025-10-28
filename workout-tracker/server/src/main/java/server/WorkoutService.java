@@ -1,14 +1,15 @@
 package server;
 
-import core.Workout;
-import persistence.WorkoutFileManager;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.springframework.stereotype.Service;
+
+import core.Workout;
+import persistence.WorkoutFileManager;
 
 /**
  * Service class for managing workout operations.
@@ -39,7 +40,8 @@ public class WorkoutService {
                     .max()
                     .orElse(0L);
             nextId.set(maxId + 1);
-        } catch (IOException e) {
+        } 
+        catch (IOException e) {
             // If file doesn't exist or can't be read, start with ID 1
             nextId.set(1L);
         }
@@ -52,7 +54,8 @@ public class WorkoutService {
     public List<Workout> getAllWorkouts() {
         try {
             return fileManager.loadWorkouts();
-        } catch (IOException e) {
+        } 
+        catch (IOException e) {
             throw new RuntimeException("Failed to load workouts", e);
         }
     }
@@ -80,7 +83,8 @@ public class WorkoutService {
         try {
             fileManager.addWorkout(workout);
             return workout;
-        } catch (IOException e) {
+        } 
+        catch (IOException e) {
             throw new RuntimeException("Failed to create workout", e);
         }
     }
@@ -103,7 +107,8 @@ public class WorkoutService {
                 try {
                     fileManager.saveWorkouts(workouts);
                     return updatedWorkout;
-                } catch (IOException e) {
+                } 
+                catch (IOException e) {
                     throw new RuntimeException("Failed to update workout", e);
                 }
             }
@@ -126,7 +131,8 @@ public class WorkoutService {
             try {
                 fileManager.saveWorkouts(workouts);
                 return true;
-            } catch (IOException e) {
+            } 
+            catch (IOException e) {
                 throw new RuntimeException("Failed to delete workout", e);
             }
         }
