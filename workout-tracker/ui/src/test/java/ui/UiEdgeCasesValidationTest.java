@@ -52,6 +52,7 @@ class UiEdgeCasesValidationTest extends ApplicationTest {
     @Test
     void validation_showsAlert_onNullDate() {
         clickOn("#add_workout"); // Navigate to form first
+        WaitForAsyncUtils.waitForFxEvents();
 
         TextField typeField = lookup("#typeField").query();
         TextArea notesField = lookup("#notesField").query();
@@ -77,6 +78,7 @@ class UiEdgeCasesValidationTest extends ApplicationTest {
     @Test
     void validation_showsAlert_onShortNotes() {
         clickOn("#add_workout"); // Navigate to FormView
+        WaitForAsyncUtils.waitForFxEvents();
 
         TextField typeField = lookup("#typeField").query();
         DatePicker datePicker = lookup("#datePicker").query();
@@ -102,6 +104,7 @@ class UiEdgeCasesValidationTest extends ApplicationTest {
     @Test
     void validation_showsAlert_onZeroTime() {
         clickOn("#add_workout"); // Navigate to formview
+        WaitForAsyncUtils.waitForFxEvents();
 
         TextField typeField = lookup("#typeField").query();
         TextArea notesField = lookup("#notesField").query();
