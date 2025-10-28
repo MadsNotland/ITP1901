@@ -139,7 +139,11 @@ class UiEdgeCasesValidationTest extends ApplicationTest {
         // Step 2: Navigate to form view
         clickOn("#add_workout");
         WaitForAsyncUtils.waitForFxEvents();
-
+        
+        // Wait for form to be loaded and verify elements exist
+        WaitForAsyncUtils.waitForFxEvents();
+        sleep(100); // Give extra time for form to load
+        
         // Step 3: Fill in workout data
         TextField typeField = lookup("#typeField").query();
         TextArea notesField = lookup("#notesField").query();
