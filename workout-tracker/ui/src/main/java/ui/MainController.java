@@ -4,6 +4,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 
 import java.io.IOException;
 
+import core.Workout;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
@@ -98,5 +99,18 @@ public class MainController extends BaseController {
         controller.setWorkoutService(workoutService);
 
         contentArea.setCenter(formView);
+    }
+
+    public void showExerciseTable(Workout workout) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ExerciseTableView.fxml"));
+        Region tableView = loader.load();
+
+        // Get the controller and send references
+        ExerciseTableController controller = loader.getController();
+        controller.setMainController(this);
+        controller.setWorkout(workout);
+        controller.initializeData();
+
+        contentArea.setCenter(tableView);
     }
 }

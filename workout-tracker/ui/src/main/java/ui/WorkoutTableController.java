@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import ui.base.BaseController;
 import ui.service.WorkoutService;
 
@@ -98,6 +99,16 @@ public class WorkoutTableController extends BaseController {
         } 
         catch (Exception e) {
             showAlert(ERROR, "Save Failed", "Could not save workouts to file: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void handleRowClick(MouseEvent event) throws IOException {
+        if (event.getClickCount() == 2) {
+            Workout selected = workoutTable.getSelectionModel().getSelectedItem();
+            if (selected != null) {
+                mainController.showExerciseTable(selected);
+            }
         }
     }
 
