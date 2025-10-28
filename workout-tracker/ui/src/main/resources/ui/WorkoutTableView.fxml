@@ -22,7 +22,7 @@
     </TableView>
 
     <!-- Button for adding workout session -->
-    <Button fx:id="add_workout" onAction="#handleAddButton" style="-fx-background-color: #3498DB; -fx-text-fill: white; -fx-font-weight: bold;" text="Add Workout" />
+    <Button fx:id="add_workout" id="add_workout" onAction="#handleAddButton" style="-fx-background-color: #3498DB; -fx-text-fill: white; -fx-font-weight: bold;" text="Add Workout" />
 
     <!-- Save Button -->
     <Button onAction="#handleSave" style="-fx-background-color: #2ECC71; -fx-text-fill: white;" text="Save" />
