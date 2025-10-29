@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -19,6 +20,8 @@ import javafx.stage.Stage;
 public class WorkoutTrackerApp extends Application {
 
     private static Scene scene;
+    private static final Scene SCENE = new Scene(new Pane(), 700, 550);
+
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -26,9 +29,9 @@ public class WorkoutTrackerApp extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("MainView.fxml"));
         Parent parent = fxmlLoader.load();
 
-        // assign the static field instead of creating a local variable
-        scene = new Scene(parent, 700, 550);
-        stage.setScene(scene);
+        // Set the loaded root on the pre-initialized static scene
+        SCENE.setRoot(parent);
+        stage.setScene(SCENE);
 
         stage.show();
     }
