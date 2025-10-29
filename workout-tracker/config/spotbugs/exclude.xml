@@ -17,4 +17,43 @@
     <Method name="getAllWorkouts"/>
     <Bug pattern="EI_EXPOSE_REP"/>
   </Match>
+
+  <!-- Ignore Internal representation warning in controllers-->
+  <!-- Controllers intentionally share mutable references for coordination between views -->
+  <Match>
+    <Class name="ui.MainController"/>
+    <Bug pattern="EI_EXPOSE_REP"/>
+  </Match>
+
+  <Match>
+    <Class name="ui.WorkoutFormController"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
+
+  <Match>
+    <Class name="ui.WorkoutTableController"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
+
+  <Match>
+    <Class name="ui.WorkoutTableController"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
+
+  <Match>
+    <Class name="ui.service.WorkoutService"/>
+    <Bug pattern="EI_EXPOSE_REP"/>
+  </Match>
+
+  <Match>
+    <Class name="ui.service.WorkoutService"/>
+    <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+  </Match>
+
+  <!-- Ignore Internal representation warning in Spring Boot controllers -->
+  <Match>
+    <Class name="server.WorkoutController"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
+  
 </FindBugsFilter>

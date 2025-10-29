@@ -17,8 +17,34 @@ class WorkoutTrackerTest {
      * Helper method to create workout objects for testing.
      * 
      */
-    private static Workout w(String type, String notes, String date, double time) {
-        return new Workout(type, notes, LocalDate.parse(date), time);
+    private static Workout w(String type, String notes, String date, double time, List<Exercise> exercises) {
+        return new Workout(type, notes, LocalDate.parse(date), time, exercises);
+    }
+
+    /**
+     * Helper method to create an Exercise with a given name, sets and reps for reuse across tests.
+     * Pass null for id to trigger auto-UUID generation.
+     */
+    private static Exercise exercise(String name, int reps, double weight) {
+        return new Exercise(name, reps, weight,null);
+    }
+
+    /**
+     * Helper method to create a sample list of Exercises for reuse across tests.
+     */
+    private static List<Exercise> pushExercises() {
+        return List.of(
+                exercise("Bench press", 8, 60.0)
+        );
+    }
+
+    /**
+     * Helper method to create a sample list of Exercises for reuse across tests.
+     */
+    private static List<Exercise> pullExercises() {
+        return List.of(
+                exercise("Pull ups", 8, 0.0)
+        );
     }
     
     /**
@@ -29,8 +55,8 @@ class WorkoutTrackerTest {
     void addsAtFrontAndGetWorkoutsReturnsCopy() {
         WorkoutTracker tracker = new WorkoutTracker();
 
-        Workout w1 = w("Run",  "Easy run",  "2025-09-14", 30);
-        Workout w2 = w("Gym", "Heavy","2025-09-15", 45);
+        Workout w1 = w("Push",  "At home",  "2025-09-14", 30, pushExercises());
+        Workout w2 = w("Pull", "Gym","2025-09-15", 45,pullExercises());
 
         tracker.addWorkout(w1);
         tracker.addWorkout(w2); // should be inserted at index 0
@@ -65,7 +91,8 @@ class WorkoutTrackerTest {
         assertEquals(0, tracker.getAllWorkouts().size());
 
         // Add via the live list reference
-        tracker.getAllWorkouts().add(new Workout("Bike", "Ride", LocalDate.parse("2025-09-16"), 1.0));
+        tracker.getAllWorkouts().add(new Workout("Bike", "Ride", LocalDate.parse("2025-09-16"), 1.0,
+                List.of(exercise("Cycling", 0, 0.0))));
         assertEquals(1, tracker.getWorkouts().size());
         assertEquals("Bike", tracker.getWorkouts().get(0).getType());
     }
