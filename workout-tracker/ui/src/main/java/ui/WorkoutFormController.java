@@ -1,4 +1,7 @@
 package ui;
+
+import static javafx.scene.control.Alert.AlertType.ERROR;
+
 import java.io.IOException;
 import java.time.LocalDate;
 
@@ -11,7 +14,6 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import static javafx.scene.control.Alert.AlertType.ERROR;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -280,19 +282,19 @@ public class WorkoutFormController extends BaseController {
      */
     private void initializeComboBoxes() {
         comboBoxHours.getItems().clear();
-        for (int hours = 0; hours <= uiConstants.MAX_HOURS; hours++) {
+        for (int hours = 0; hours <= UiConstants.MAX_HOURS; hours++) {
             comboBoxHours.getItems().add(hours);
         }
         comboBoxMinutes.getItems().clear();
-        for (int minutes = 0; minutes < 60; minutes += uiConstants.MINUTES_STEP) {
+        for (int minutes = 0; minutes < 60; minutes += UiConstants.MINUTES_STEP) {
             comboBoxMinutes.getItems().add(minutes);
         }
         comboBoxReps.getItems().clear();
-        for (int i = 1; i <= uiConstants.MAX_REPS; i++) {
+        for (int i = 1; i <= UiConstants.MAX_REPS; i++) {
             comboBoxReps.getItems().add(i);
         }
         SpinnerValueFactory.DoubleSpinnerValueFactory weightFactory =
-            new SpinnerValueFactory.DoubleSpinnerValueFactory(0, uiConstants.MAX_REPS, 0, uiConstants.WEIGHT_STEP);
+            new SpinnerValueFactory.DoubleSpinnerValueFactory(0, UiConstants.MAX_WEIGHT, 0, UiConstants.WEIGHT_STEP);
         spinnerWeight.setValueFactory(weightFactory);
     }
 
@@ -340,12 +342,12 @@ public class WorkoutFormController extends BaseController {
             showAlert(ERROR, "Invalid Input", "Date must not be empty");
             return false;
         }
-        if (notes == null || notes.trim().length() < uiConstants.MIN_NOTE_LENGTH) {
+        if (notes == null || notes.trim().length() < UiConstants.MIN_NOTE_LENGTH) {
             showAlert(ERROR, "Invalid Input", "Notes must be at least 3 characters long.");
             return false;
         }
-        else if (notes.trim().length() > uiConstants.MAX_NOTE_LENGTH) {
-            showAlert(ERROR, "Invalid Input", "Notes must be less than" + uiConstants.MAX_NOTE_LENGTH + "characters long");
+        else if (notes.trim().length() > UiConstants.MAX_NOTE_LENGTH) {
+            showAlert(ERROR, "Invalid Input", "Notes must be less than" + UiConstants.MAX_NOTE_LENGTH + "characters long");
             return false;
         }
         if (comboBoxHours.getValue() == null || comboBoxMinutes.getValue() == null || comboBoxHours.getValue() + comboBoxMinutes.getValue() == 0) {
@@ -378,7 +380,7 @@ public class WorkoutFormController extends BaseController {
             showAlert(ERROR, "Invalid Input", "Weight must be 0 or more.");
             return false;
         }
-        if (currentExercises.size() >= uiConstants.MAX_EXERCISES_PER_WORKOUT) {
+        if (currentExercises.size() >= UiConstants.MAX_EXERCISES_PER_WORKOUT) {
             showAlert(ERROR, "Limit reached", "You can only add up to 5 exercises.");
             return false;
         }
