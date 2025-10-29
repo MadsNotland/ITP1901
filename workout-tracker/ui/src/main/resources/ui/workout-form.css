@@ -1,0 +1,392 @@
+
+/* Container */
+.form-container {
+    -fx-background-color: linear-gradient(to bottom right, #2b2e4a, #1f2235);
+    -fx-padding: 40;
+    -fx-spacing: 15;
+    -fx-background-radius: 15;
+}
+
+/* Title */
+.label-title {
+    -fx-font-size: 26;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f0f0f0;
+}
+
+/* Undertitle (For Exercises) */
+.label-undertitle {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f0f0f0;
+}
+
+/* Labels for input-fields in Workout (date, type, time, notes) */
+.label-field {
+    -fx-font-size: 16;
+    -fx-text-fill: #dcdcdc;
+}
+
+/* Labels for small descriptions (hour, minutes, exercisename, reps and weight) */
+.label-description {
+    -fx-font-size: 12;
+    -fx-text-fill: #dcdcdc;
+}
+
+
+.text-field, .text-area, .combo-box, .spinner {
+    -fx-background-color: #3c3f58;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-prompt-text-fill: #aaaaaa;
+}
+
+
+/* ========== Date-picker =========== */
+.date-picker {
+    -fx-background-color: #3c3f58;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #aaaaaa;
+}
+
+/* Calender Icon */
+.date-picker .arrow-button {
+    -fx-background-color: #3c3f58;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+}
+.date-picker .arrow-button:hover {
+    -fx-background-color: #4b4f6a;
+}
+.date-picker .arrow {
+    -fx-background-color: white;
+}
+
+/* Popup-window */
+.date-picker-popup {
+    -fx-background-color: #2f3246;
+    -fx-border-color: #2f3246;
+    -fx-background-radius: 8;
+}
+
+/* Heading (month + year) */
+.date-picker-popup .month-year-pane {
+    -fx-background-color: #2f3246;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+}
+
+/* Navigation-buttons in Heading */
+.date-picker-popup .month-year-pane .button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+}
+.date-picker-popup .month-year-pane .button:hover {
+    -fx-background-color: #4752c4;
+}
+
+/* Drop-down-list for month og year (when clicking the headline) */
+.date-picker-popup .spinner,
+.date-picker-popup .spinner .text-field {
+    -fx-background-color: #3c3f58;
+    -fx-text-fill: #ffffff;
+}
+
+/* Calender-grid with days */
+.date-picker-popup .calendar-grid {
+    -fx-background-color: #2f3246;
+    -fx-border-color: transparent;
+}
+
+/* Weekdays in white text */
+.date-picker-popup .calendar-grid .label {
+    -fx-text-fill: #ffffff;
+}
+
+/* Month and year in white text */
+.date-picker-popup .month-year-pane .label {
+    -fx-text-fill: #ffffff;
+}
+
+/* Days in the calender */
+.date-picker-popup .day-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #f0f0f0;
+}
+.date-picker-popup .day-cell:hover {
+    -fx-background-color: #5865f2;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+.date-picker-popup .day-cell:selected {
+    -fx-background-color: #4752c4;
+    -fx-text-fill: white;
+}
+
+/* Removes the white scrollbar */
+.date-picker-popup .scroll-bar,
+.date-picker-popup .corner {
+    -fx-opacity: 0;
+    -fx-max-width: 0;
+    -fx-max-height: 0;
+}
+/* ========== DatePicker Finished ========== */
+
+
+/* ========== ComboBox styling (time, reps) ========== */
+.combo-box {
+    -fx-background-color: #3c3f58;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-alignment: CENTER; /* sentrerer teksten i feltet */
+}
+
+/* Textfield in ComboBox */
+.combo-box .list-cell {
+    -fx-background-color: #3c3f58;
+    -fx-text-fill: #ffffff;
+    -fx-alignment: CENTER;
+}
+
+/* Popup-list (when opening the Drop-down-menu) */
+.combo-box-popup .list-view {
+    -fx-background-color: #2f3246;
+    -fx-background-radius: 8;
+    -fx-border-color: #2f3246;
+}
+
+/* Removes the white scrollbar */
+.combo-box-popup .scroll-bar,
+.combo-box-popup .corner {
+    -fx-opacity: 0;
+    -fx-max-width: 0;
+    -fx-max-height: 0;
+}
+
+/* Removes the scrollbar-area */
+.combo-box-popup .scroll-bar:horizontal,
+.combo-box-popup .scroll-bar:vertical {
+    -fx-pref-width: 0;
+    -fx-pref-height: 0;
+    -fx-background-color: transparent;
+}
+
+/* Hover-effect for choices im dropdown */
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #5865f2;
+    -fx-text-fill: white;
+}
+
+/* Highlights chosen element in list */
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: #4752c4;
+    -fx-text-fill: white;
+}
+/* ======= Combo-Box Finished ============ */
+
+
+/* ========== Text Area (For notes) ========== */
+.text-area {
+    -fx-background-color: #3c3f58;
+    -fx-background-radius: 8;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #aaaaaa;
+    -fx-border-color: transparent;
+}
+
+/* Controls backgroundcolor in ScrollPane-part */
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent
+}
+
+/* Ensures that viewport is transparent */
+.text-area .scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Controls the text-area inside the text-area */
+.text-area .content {
+    -fx-background-color: #3c3f58;
+    -fx-background-radius: 8;
+    -fx-padding: 6;
+}
+/* ========== Text-Area Finished ========= */
+
+
+/* ========= Spinner (Weight input) ========= */
+.spinner {
+    -fx-background-color: #3c3f58;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-text-fill: #ffffff;
+}
+
+/* Text in spinner */
+.spinner .text-field {
+    -fx-background-color: #3c3f58;
+    -fx-text-fill: #ffffff;
+    -fx-alignment: CENTER;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+}
+
+/* Arrowbuttons (up and down) */
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: #2f3246;
+    -fx-background-radius: 0 8 8 0;
+    -fx-border-color: transparent;
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: #4752c4; /* blue-ish hover as the rest */
+}
+
+/* Arrow-icons */
+.spinner .increment-arrow,
+.spinner .decrement-arrow {
+    -fx-background-color: #ffffff; /* white arrow on dark background */
+}
+
+/* Adjust height and width on arrows for good look */
+.spinner .increment-arrow,
+.spinner .decrement-arrow {
+    -fx-padding: 0.25em; /* A bit smaller arrows */
+}
+/* ========== Spinner Finished ========== */
+
+
+/* ========== Add Exercise button (success style) ========== */
+.button-success {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-padding: 3 8 3 8;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 2);
+    -fx-font-size: 10px;
+}
+.button-success:hover {
+    -fx-background-color: #2ecc71; /* Lighter green on hover */
+}
+.button-success:pressed {
+    -fx-background-color: #1e8f55; /* Darker when pressed */
+    -fx-translate-y: 1px; /* gives the feeling of a click */
+}
+/* ========== Add Exercise Button Finished ========== */
+
+
+/* ========== Exercise Table ========== */
+.exercise-table {
+    -fx-background-color: #2f3246;
+    -fx-background-radius: 10;
+    -fx-border-color: transparent;
+    -fx-padding: 4;
+    -fx-table-cell-border-color: transparent;
+    -fx-control-inner-background: #2f3246;
+    -fx-control-inner-background-alt: derive(#2f3246, 8%);
+    -fx-text-background-color: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 8, 0, 0, 2);
+}
+
+/* Column-headlines */
+.exercise-table .column-header-background {
+    -fx-background-color: #3c3f58;
+    -fx-background-radius: 10 10 0 0;
+    -fx-border-color: transparent;
+}
+.exercise-table .column-header, 
+.exercise-table .column-header .label {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+}
+
+/* Rows */
+.exercise-table .table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-cell-size: 32px;
+}
+
+/* Every other row - subtle contrast */
+.exercise-table .table-row-cell:odd {
+    -fx-background-color: derive(#2f3246, 6%);
+}
+.exercise-table .table-row-cell:even {
+    -fx-background-color: #2f3246;
+}
+
+/* Hover */
+.exercise-table .table-row-cell:hover {
+    -fx-background-color: #4752c4;
+    -fx-text-fill: white;
+}
+
+/* Highlight chosen row */
+.exercise-table .table-row-cell:selected {
+    -fx-background-color: #5865f2;
+    -fx-text-fill: white;
+}
+
+/* Text in cells */
+.exercise-table .table-cell {
+    -fx-text-fill: #ffffff;
+    -fx-alignment: CENTER;
+}
+
+/* removes scrollbar and edges */
+.exercise-table .scroll-bar,
+.exercise-table .corner {
+    -fx-opacity: 0;
+    -fx-max-width: 0;
+    -fx-max-height: 0;
+    visibility: hidden;
+}
+/* ========== Exercise Table Finished ========== */
+
+/* Delete exerciseButton */
+.button-delete-side {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-padding: 6 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0, 0, 2);
+}
+.button-delete-side:hover {
+    -fx-background-color: #ff6659;
+}
+
+
+/* ========== Add Workout Button ======== */
+.button-primary {
+    -fx-background-color: #5865f2;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+}
+/* Hover */
+.button-primary:hover {
+    -fx-background-color: #4752c4;
+}
+/* ========== Add Workout Button Finished ======== */
+
+/* Cancel Button */
+.button-danger {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+}
