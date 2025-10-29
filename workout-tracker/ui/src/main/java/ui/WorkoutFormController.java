@@ -12,6 +12,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import static javafx.scene.control.Alert.AlertType.ERROR;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
@@ -72,6 +73,8 @@ public class WorkoutFormController extends BaseController {
     private TableColumn<Exercise, Double> colWeight;
     @FXML
     private TextField exerciseNameField;
+    @FXML
+    private Button deleteExerciseButton;
 
     private final ObservableList<Exercise> currentExercises =
         FXCollections.observableArrayList();
@@ -84,6 +87,8 @@ public class WorkoutFormController extends BaseController {
     void initialize() {
         initializeComboBoxes();
         initializeExerciseTable();
+        setupExerciseTableSelectionListeners();
+
     }
 
     /**
@@ -180,6 +185,85 @@ public class WorkoutFormController extends BaseController {
     }
 
     /**
+     * Deletes the chosen exercise in the exerciseTable
+     */
+    @FXML
+    public void handleDeleteExercise() {
+        Exercise selectedExercise = exerciseTable.getSelectionModel().getSelectedItem();
+        if (selectedExercise == null) {
+            showAlert(ERROR, "No Selection", "Please select an exercise to delete.");
+            return;
+        }
+        currentExercises.remove(selectedExercise);
+        exerciseTable.refresh();
+        deleteExerciseButton.setVisible(false);
+    }
+
+    /**
+     * Sets up all listeners related to user interaction with the exercise table.
+     * <p>
+     * This includes:
+     * <ul>
+     *   <li>Displaying and hiding the delete button when a row is selected or deselected</li>
+     *   <li>Clearing the selection when the user clicks outside the table (but not on the delete button)</li>
+     * </ul>
+     * </p>
+     * <p>
+     * These listeners define how the exercise table responds to selection changes
+     * and ensure a smooth, intuitive user experience.
+     * </p>
+     */
+    private void setupExerciseTableSelectionListeners() {
+        // Activates the delete button when an exercise is chosen in the table
+        exerciseTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSel, newSel) -> {
+            if (newSel != null) {
+                showDeleteButton();
+            }
+            else {
+                hideDeleteButton();
+            }
+        });
+
+        // Click outside of table resets choice
+        exerciseTable.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, e -> {
+                    if (!exerciseTable.isHover() && (deleteExerciseButton == null || !deleteExerciseButton.isHover())) {
+                        exerciseTable.getSelectionModel().clearSelection();
+                    }
+                });
+            }
+        });
+    }
+
+    /* Shows deleteExersiceButton relative to where the selected exercise is */
+    private void showDeleteButton() {
+        int index = exerciseTable.getSelectionModel().getSelectedIndex();
+        if (index < 0) {
+            hideDeleteButton();
+            return;
+        }
+
+        // Calculates how high we need to move the button in relation to the table
+        double rowHeight = 30;  // adjust to height for rows in css
+        double headerHeight = 28; // height of tableheader
+        double topPadding = 5;    // little air over first row
+
+        // Total vertical displacement
+        double translateY = topPadding + headerHeight + (index * rowHeight);
+
+        deleteExerciseButton.setVisible(true);
+        deleteExerciseButton.setManaged(true);
+        deleteExerciseButton.setTranslateY(translateY);
+    }
+
+    /* Hides the deleteExersiceButton when an exercise is not selected */
+    private void hideDeleteButton() {
+        deleteExerciseButton.setVisible(false);
+        deleteExerciseButton.setManaged(false);
+    }
+
+    /**
      * Switches to workout-table if cancel-button is pressed.
      * 
      * @throws IOException
@@ -237,8 +321,6 @@ public class WorkoutFormController extends BaseController {
         exerciseTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         exerciseTable.setPlaceholder(new Label("No exercises added yet"));
     }
-
-
 
     /**
      * Validates user input for a new workout. If validation fails, an alert is

@@ -354,6 +354,21 @@
 }
 /* ========== Exercise Table Finished ========== */
 
+/* Delete exerciseButton */
+.button-delete-side {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-padding: 6 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0, 0, 2);
+}
+.button-delete-side:hover {
+    -fx-background-color: #ff6659;
+}
+
 
 /* ========== Add Workout Button ======== */
 .button-primary {

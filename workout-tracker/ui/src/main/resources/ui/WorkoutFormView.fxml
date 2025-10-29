@@ -104,17 +104,19 @@
          </padding>
         </HBox>
 
-        <!-- Row 6: Exercise Table -->
-        <TableView fx:id="exerciseTable" styleClass="exercise-table" maxHeight="179.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="179.0" prefWidth="375.0" GridPane.columnIndex="1" GridPane.rowIndex="7">
-            <columns>
-                <TableColumn fx:id="colName" prefWidth="150" text="Name" />
-                <TableColumn fx:id="colReps" prefWidth="120" text="Repetitions" />
-                <TableColumn fx:id="colWeight" prefWidth="120" text="Weight (kg)" />
-            </columns>
-         <GridPane.margin>
-            <Insets left="25.0" />
-         </GridPane.margin>
-        </TableView>
+        <!-- Row 7: Exercise Table -->
+        <HBox spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="7">
+            <TableView fx:id="exerciseTable" prefHeight="180" prefWidth="375" styleClass="exercise-table" translateX="10.0">
+                <columns>
+                    <TableColumn fx:id="colName" prefWidth="150" text="Name" />
+                    <TableColumn fx:id="colReps" prefWidth="100" text="Repetitions" />
+                    <TableColumn fx:id="colWeight" prefWidth="100" text="Weight (kg)" />
+                </columns>
+            </TableView>
+
+            <!-- DeleteExersiceButton besides the table -->
+            <Button fx:id="deleteExerciseButton" onAction="#handleDeleteExercise" styleClass="button-delete-side" text="x" visible="false" translateX="10.0"/>
+        </HBox>
    
 
     <rowConstraints>
