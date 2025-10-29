@@ -36,6 +36,11 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
 
         <!-- Test dependencies -->
         <dependency>
@@ -64,6 +69,13 @@
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
         </dependency>
+        <!-- Headless Glass toolkit for CI: Monocle (match JavaFX version via parent) -->
+        <dependency>
+            <groupId>org.testfx</groupId>
+            <artifactId>openjfx-monocle</artifactId>
+            <version>8u76-b04</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <!-- Module-specific build configuration -->
@@ -83,6 +95,11 @@
                         --add-exports=javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED
                         --add-opens=javafx.graphics/com.sun.javafx.stage=ALL-UNNAMED
                     </argLine>
+                    <systemPropertyVariables>
+                        <javafx.platform>Monocle</javafx.platform>
+                        <prism.order>sw</prism.order>
+                        <headless>true</headless>
+                    </systemPropertyVariables>
                     <excludes>
                         <exclude>**/ui/WorkoutTrackerAppTest.java</exclude>
                     </excludes>
