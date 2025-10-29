@@ -23,7 +23,7 @@ public class WorkoutTrackerApp extends Application {
         // Load the main FXML and set up the primary scene
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("MainView.fxml"));
         Parent parent = fxmlLoader.load();
-        stage.setScene(new Scene(parent, 700, 550));
+        stage.setScene(new Scene(parent, 700, 700));
         stage.show();
     }
 
