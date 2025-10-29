@@ -6,15 +6,21 @@ LOG_INIT=/tmp/desktop-init.log
 LOG_NOVNC=/tmp/novnc.log
 
 echo "[CHE] Starting desktop bootstrap..." | tee "$LOG_INIT"
+export LC_ALL=C
 
 mkdir -p ~/.vnc
 
 # Generate and print a random password (>=6 chars)
-VNC_PASSWORD=$(tr -dc 'A-Za-z0-9' </dev/urandom | head -c 6)
-echo "[CHE] VNC password: ${VNC_PASSWORD}"
+# Use robust generation that won't fail on locale issues
+if command -v openssl >/dev/null 2>&1; then
+  VNC_PASSWORD=$(openssl rand -base64 12 | tr -dc 'A-Za-z0-9' | head -c 8)
+else
+  VNC_PASSWORD=$(dd if=/dev/urandom bs=16 count=1 2>/dev/null | base64 | tr -dc 'A-Za-z0-9' | head -c 8)
+fi
+echo "[CHE] VNC password: ${VNC_PASSWORD}" | tee -a "$LOG_INIT"
 
 # Configure VNC password
-vncpasswd -f <<<"${VNC_PASSWORD}" > ~/.vnc/passwd
+vncpasswd -f <<<"${VNC_PASSWORD}" > ~/.vnc/passwd 2>>"$LOG_VNC"
 chmod 600 ~/.vnc/passwd
 
 # Ensure xstartup exists so the VNC session launches a desktop
