@@ -41,7 +41,6 @@ public class WorkoutService {
         this.workoutTracker = new WorkoutTracker();
     }
 
-
     /**
      * Loads all workouts from the configured data file.
      *
@@ -109,8 +108,6 @@ public class WorkoutService {
                 candidate = legacy;
             }
         }
-
         return candidate;
     }
 }
-

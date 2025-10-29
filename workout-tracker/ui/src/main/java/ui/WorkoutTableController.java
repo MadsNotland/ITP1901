@@ -60,7 +60,6 @@ public class WorkoutTableController extends BaseController {
         setTableView();
     }
 
-
     /**
      * Injects the {@link MainController} to enable view navigation.
      *
@@ -74,7 +73,6 @@ public class WorkoutTableController extends BaseController {
         this.workoutService = workoutService;
     }
     
-
     /**
      * Navigates to the workout form view when the user presses the "Add" button.
      *
@@ -84,7 +82,6 @@ public class WorkoutTableController extends BaseController {
     private void handleAddButton() throws IOException {
         mainController.showWorkoutForm();
     }
-
 
     /**
      * Saves all current workouts to file when the "Save" button is pressed.

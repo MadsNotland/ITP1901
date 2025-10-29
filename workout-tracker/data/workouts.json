@@ -1,70 +1,12 @@
-[ {
-  "type" : "Push",
-  "notes" : "Behdbfehb",
-  "date" : [ 2025, 10, 17 ],
-  "time" : 1.1,
-  "exercises" : [ {
-    "name" : "Push",
-    "repetitions" : 2,
-    "weight" : 2.5,
-    "id" : "081335a0-7493-4a0a-8ead-046a89e53ae4"
-  }, {
-    "name" : "Push",
-    "repetitions" : 2,
-    "weight" : 2.5,
-    "id" : "1d7207ee-a650-41dc-80ca-e7c54633c0bd"
-  }, {
-    "name" : "Push",
-    "repetitions" : 2,
-    "weight" : 2.5,
-    "id" : "36fa7f5a-3f8d-4ec8-83f8-59bbbdea3d72"
-  } ]
-}, {
-  "type" : "jj",
-  "notes" : "hbh",
-  "date" : [ 2025, 10, 23 ],
-  "time" : 2.1,
-  "exercises" : [ {
-    "name" : "hb",
-    "repetitions" : 3,
-    "weight" : 0.0,
-    "id" : "6087417e-614a-47da-8e12-1d126da836e2"
-  }, {
-    "name" : "hb",
-    "repetitions" : 3,
-    "weight" : 2.5,
-    "id" : "7ef590fa-7f8d-46be-a149-3e6da6b3db43"
-  } ]
-}, {
-  "type" : "Push",
-  "notes" : "Hard workout",
-  "date" : [ 2025, 10, 11 ],
-  "time" : 4.0,
-  "exercises" : [ {
-    "name" : "Benchpress",
-    "repetitions" : 8,
-    "weight" : 110.0,
-    "id" : "5195c8bb-8be1-4783-8eda-0baf03c1cc43"
-  }, {
-    "name" : "Incline ",
-    "repetitions" : 10,
-    "weight" : 85.0,
-    "id" : "49f5a820-1fa8-4bbb-a786-47353c5b0946"
-  }, {
-    "name" : "Chest flies",
-    "repetitions" : 4,
-    "weight" : 70.0,
-    "id" : "2456d3bb-0fb8-4e2f-8c48-028ee0ea0807"
-  } ]
-}, {
-  "type" : "Run",
-  "notes" : "Previous workout",
-  "date" : [ 2025, 10, 1 ],
-  "time" : 0.5,
-  "exercises" : [ {
-    "name" : "Warmup",
-    "repetitions" : 0,
-    "weight" : 0.0,
-    "id" : "seed-1"
-  } ]
-} ]
+[
+  {
+    "type": "Run",
+    "notes": "Previous workout",
+    "date": "2025-10-01",
+    "time": 0.5,
+    "exercises": [
+      { "name": "Warmup", "repetitions": 0, "weight": 0.0, "id": "seed-1" }
+    ]
+  }
+]
+
