@@ -7,8 +7,8 @@ components:
       image: adrianstoica/it1901:latest
       memoryLimit: 3Gi
       mountSources: true
-      command: ["tail"]
-      args: ["-f", "/dev/null"]
+      command: ["bash", "-lc"]
+      args: ["bash /projects/gr2528/.che/start-desktop.sh; tail -f /dev/null"]
       endpoints:
         - exposure: public
           name: 6080-desktop-ui
@@ -46,6 +46,8 @@ commands:
       component: gr2528
       commandLine: "bash -lc 'bash /projects/gr2528/.che/start-desktop.sh'"
       workingDir: "/projects/gr2528"
-events:
-  postStart:
-    - start-desktop
+  - id: start-novnc
+    exec:
+      component: gr2528
+      commandLine: "bash -lc 'cd /opt/novnc && ./utils/novnc_proxy --vnc 127.0.0.1:5901 --listen 0.0.0.0:6080'"
+      workingDir: "/opt/novnc"
