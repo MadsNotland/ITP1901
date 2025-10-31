@@ -4,6 +4,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 
 import java.io.IOException;
 
+import core.Workout;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
@@ -54,8 +55,7 @@ public class MainController extends BaseController {
         } 
         catch (IOException e) {
             showAlert(ERROR, "Load Error", "Could not load workouts from file " + e.getMessage());
-        }
-        
+        }   
     }
 
     /**
@@ -98,5 +98,25 @@ public class MainController extends BaseController {
         controller.setWorkoutService(workoutService);
 
         contentArea.setCenter(formView);
+    }
+
+    /**
+     * Loads and displays the {@code ExerciseTableView.fxml} view in the center of the layout.
+     * <p>
+     * This method also sends the Workout that was clicked on to ExerciseTableController
+     * </p>
+     *
+     * @throws IOException if the FXML resource cannot be loaded
+     */
+    public void showExerciseTable(Workout workout) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("ExerciseTableView.fxml"));
+        Region tableView = loader.load();
+
+        // Get the controller and send references
+        ExerciseTableController controller = loader.getController();
+        controller.setMainController(this);
+        controller.setWorkout(workout);
+
+        contentArea.setCenter(tableView);
     }
 }

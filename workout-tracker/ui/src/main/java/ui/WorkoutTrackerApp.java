@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -18,13 +19,30 @@ import javafx.stage.Stage;
  */
 public class WorkoutTrackerApp extends Application {
 
+    private static Scene scene;
+    private static final Scene SCENE = new Scene(new Pane(), 700, 550);
+
+
     @Override
     public void start(Stage stage) throws IOException {
         // Load the main FXML and set up the primary scene
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("MainView.fxml"));
         Parent parent = fxmlLoader.load();
-        stage.setScene(new Scene(parent, 700, 700));
+      
+        // Set the loaded root on the pre-initialized static scene
+        SCENE.setRoot(parent);
+        stage.setScene(SCENE);
+      
         stage.show();
+    }
+
+    static void setRoot(String fxml) throws IOException {
+        scene.setRoot(loadFXML(fxml));
+    }
+
+    private static Parent loadFXML(String fxml) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(WorkoutTrackerApp.class.getResource(fxml + ".fxml"));
+        return fxmlLoader.load();
     }
 
     /**
