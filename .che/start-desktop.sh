@@ -25,7 +25,7 @@ echo "[CHE] VNC password: ${VNC_PASSWORD}" | tee -a "$LOG_INIT"
 # Ensure the password shows when a new terminal opens
 if [ -f "$HOME/.bashrc" ] && ! grep -q "CHE VNC password" "$HOME/.bashrc"; then
   printf '\n# Print Che VNC password on terminal open\n' >> "$HOME/.bashrc"
-  printf 'test -f %s && echo "[CHE] VNC password: $(cat %s)"\n' "$PW_FILE" "$PW_FILE" >> "$HOME/.bashrc"
+  printf 'test -f %s && echo "[CHE] VNC password: $(cat %s)"\nOpen the endpoint "6080-desktop-ui (6080/https)" and use the printed password.\n' "$PW_FILE" "$PW_FILE" >> "$HOME/.bashrc"
 fi
 
 # Configure VNC password
