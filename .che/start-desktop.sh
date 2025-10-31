@@ -4,6 +4,7 @@ set -euo pipefail
 LOG_VNC=/tmp/vncserver.log
 LOG_INIT=/tmp/desktop-init.log
 LOG_NOVNC=/tmp/novnc.log
+PW_FILE=/tmp/vnc-password.txt
 
 echo "[CHE] Starting desktop bootstrap..." | tee "$LOG_INIT"
 export LC_ALL=C
@@ -13,11 +14,19 @@ mkdir -p ~/.vnc
 # Generate and print a random password (>=6 chars)
 # Use robust generation that won't fail on locale issues
 if command -v openssl >/dev/null 2>&1; then
-  VNC_PASSWORD=$(openssl rand -base64 12 | tr -dc 'A-Za-z0-9' | head -c 8)
+  VNC_PASSWORD=$(openssl rand -base64 12 | tr -dc 'A-Za-z0-9' | head -c 6)
 else
-  VNC_PASSWORD=$(dd if=/dev/urandom bs=16 count=1 2>/dev/null | base64 | tr -dc 'A-Za-z0-9' | head -c 8)
+  VNC_PASSWORD=$(dd if=/dev/urandom bs=16 count=1 2>/dev/null | base64 | tr -dc 'A-Za-z0-9' | head -c 6)
 fi
+echo "${VNC_PASSWORD}" > "$PW_FILE"
+chmod 600 "$PW_FILE" 2>/dev/null || true
 echo "[CHE] VNC password: ${VNC_PASSWORD}" | tee -a "$LOG_INIT"
+
+# Ensure the password shows when a new terminal opens
+if [ -f "$HOME/.bashrc" ] && ! grep -q "CHE VNC password" "$HOME/.bashrc"; then
+  printf '\n# Print Che VNC password on terminal open\n' >> "$HOME/.bashrc"
+  printf 'test -f %s && echo "[CHE] VNC password: $(cat %s)"\n' "$PW_FILE" "$PW_FILE" >> "$HOME/.bashrc"
+fi
 
 # Configure VNC password
 vncpasswd -f <<<"${VNC_PASSWORD}" > ~/.vnc/passwd 2>>"$LOG_VNC"
