@@ -25,7 +25,7 @@ echo "[CHE] VNC password: ${VNC_PASSWORD}" | tee -a "$LOG_INIT"
 # Ensure the password shows when a new terminal opens
 if [ -f "$HOME/.bashrc" ] && ! grep -q "CHE VNC password" "$HOME/.bashrc"; then
   printf '\n# Print Che VNC password on terminal open\n' >> "$HOME/.bashrc"
-  printf 'test -f %s && echo "[CHE] VNC password: $(cat %s)"\n' "$PW_FILE" "$PW_FILE" >> "$HOME/.bashrc"
+  printf 'test -f %s && echo "Open the endpoint desktop-ui-6080 and use the VNC password: $(cat %s)"\n' "$PW_FILE" "$PW_FILE" >> "$HOME/.bashrc"
 fi
 
 # Configure VNC password
@@ -50,6 +50,11 @@ else
 fi
 EOF
 chmod +x ~/.vnc/xstartup
+
+# Ensure interactive terminals default to the project directory
+if [ -f "$HOME/.bashrc" ] && ! grep -q "cd /projects/gr2528" "$HOME/.bashrc"; then
+  printf '\n# Default to project directory in terminals\ncd /projects/gr2528\n' >> "$HOME/.bashrc"
+fi
 
 # Restart VNC server on :1 and bind to 0.0.0.0
 echo "[CHE] (re)starting VNC server on :1 ..." | tee -a "$LOG_INIT"
