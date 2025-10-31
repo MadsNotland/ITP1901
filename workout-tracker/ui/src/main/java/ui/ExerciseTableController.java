@@ -1,6 +1,7 @@
 package ui;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 import core.Exercise;
@@ -8,10 +9,16 @@ import core.Workout;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ui.base.BaseController;
+import ui.UiConstants;
+import javafx.scene.layout.HBox;
 
 /**
  * Controller for {@code ExerciseTableView.fxml}.
@@ -43,8 +50,19 @@ public class ExerciseTableController extends BaseController {
      */
     @FXML private TableColumn<Exercise, Number>  setColumn;
 
+    // Workout details fields (editable on double-click)
+    @FXML private TextField typeField;
+    @FXML private DatePicker datePicker;
+    @FXML private ComboBox<Integer> comboBoxHours;
+    @FXML private ComboBox<Integer> comboBoxMinutes;
+    @FXML private HBox durationBox;
+    @FXML private TextArea notesArea;
+
     /** Reference used only for navigation; set by {@link MainController} after loading. */
     private MainController mainController;
+
+    /** The workout currently shown; kept for editing header fields. */
+    private Workout workout;
 
     /**
      * Items displayed in the table. We populate this list from {@link #setWorkout(Workout)}
@@ -75,6 +93,46 @@ public class ExerciseTableController extends BaseController {
         );
         // Sorting doesn't make sense for an index column derived from position.
         setColumn.setSortable(false);
+
+        // Configure double-click-to-edit for header fields
+        setupEditableTextField(typeField, () -> {
+            String newValue = typeField.getText();
+            try {
+                if (workout != null) {
+                    workout.setType(newValue);
+                }
+            } catch (IllegalArgumentException ex) {
+                // Revert UI and inform user
+                typeField.setText(workout != null ? workout.getType() : "");
+                showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Name", ex.getMessage());
+            }
+        });
+
+        setupEditableDatePicker(datePicker, () -> {
+            LocalDate date = datePicker.getValue();
+            try {
+                if (workout != null) {
+                    workout.setDate(date);
+                }
+            } catch (IllegalArgumentException ex) {
+                datePicker.setValue(workout != null ? workout.getDate() : null);
+                showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Date", ex.getMessage());
+            }
+        });
+
+        initializeDurationPickers();
+
+        setupEditableTextArea(notesArea, () -> {
+            String newNotes = notesArea.getText();
+            try {
+                if (workout != null) {
+                    workout.setNotes(newNotes);
+                }
+            } catch (IllegalArgumentException ex) {
+                notesArea.setText(workout != null ? workout.getNotes() : "");
+                showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Notes", ex.getMessage());
+            }
+        });
     }
 
     /**
@@ -95,7 +153,25 @@ public class ExerciseTableController extends BaseController {
      * @param workout workout to read exercises from; if {@code null}, the table is cleared
      */
     public void setWorkout(Workout workout) {
-        // Workout#getExercises() already returns a defensive copy in your model.
+        this.workout = workout;
+        // Populate header fields
+        if (workout != null) {
+            typeField.setText(workout.getType());
+            datePicker.setValue(workout.getDate());
+            int hours = (int) Math.floor(workout.getTime());
+            int minutes = (int) Math.round((workout.getTime() - hours) * 100);
+            comboBoxHours.setValue(hours);
+            comboBoxMinutes.setValue(minutes);
+            notesArea.setText(workout.getNotes());
+        } else {
+            typeField.clear();
+            datePicker.setValue(null);
+            comboBoxHours.setValue(null);
+            comboBoxMinutes.setValue(null);
+            notesArea.clear();
+        }
+
+        // Populate exercise table from snapshot
         List<Exercise> snapshot = (workout == null) ? List.of() : workout.getExercises();
         exerciseItems.setAll(snapshot);
     }
@@ -109,5 +185,158 @@ public class ExerciseTableController extends BaseController {
     private void handleBack() throws IOException {
         // Assumes MainController was injected; if not, this will NPE—caller must set it.
         mainController.showWorkoutTable();
+    }
+
+    // --- Helpers to enable double-click editing with commit on focus loss or Enter ---
+
+    private void setupEditableTextField(TextField field, Runnable onCommit) {
+        field.setEditable(false);
+        field.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                field.setEditable(true);
+                field.requestFocus();
+                field.selectAll();
+            }
+        });
+        field.focusedProperty().addListener((obs, oldV, hasFocus) -> {
+            if (!hasFocus && field.isEditable()) {
+                field.setEditable(false);
+                onCommit.run();
+            }
+        });
+        field.setOnAction(e -> {
+            if (field.isEditable()) {
+                field.setEditable(false);
+                onCommit.run();
+            }
+        });
+    }
+
+    private void setupEditableTextArea(TextArea area, Runnable onCommit) {
+        area.setEditable(false);
+        area.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                area.setEditable(true);
+                area.requestFocus();
+            }
+        });
+        area.focusedProperty().addListener((obs, oldV, hasFocus) -> {
+            if (!hasFocus && area.isEditable()) {
+                area.setEditable(false);
+                onCommit.run();
+            }
+        });
+    }
+
+    private void setupEditableDatePicker(DatePicker picker, Runnable onCommit) {
+        picker.setEditable(false);
+        picker.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                picker.setEditable(true);
+                picker.requestFocus();
+                picker.show();
+            }
+        });
+        picker.focusedProperty().addListener((obs, oldV, hasFocus) -> {
+            if (!hasFocus && picker.isEditable()) {
+                picker.setEditable(false);
+                onCommit.run();
+            }
+        });
+        picker.setOnAction(e -> {
+            if (picker.isEditable()) {
+                picker.setEditable(false);
+                onCommit.run();
+            }
+        });
+    }
+
+    private void initializeDurationPickers() {
+        // Populate choices similarly to WorkoutFormController
+        comboBoxHours.getItems().clear();
+        for (int h = 0; h <= UiConstants.MAX_HOURS; h++) {
+            comboBoxHours.getItems().add(h);
+        }
+        comboBoxMinutes.getItems().clear();
+        for (int m = 0; m < 60; m += UiConstants.MINUTES_STEP) {
+            comboBoxMinutes.getItems().add(m);
+        }
+
+        // Start disabled; enable on double-click of the container
+        disableDurationEditing();
+        durationBox.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                enableDurationEditing();
+                comboBoxHours.requestFocus();
+                comboBoxHours.show();
+            }
+        });
+
+        // Commit on selection
+        comboBoxHours.setOnAction(e -> commitDurationIfEditing());
+        comboBoxMinutes.setOnAction(e -> commitDurationIfEditing());
+
+        // Commit when both lose focus
+        comboBoxHours.focusedProperty().addListener((obs, o, hasFocus) -> {
+            if (!hasFocus) {
+                commitDurationIfBothNotFocused();
+            }
+        });
+        comboBoxMinutes.focusedProperty().addListener((obs, o, hasFocus) -> {
+            if (!hasFocus) {
+                commitDurationIfBothNotFocused();
+            }
+        });
+    }
+
+    private void enableDurationEditing() {
+        comboBoxHours.setDisable(false);
+        comboBoxMinutes.setDisable(false);
+    }
+
+    private void disableDurationEditing() {
+        comboBoxHours.setDisable(true);
+        comboBoxMinutes.setDisable(true);
+    }
+
+    private void commitDurationIfEditing() {
+        if (!comboBoxHours.isDisabled() || !comboBoxMinutes.isDisabled()) {
+            commitDuration();
+        }
+    }
+
+    private void commitDurationIfBothNotFocused() {
+        if (!comboBoxHours.isFocused() && !comboBoxMinutes.isFocused() && !comboBoxHours.isDisabled()) {
+            commitDuration();
+        }
+    }
+
+    private void commitDuration() {
+        try {
+            Integer hours = comboBoxHours.getValue();
+            Integer minutes = comboBoxMinutes.getValue();
+            int h = hours == null ? 0 : hours;
+            int m = minutes == null ? 0 : minutes;
+            if (h + m == 0) {
+                throw new IllegalArgumentException("Please select both hours and minutes.");
+            }
+            if (workout != null) {
+                double time = h + (m / 100.0);
+                workout.setTime(time);
+            }
+            disableDurationEditing();
+        } catch (IllegalArgumentException ex) {
+            if (workout != null) {
+                int hoursOld = (int) Math.floor(workout.getTime());
+                int minutesOld = (int) Math.round((workout.getTime() - hoursOld) * 100);
+                comboBoxHours.setValue(hoursOld);
+                comboBoxMinutes.setValue(minutesOld);
+            } else {
+                comboBoxHours.setValue(null);
+                comboBoxMinutes.setValue(null);
+            }
+            showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Duration", ex.getMessage());
+            disableDurationEditing();
+        }
     }
 }
