@@ -67,7 +67,26 @@ public class WorkoutService {
         return workoutTracker;
     }
 
-    public void addWorkout(Workout workout) {
-        workoutTracker.addWorkout(workout);
+    /**
+     * Creates a new workout on the server and adds it to the tracker.
+     *
+     * <p>This method persists the workout immediately to the server via REST API.
+     * The server assigns an ID to the workout and returns the created workout
+     * with the assigned ID. This workout (with ID) is then added to the tracker.</p>
+     *
+     * @param workout the workout to create (ID is ignored, server will assign one)
+     * @throws IOException if the HTTP request fails or the server cannot be reached
+     * @throws IllegalArgumentException if workout is null
+     */
+    public void addWorkout(Workout workout) throws IOException {
+        if (workout == null) {
+            throw new IllegalArgumentException("Workout cannot be null");
+        }
+        
+        // Persist to server immediately - server assigns ID
+        Workout createdWorkout = restClient.createWorkout(workout);
+        
+        // Add the created workout (with server-assigned ID) to tracker
+        workoutTracker.addWorkout(createdWorkout);
     }
 }
