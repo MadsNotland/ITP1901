@@ -1,64 +1,61 @@
 package ui.service;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 
 import core.Workout;
 import core.WorkoutTracker;
-import persistence.WorkoutFileManager;
 
 /**
  * Service class responsible for managing persistence and data flow
  * for {@link Workout} and {@link WorkoutTracker}.
  *
- * <p>This class abstracts away file path resolution, loading, and saving
- * of workout data. It allows controllers (e.g. {@code MainController})
- * to interact with the business logic without worrying about file I/O.</p>
+ * <p>This class abstracts away REST API communication and provides a clean
+ * interface for controllers (e.g. {@code MainController}) to interact with
+ * the business logic without worrying about HTTP details.</p>
  *
  * <p>Design principles:
  * <ul>
  *   <li><b>Single Responsibility:</b> Handles only data operations.</li>
  *   <li><b>Separation of Concerns:</b> Keeps controllers UI-focused.</li>
- *   <li><b>Extensibility:</b> Can later be replaced with a REST API or database layer.</li>
+ *   <li><b>REST Integration:</b> All persistence operations go through the REST API server.</li>
  * </ul>
  * </p>
  */
 public class WorkoutService {
     
-    private final WorkoutFileManager fileManager;
+    private final RestWorkoutClient restClient;
     private final WorkoutTracker workoutTracker;
 
     /**
      * Creates a {@code WorkoutService} instance that initializes
-     * a file manager with a resolved data path.
+     * a REST client for server communication.
      */
     public WorkoutService() {
-        Path workoutFilePath = resolveWorkoutFilePath(); 
-        this.fileManager = new WorkoutFileManager(workoutFilePath);
+        this.restClient = new RestWorkoutClient();
         this.workoutTracker = new WorkoutTracker();
     }
 
     /**
-     * Loads all workouts from the configured data file.
+     * Loads all workouts from the server via REST API.
      *
-     * @throws IOException if file reading or parsing fails
+     * @throws IOException if the HTTP request fails or the server cannot be reached
      */
     public void loadWorkouts() throws IOException {
-        var loadedWorkouts = fileManager.loadWorkouts();
+        var loadedWorkouts = restClient.getAllWorkouts();
         workoutTracker.getAllWorkouts().setAll(loadedWorkouts);
     }
 
     /**
      * Saves all workouts currently in the {@link WorkoutTracker} to file.
      *
-     * @throws IOException if file writing fails
+     * <p>This method is now a no-op since workouts are persisted immediately
+     * via REST API when they are created, updated, or deleted. This method is
+     * kept for backward compatibility with existing UI code.</p>
+     *
+     * @throws IOException never thrown (method is a no-op)
      */
     public void saveWorkouts() throws IOException {
-        List<Workout> workouts = List.copyOf(workoutTracker.getAllWorkouts());
-        fileManager.saveWorkouts(workouts);
+        // No-op: workouts are persisted immediately via REST API
     }
 
     /**
@@ -72,42 +69,5 @@ public class WorkoutService {
 
     public void addWorkout(Workout workout) {
         workoutTracker.addWorkout(workout);
-    }
-
-    /**
-     * Resolves the most likely file path for the workouts.json file
-     * across different runtime environments (IDE, Maven, packaged app).
-     *
-     * @return path to the workouts.json data file
-     */
-    private Path resolveWorkoutFilePath() {
-        String currentDir = System.getProperty("user.dir");
-        if (currentDir == null) {
-            throw new IllegalStateException("Cannot determine working directory");
-        }
-
-        Path cwd = Paths.get(currentDir).toAbsolutePath();
-        // Primary: running from the UI module directory: workout-tracker/ui -> ../data/workouts.json
-        Path cwdParent = cwd.getParent();
-        Path candidate = cwdParent != null
-                ? cwdParent.resolve("data").resolve("workouts.json")
-                : cwd.resolve("data").resolve("workouts.json");
-        
-        // Fallback: running from project root: workout-tracker -> data/workouts.json
-        if (!Files.exists(candidate)) {
-            Path projectRootCandidate = cwd.resolve("data").resolve("workouts.json");
-            if (Files.exists(projectRootCandidate)) {
-                candidate = projectRootCandidate;
-            }
-        }
-
-        // Last resort: legacy repository layout if present
-        if (!Files.exists(candidate)) {
-            Path legacy = cwd.resolve("app").resolve("data").resolve("workouts.json");
-            if (Files.exists(legacy)) {
-                candidate = legacy;
-            }
-        }
-        return candidate;
     }
 }
