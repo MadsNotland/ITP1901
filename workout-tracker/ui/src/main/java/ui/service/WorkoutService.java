@@ -29,9 +29,25 @@ public class WorkoutService {
     /**
      * Creates a {@code WorkoutService} instance that initializes
      * a REST client for server communication.
+     * 
+     * <p>This constructor creates a default {@link RestWorkoutClient} instance
+     * that connects to http://localhost:8080/api/workouts.</p>
      */
     public WorkoutService() {
-        this.restClient = new RestWorkoutClient();
+        this(new RestWorkoutClient());
+    }
+
+    /**
+     * Creates a {@code WorkoutService} instance with a provided REST client.
+     * 
+     * <p>This constructor is primarily used for testing, allowing injection
+     * of a mock or test implementation of {@link RestWorkoutClient} to avoid
+     * making actual HTTP requests during unit tests.</p>
+     * 
+     * @param restClient the REST client to use for server communication
+     */
+    public WorkoutService(RestWorkoutClient restClient) {
+        this.restClient = restClient;
         this.workoutTracker = new WorkoutTracker();
     }
 
