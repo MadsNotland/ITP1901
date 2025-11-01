@@ -85,17 +85,23 @@ public class WorkoutTableController extends BaseController {
     }
 
     /**
-     * Saves all current workouts to file when the "Save" button is pressed.
-     * Displays a confirmation or error alert depending on the result.
+     * Saves all current workouts when the "Save" button is pressed.
+     * 
+     * <p>Note: Workouts are persisted immediately via REST API when created,
+     * updated, or deleted. This method is kept for backward compatibility.</p>
+     * 
+     * Displays a confirmation alert.
      */
     @FXML
     private void handleSave() {
         try {
+            // saveWorkouts() is now a no-op since data is persisted immediately via REST
             workoutService.saveWorkouts();
-            showAlert(INFORMATION, "Saved", "Workouts saved to workouts.json");
-        } 
-        catch (Exception e) {
-            showAlert(ERROR, "Save Failed", "Could not save workouts to file: " + e.getMessage());
+            showAlert(INFORMATION, "Info", "Workouts are automatically saved to the server when created or updated.");
+        }
+        catch (IOException e) {
+            // This should never happen since saveWorkouts() is a no-op, but handle it anyway
+            showAlert(ERROR, "Error", "An unexpected error occurred: " + e.getMessage());
         }
     }
 

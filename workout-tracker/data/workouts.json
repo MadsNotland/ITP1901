@@ -1,12 +1,25 @@
-[
-  {
-    "type": "Run",
-    "notes": "Previous workout",
-    "date": "2025-10-01",
-    "time": 0.5,
-    "exercises": [
-      { "name": "Warmup", "repetitions": 0, "weight": 0.0, "id": "seed-1" }
-    ]
-  }
-]
-
+[ {
+  "type" : "Run",
+  "notes" : "Previous workout",
+  "date" : [ 2025, 10, 1 ],
+  "time" : 0.5,
+  "exercises" : [ {
+    "name" : "Warmup",
+    "repetitions" : 0,
+    "weight" : 0.0,
+    "id" : "seed-1"
+  } ],
+  "id" : null
+}, {
+  "type" : "r",
+  "notes" : "tde",
+  "date" : [ 2025, 11, 7 ],
+  "time" : 0.1,
+  "exercises" : [ {
+    "name" : "te",
+    "repetitions" : 1,
+    "weight" : 2.5,
+    "id" : "963996d0-c48b-4d57-9f9a-b9e5f8dc5426"
+  } ],
+  "id" : 1
+} ]
