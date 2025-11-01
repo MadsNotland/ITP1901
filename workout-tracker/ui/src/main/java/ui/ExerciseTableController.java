@@ -11,7 +11,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import ui.base.BaseController;
+
 
 /**
  * Controller for {@code ExerciseTableView.fxml}.
@@ -73,8 +77,21 @@ public class ExerciseTableController extends BaseController {
                 exerciseTable.getItems().indexOf(cd.getValue()) + 1
             )
         );
-        // Sorting doesn't make sense for an index column derived from position.
         setColumn.setSortable(false);
+
+        exerciseTable.setEditable(true);
+
+       // Name
+        nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        nameColumn.setOnEditCommit(this::onNameEditCommit);
+
+        // Reps
+        repsColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        repsColumn.setOnEditCommit(this::onRepsEditCommit);
+
+        // Weight
+        weightColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        weightColumn.setOnEditCommit(this::onWeightEditCommit);
     }
 
     /**
@@ -109,5 +126,35 @@ public class ExerciseTableController extends BaseController {
     private void handleBack() throws IOException {
         // Assumes MainController was injected; if not, this will NPE—caller must set it.
         mainController.showWorkoutTable();
+    }
+
+    private void onNameEditCommit(TableColumn.CellEditEvent<Exercise, String> evt) {
+        String newVal = (evt.getNewValue() == null) ? "" : evt.getNewValue().trim();
+        if (!newVal.isBlank()) {
+            evt.getRowValue().setName(newVal);
+        }
+        else {
+            exerciseTable.refresh();
+        }
+    }
+
+    private void onRepsEditCommit(TableColumn.CellEditEvent<Exercise, Integer> evt) {
+        Integer v = evt.getNewValue();
+        if (v != null && v > 0) {
+            evt.getRowValue().setRepetitions(v);
+        }
+        else {
+            exerciseTable.refresh();
+        }
+    }
+
+    private void onWeightEditCommit(TableColumn.CellEditEvent<Exercise, Double> evt) {
+        Double v = evt.getNewValue();
+        if (v != null && v >= 0.0) {
+            evt.getRowValue().setWeight(v);
+        }
+        else {
+            exerciseTable.refresh();
+        }
     }
 }
