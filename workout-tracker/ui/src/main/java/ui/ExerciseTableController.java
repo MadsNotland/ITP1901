@@ -56,6 +56,9 @@ public class ExerciseTableController extends BaseController {
     @FXML private ComboBox<Integer> comboBoxMinutes;
     @FXML private TextArea notesArea;
 
+    /** Guards against firing duration commit while programmatically setting values. */
+    private boolean suppressDurationCommit = false;
+
     /** Reference used only for navigation; set by {@link MainController} after loading. */
     private MainController mainController;
 
@@ -167,18 +170,33 @@ public class ExerciseTableController extends BaseController {
         if (workout != null) {
             typeField.setText(workout.getType());
             datePicker.setValue(workout.getDate());
+
             int hours = (int) Math.floor(workout.getTime());
             int minutes = (int) Math.round((workout.getTime() - hours) * 100);
-            comboBoxHours.setValue(hours);
-            comboBoxMinutes.setValue(minutes);
+            
+            suppressDurationCommit = true;
+            try {
+                comboBoxHours.setValue(hours);
+                comboBoxMinutes.setValue(minutes);
+            } 
+            finally {
+                suppressDurationCommit = false;
+            }
+
             notesArea.setText(workout.getNotes());
         } 
         else {
-            typeField.clear();
-            datePicker.setValue(null);
-            comboBoxHours.setValue(null);
-            comboBoxMinutes.setValue(null);
-            notesArea.clear();
+            suppressDurationCommit = true;
+            try {
+                typeField.clear();
+                datePicker.setValue(null);
+                comboBoxHours.setValue(null);
+                comboBoxMinutes.setValue(null);
+                notesArea.clear();
+            } 
+            finally {
+                suppressDurationCommit = false;
+            }
         }
 
         // Populate exercise table from snapshot
@@ -305,12 +323,16 @@ public class ExerciseTableController extends BaseController {
         comboBoxMinutes.setDisable(false);
 
         // Update the workout time any time either value changes
-        comboBoxHours.valueProperty().addListener((obs, oldV, newV) -> commitDuration());
-        comboBoxMinutes.valueProperty().addListener((obs, oldV, newV) -> commitDuration());
+        comboBoxHours.valueProperty().addListener((obs, oldV, newV) -> {
+            if (!suppressDurationCommit) commitDuration();
+        });
+        comboBoxMinutes.valueProperty().addListener((obs, oldV, newV) -> {
+            if (!suppressDurationCommit) commitDuration();
+        });
 
         // Also commit on "Action" (e.g., Enter/selection via keyboard)
-        comboBoxHours.setOnAction(e -> commitDuration());
-        comboBoxMinutes.setOnAction(e -> commitDuration());
+        comboBoxHours.setOnAction(e -> { if (!suppressDurationCommit) commitDuration(); });
+        comboBoxMinutes.setOnAction(e -> { if (!suppressDurationCommit) commitDuration(); });
     }
 
     /**
@@ -334,7 +356,9 @@ public class ExerciseTableController extends BaseController {
         } 
         catch (IllegalArgumentException ex) {
             Workout w = this.workout;
-            if (w != null) {
+            suppressDurationCommit = true;
+            try {
+                if (w != null) {
                 int hoursOld = (int) Math.floor(w.getTime());
                 int minutesOld = (int) Math.round((w.getTime() - hoursOld) * 100);
                 comboBoxHours.setValue(hoursOld);
@@ -343,6 +367,10 @@ public class ExerciseTableController extends BaseController {
             else {
                 comboBoxHours.setValue(null);
                 comboBoxMinutes.setValue(null);
+            }
+            } 
+            finally {
+                suppressDurationCommit = false;
             }
             showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Duration", ex.getMessage());
         }
