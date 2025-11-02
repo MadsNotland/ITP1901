@@ -18,7 +18,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ui.base.BaseController;
 import ui.UiConstants;
-import javafx.scene.layout.HBox;
 
 /**
  * Controller for {@code ExerciseTableView.fxml}.
@@ -145,11 +144,13 @@ public class ExerciseTableController extends BaseController {
     }
 
     /**
-     * Populates the table with a snapshot of the given workout's exercises.
-     * <p><b>Important:</b> This method does not store the {@code Workout} reference,
-     * only copies its current exercises into {@link #exerciseItems}.</p>
+     * Populates the view from a given {@link Workout}.
      *
-     * @param workout workout to read exercises from; if {@code null}, the table is cleared
+     * <p>Copies a snapshot of the workout's exercises into {@link #exerciseItems} and
+     * binds the workout header fields (type, date, time, notes) to the workout's current
+     * values. Passing {@code null} clears the view.</p>
+     *
+     * @param workout workout to read exercises and header values from; if {@code null}, the view is cleared
      */
     public void setWorkout(Workout workout) {
         this.workout = workout;
@@ -188,6 +189,13 @@ public class ExerciseTableController extends BaseController {
 
     // --- Helpers to enable double-click editing with commit on focus loss or Enter ---
 
+    /**
+     * Configures a {@link TextField} for "double-click to edit" behavior and commits
+     * the change on Enter or when the field loses focus.
+     *
+     * @param field     the text field to make editable on demand
+     * @param onCommit  callback executed after a successful commit (field is set back to non-editable)
+     */
     private void setupEditableTextField(TextField field, Runnable onCommit) {
         field.setEditable(false);
         field.setOnMouseClicked(e -> {
@@ -211,6 +219,13 @@ public class ExerciseTableController extends BaseController {
         });
     }
 
+    /**
+     * Configures a {@link TextArea} for "double-click to edit" behavior and commits
+     * the change when the area loses focus.
+     *
+     * @param area      the text area to make editable on demand
+     * @param onCommit  callback executed after a successful commit (area is set back to non-editable)
+     */
     private void setupEditableTextArea(TextArea area, Runnable onCommit) {
         area.setEditable(false);
         area.setOnMouseClicked(e -> {
@@ -227,6 +242,13 @@ public class ExerciseTableController extends BaseController {
         });
     }
 
+    /**
+     * Configures a {@link DatePicker} for "double-click to edit" behavior and commits
+     * the change on action (e.g., Enter) or when the control loses focus.
+     *
+     * @param picker    the date picker to make editable on demand
+     * @param onCommit  callback executed after a successful commit (picker is set back to non-editable)
+     */
     private void setupEditableDatePicker(DatePicker picker, Runnable onCommit) {
         picker.setEditable(false);
         picker.setOnMouseClicked(e -> {
@@ -250,6 +272,13 @@ public class ExerciseTableController extends BaseController {
         });
     }
 
+    /**
+     * Initializes the duration ComboBoxes (hours/minutes).
+     *
+     * <p>Populates choices based on {@link UiConstants}, keeps both controls enabled so the
+     * user can interact directly, and wires listeners that commit changes immediately whenever
+     * a value changes or an action occurs.</p>
+     */
     private void initializeDurationPickers() {
        // Populate choices
         comboBoxHours.getItems().clear();
@@ -274,6 +303,14 @@ public class ExerciseTableController extends BaseController {
         comboBoxMinutes.setOnAction(e -> commitDuration());
     }
 
+    /**
+     * Commits the current duration selection to the underlying {@link Workout}.
+     *
+     * <p>Reads hours/minutes from the ComboBoxes (treating {@code null} as {@code 0})
+     * and writes to {@link Workout#setTime(double)} using the {@code h + m/100.0} encoding.
+     * If the model rejects the value ({@link IllegalArgumentException}), the UI reverts to
+     * the last valid values and an error alert is shown.</p>
+     */
     private void commitDuration() {
         try {
         int h = comboBoxHours.getValue() == null ? 0 : comboBoxHours.getValue();
