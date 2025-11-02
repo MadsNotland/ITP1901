@@ -1,6 +1,4 @@
 package ui;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +18,6 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import ui.base.BaseController;
-import ui.service.WorkoutService;
 
 /**
  * Controller for {@code ExerciseTableView.fxml}.
@@ -52,7 +49,6 @@ public class ExerciseTableController extends BaseController {
 
     /** Injected by MainController for navigation & model lookup. */
     private MainController mainController;
-    private WorkoutService workoutService;
 
     @FXML
     private void initialize() {
@@ -96,10 +92,6 @@ public class ExerciseTableController extends BaseController {
         this.mainController = mainController;
     }
 
-    public void setWorkoutService(WorkoutService workoutService) {
-        this.workoutService = workoutService;
-    }
-
     /**
      * Load a workout into the editor: deep-copy each Exercise to isolate edits.
      */
@@ -136,13 +128,8 @@ public class ExerciseTableController extends BaseController {
         // Replace model list (see Workout#setExercises below)
         w.setExercises(updated);
 
-        try {
-            workoutService.saveWorkouts();
-            showAlert(INFORMATION, "Saved", "Workouts saved to workouts.json");
-        } 
-        catch (Exception e) {
-            showAlert(ERROR, "Save Failed", "Could not save workouts to file: " + e.getMessage());
-        }
+        mainController.saveAllWorkoutsWithAlert();
+
     }
 
     /** Add a new CLONED exercise to the editor only (not the model until Save). */

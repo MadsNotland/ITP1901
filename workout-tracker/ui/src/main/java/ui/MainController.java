@@ -1,6 +1,7 @@
 package ui;
 
 import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 import java.io.IOException;
 
@@ -116,9 +117,18 @@ public class MainController extends BaseController {
         ExerciseTableController controller = loader.getController();
         controller.setMainController(this);
         controller.setWorkout(workout);
-        controller.setWorkoutService(workoutService);
 
         contentArea.setCenter(tableView);
+    }
+
+    public void saveAllWorkoutsWithAlert() {
+        try {
+            workoutService.saveWorkouts();
+            showAlert(INFORMATION, "Saved", "Workouts saved to file.");
+        } 
+        catch (IOException e) {
+            showAlert(ERROR, "Save Error", "Could not save workouts: " + e.getMessage());
+        }
     }
 
     public Workout findWorkoutById(Long id) {
