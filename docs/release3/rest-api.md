@@ -10,6 +10,8 @@ This document describes the REST API endpoints for the Workout Tracker applicati
 http://localhost:8080/api
 ```
 
+**Note:** The base URL `/api` is a path prefix. The main endpoint is `/api/workouts`. Accessing `/api` directly returns API information (available endpoints, version, etc.).
+
 ## Conventions
 
 - All endpoints return JSON responses
@@ -66,6 +68,29 @@ http://localhost:8080/api
 - `id` (String): Unique identifier (UUID); auto-generated if not provided
 
 ## Endpoints
+
+### 0. Get API Information
+
+**GET** `/api`
+
+Returns basic information about the API.
+
+**Response:**
+- **200 OK**: API information object
+
+**Example Response:**
+```json
+{
+  "name": "Workout Tracker REST API",
+  "version": "1.0",
+  "endpoints": {
+    "workouts": "/api/workouts",
+    "documentation": "See /docs/release3/rest-api.md"
+  }
+}
+```
+
+---
 
 ### 1. Get All Workouts
 
