@@ -324,15 +324,27 @@ public class ExerciseTableController extends BaseController {
 
         // Update the workout time any time either value changes
         comboBoxHours.valueProperty().addListener((obs, oldV, newV) -> {
-            if (!suppressDurationCommit) commitDuration();
+            if (!suppressDurationCommit) {
+                commitDuration();
+            }
         });
         comboBoxMinutes.valueProperty().addListener((obs, oldV, newV) -> {
-            if (!suppressDurationCommit) commitDuration();
+            if (!suppressDurationCommit) {
+                commitDuration();
+            }
         });
 
         // Also commit on "Action" (e.g., Enter/selection via keyboard)
-        comboBoxHours.setOnAction(e -> { if (!suppressDurationCommit) commitDuration(); });
-        comboBoxMinutes.setOnAction(e -> { if (!suppressDurationCommit) commitDuration(); });
+        comboBoxHours.setOnAction(e -> { 
+            if (!suppressDurationCommit) {
+                commitDuration();
+            } 
+        });
+        comboBoxMinutes.setOnAction(e -> { 
+            if (!suppressDurationCommit) {
+                commitDuration();
+            } 
+        });
     }
 
     /**
@@ -359,15 +371,15 @@ public class ExerciseTableController extends BaseController {
             suppressDurationCommit = true;
             try {
                 if (w != null) {
-                int hoursOld = (int) Math.floor(w.getTime());
-                int minutesOld = (int) Math.round((w.getTime() - hoursOld) * 100);
-                comboBoxHours.setValue(hoursOld);
-                comboBoxMinutes.setValue(minutesOld);
-            } 
-            else {
-                comboBoxHours.setValue(null);
-                comboBoxMinutes.setValue(null);
-            }
+                    int hoursOld = (int) Math.floor(w.getTime());
+                    int minutesOld = (int) Math.round((w.getTime() - hoursOld) * 100);
+                    comboBoxHours.setValue(hoursOld);
+                    comboBoxMinutes.setValue(minutesOld);
+                } 
+                else {
+                    comboBoxHours.setValue(null);
+                    comboBoxMinutes.setValue(null);
+                }
             } 
             finally {
                 suppressDurationCommit = false;
