@@ -31,7 +31,6 @@ public class WorkoutController {
      *
      * @param workoutService the workout service
      */
-    @GetMapping({"", "/"})
     public WorkoutController(WorkoutService workoutService) {
         this.workoutService = workoutService;
     }
@@ -41,7 +40,7 @@ public class WorkoutController {
      *
      * @return ResponseEntity containing a list of all workouts with HTTP 200 status
      */
-    @GetMapping
+    @GetMapping({"", "/"})
     public ResponseEntity<List<Workout>> getAllWorkouts() {
         List<Workout> workouts = workoutService.getAllWorkouts();
         return ResponseEntity.ok(workouts);
