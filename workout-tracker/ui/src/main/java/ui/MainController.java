@@ -116,7 +116,20 @@ public class MainController extends BaseController {
         ExerciseTableController controller = loader.getController();
         controller.setMainController(this);
         controller.setWorkout(workout);
+        controller.setWorkoutService(workoutService);
 
         contentArea.setCenter(tableView);
+    }
+
+    public Workout findWorkoutById(Long id) {
+        if (id == null) {
+            return null;
+        }
+        return workoutService.getWorkoutTracker()
+                .getAllWorkouts()
+                .stream()
+                .filter(w -> id.equals(w.getId()))
+                .findFirst()
+                .orElse(null);
     }
 }

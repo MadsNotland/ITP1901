@@ -9,6 +9,7 @@ import java.util.List;
 import core.Workout;
 import core.WorkoutTracker;
 import persistence.WorkoutFileManager;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Service class responsible for managing persistence and data flow
@@ -31,6 +32,9 @@ public class WorkoutService {
     private final WorkoutFileManager fileManager;
     private final WorkoutTracker workoutTracker;
 
+    // Sequence for assigning new Long ids
+    private final AtomicLong idSequence = new AtomicLong(1L);
+
     /**
      * Creates a {@code WorkoutService} instance that initializes
      * a file manager with a resolved data path.
@@ -48,6 +52,16 @@ public class WorkoutService {
      */
     public void loadWorkouts() throws IOException {
         var loadedWorkouts = fileManager.loadWorkouts();
+
+        // initialize the sequence to max(existingId)+1
+        long next = loadedWorkouts.stream()
+                .map(Workout::getId)
+                .filter(java.util.Objects::nonNull)
+                .mapToLong(Long::longValue)
+                .max()
+                .orElse(0L) + 1L;
+        idSequence.set(next);
+
         workoutTracker.getAllWorkouts().setAll(loadedWorkouts);
     }
 
@@ -71,6 +85,10 @@ public class WorkoutService {
     }
 
     public void addWorkout(Workout workout) {
+        // Assign an id if missing
+        if (workout.getId() == null) {
+            workout.setId(idSequence.getAndIncrement());
+        }
         workoutTracker.addWorkout(workout);
     }
 

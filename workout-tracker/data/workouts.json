@@ -1,12 +1,18 @@
-[
-  {
-    "type": "Run",
-    "notes": "Previous workout",
-    "date": "2025-10-01",
-    "time": 0.5,
-    "exercises": [
-      { "name": "Warmup", "repetitions": 0, "weight": 0.0, "id": "seed-1" }
-    ]
-  }
-]
-
+[ {
+  "type" : "Push",
+  "notes" : "Sunday workouty",
+  "date" : [ 2025, 11, 2 ],
+  "time" : 0.45,
+  "exercises" : [ {
+    "name" : "Bench press",
+    "repetitions" : 10,
+    "weight" : 80.0,
+    "id" : "b4756b83-7df6-463d-83b2-65b9ae03f4bb"
+  }, {
+    "name" : "Bench press",
+    "repetitions" : 7,
+    "weight" : 80.0,
+    "id" : "158fa0d2-77a5-4495-94a6-a7f0f928792c"
+  } ],
+  "id" : 1
+} ]

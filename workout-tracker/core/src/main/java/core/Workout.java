@@ -60,11 +60,13 @@ public class Workout {
     }
 
     /** Returns the workout ID. */
+    @JsonProperty("id")
     public Long getId() {
         return id;
     }
 
     /** Sets the workout ID. */
+    @JsonProperty("id")
     public void setId(Long id) {
         this.id = id;
     }
@@ -162,6 +164,12 @@ public class Workout {
             throw new IllegalArgumentException("Exercise not found in workout");
         }
         exercises.remove(toRemove);
+    }
+
+    public void setExercises(List<Exercise> newList) {
+        java.util.Objects.requireNonNull(newList);
+        this.exercises.clear();
+        this.exercises.addAll(newList);
     }
 
     @Override
