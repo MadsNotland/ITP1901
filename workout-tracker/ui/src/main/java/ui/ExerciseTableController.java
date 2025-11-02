@@ -9,15 +9,15 @@ import core.Workout;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import ui.base.BaseController;
 import ui.UiConstants;
+import ui.base.BaseController;
 
 /**
  * Controller for {@code ExerciseTableView.fxml}.
@@ -95,25 +95,31 @@ public class ExerciseTableController extends BaseController {
         // Configure double-click-to-edit for header fields
         setupEditableTextField(typeField, () -> {
             String newValue = typeField.getText();
+            Workout w = this.workout;
+            if (w == null) {
+                return;
+            }
             try {
-                if (workout != null) {
-                    workout.setType(newValue);
-                }
-            } catch (IllegalArgumentException ex) {
+                w.setType(newValue);
+            } 
+            catch (IllegalArgumentException ex) {
                 // Revert UI and inform user
-                typeField.setText(workout != null ? workout.getType() : "");
+                typeField.setText(w.getType());
                 showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Name", ex.getMessage());
             }
         });
 
         setupEditableDatePicker(datePicker, () -> {
             LocalDate date = datePicker.getValue();
+            Workout w = this.workout;
+            if (w == null) {
+                return;
+            }
             try {
-                if (workout != null) {
-                    workout.setDate(date);
-                }
-            } catch (IllegalArgumentException ex) {
-                datePicker.setValue(workout != null ? workout.getDate() : null);
+                w.setDate(date);
+            } 
+            catch (IllegalArgumentException ex) {
+                datePicker.setValue(w.getDate());
                 showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Date", ex.getMessage());
             }
         });
@@ -122,12 +128,15 @@ public class ExerciseTableController extends BaseController {
 
         setupEditableTextArea(notesArea, () -> {
             String newNotes = notesArea.getText();
+            Workout w = this.workout;
+            if (w == null) {
+                return;
+            }
             try {
-                if (workout != null) {
-                    workout.setNotes(newNotes);
-                }
-            } catch (IllegalArgumentException ex) {
-                notesArea.setText(workout != null ? workout.getNotes() : "");
+                w.setNotes(newNotes);
+            } 
+            catch (IllegalArgumentException ex) {
+                notesArea.setText(w.getNotes());
                 showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Notes", ex.getMessage());
             }
         });
@@ -163,7 +172,8 @@ public class ExerciseTableController extends BaseController {
             comboBoxHours.setValue(hours);
             comboBoxMinutes.setValue(minutes);
             notesArea.setText(workout.getNotes());
-        } else {
+        } 
+        else {
             typeField.clear();
             datePicker.setValue(null);
             comboBoxHours.setValue(null);
@@ -313,21 +323,24 @@ public class ExerciseTableController extends BaseController {
      */
     private void commitDuration() {
         try {
-        int h = comboBoxHours.getValue() == null ? 0 : comboBoxHours.getValue();
-        int m = comboBoxMinutes.getValue() == null ? 0 : comboBoxMinutes.getValue();
+            int h = comboBoxHours.getValue() == null ? 0 : comboBoxHours.getValue();
+            int m = comboBoxMinutes.getValue() == null ? 0 : comboBoxMinutes.getValue();
 
-        if (workout != null) {
-            double time = h + (m / 100.0);
-            workout.setTime(time); // Let Workout validate; we no longer block 0:00 here
-        }
-        } catch (IllegalArgumentException ex) {
-            // Revert UI to the workout's current value on validation failure
-            if (workout != null) {
-                int hoursOld = (int) Math.floor(workout.getTime());
-                int minutesOld = (int) Math.round((workout.getTime() - hoursOld) * 100);
+            Workout w = this.workout;
+            if (w != null) {
+                double time = h + (m / 100.0);
+                w.setTime(time); // Let Workout validate; we no longer block 0:00 here
+            }
+        } 
+        catch (IllegalArgumentException ex) {
+            Workout w = this.workout;
+            if (w != null) {
+                int hoursOld = (int) Math.floor(w.getTime());
+                int minutesOld = (int) Math.round((w.getTime() - hoursOld) * 100);
                 comboBoxHours.setValue(hoursOld);
                 comboBoxMinutes.setValue(minutesOld);
-            } else {
+            } 
+            else {
                 comboBoxHours.setValue(null);
                 comboBoxMinutes.setValue(null);
             }
