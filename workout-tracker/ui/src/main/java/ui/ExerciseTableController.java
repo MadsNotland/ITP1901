@@ -55,7 +55,6 @@ public class ExerciseTableController extends BaseController {
     @FXML private DatePicker datePicker;
     @FXML private ComboBox<Integer> comboBoxHours;
     @FXML private ComboBox<Integer> comboBoxMinutes;
-    @FXML private HBox durationBox;
     @FXML private TextArea notesArea;
 
     /** Reference used only for navigation; set by {@link MainController} after loading. */
