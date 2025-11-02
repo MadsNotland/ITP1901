@@ -20,7 +20,7 @@ public class ApiInfoController {
      *
      * @return Map containing API information
      */
-    @GetMapping
+    @GetMapping({"", "/"})
     public Map<String, Object> getApiInfo() {
         return Map.of(
             "name", "Workout Tracker REST API",
