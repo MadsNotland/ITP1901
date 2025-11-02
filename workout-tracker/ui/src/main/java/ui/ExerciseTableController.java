@@ -252,7 +252,7 @@ public class ExerciseTableController extends BaseController {
     }
 
     private void initializeDurationPickers() {
-        // Populate choices similarly to WorkoutFormController
+       // Populate choices
         comboBoxHours.getItems().clear();
         for (int h = 0; h <= UiConstants.MAX_HOURS; h++) {
             comboBoxHours.getItems().add(h);
@@ -262,70 +262,30 @@ public class ExerciseTableController extends BaseController {
             comboBoxMinutes.getItems().add(m);
         }
 
-        // Start disabled; enable on double-click of the container
-        disableDurationEditing();
-        durationBox.setOnMouseClicked(e -> {
-            if (e.getClickCount() == 2) {
-                enableDurationEditing();
-                comboBoxHours.requestFocus();
-                comboBoxHours.show();
-            }
-        });
-
-        // Commit on selection
-        comboBoxHours.setOnAction(e -> commitDurationIfEditing());
-        comboBoxMinutes.setOnAction(e -> commitDurationIfEditing());
-
-        // Commit when both lose focus
-        comboBoxHours.focusedProperty().addListener((obs, o, hasFocus) -> {
-            if (!hasFocus) {
-                commitDurationIfBothNotFocused();
-            }
-        });
-        comboBoxMinutes.focusedProperty().addListener((obs, o, hasFocus) -> {
-            if (!hasFocus) {
-                commitDurationIfBothNotFocused();
-            }
-        });
-    }
-
-    private void enableDurationEditing() {
+        // Always enabled so the user can click the arrows directly
         comboBoxHours.setDisable(false);
         comboBoxMinutes.setDisable(false);
-    }
 
-    private void disableDurationEditing() {
-        comboBoxHours.setDisable(true);
-        comboBoxMinutes.setDisable(true);
-    }
+        // Update the workout time any time either value changes
+        comboBoxHours.valueProperty().addListener((obs, oldV, newV) -> commitDuration());
+        comboBoxMinutes.valueProperty().addListener((obs, oldV, newV) -> commitDuration());
 
-    private void commitDurationIfEditing() {
-        if (!comboBoxHours.isDisabled() || !comboBoxMinutes.isDisabled()) {
-            commitDuration();
-        }
-    }
-
-    private void commitDurationIfBothNotFocused() {
-        if (!comboBoxHours.isFocused() && !comboBoxMinutes.isFocused() && !comboBoxHours.isDisabled()) {
-            commitDuration();
-        }
+        // Also commit on "Action" (e.g., Enter/selection via keyboard)
+        comboBoxHours.setOnAction(e -> commitDuration());
+        comboBoxMinutes.setOnAction(e -> commitDuration());
     }
 
     private void commitDuration() {
         try {
-            Integer hours = comboBoxHours.getValue();
-            Integer minutes = comboBoxMinutes.getValue();
-            int h = hours == null ? 0 : hours;
-            int m = minutes == null ? 0 : minutes;
-            if (h + m == 0) {
-                throw new IllegalArgumentException("Please select both hours and minutes.");
-            }
-            if (workout != null) {
-                double time = h + (m / 100.0);
-                workout.setTime(time);
-            }
-            disableDurationEditing();
+        int h = comboBoxHours.getValue() == null ? 0 : comboBoxHours.getValue();
+        int m = comboBoxMinutes.getValue() == null ? 0 : comboBoxMinutes.getValue();
+
+        if (workout != null) {
+            double time = h + (m / 100.0);
+            workout.setTime(time); // Let Workout validate; we no longer block 0:00 here
+        }
         } catch (IllegalArgumentException ex) {
+            // Revert UI to the workout's current value on validation failure
             if (workout != null) {
                 int hoursOld = (int) Math.floor(workout.getTime());
                 int minutesOld = (int) Math.round((workout.getTime() - hoursOld) * 100);
@@ -336,7 +296,6 @@ public class ExerciseTableController extends BaseController {
                 comboBoxMinutes.setValue(null);
             }
             showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Duration", ex.getMessage());
-            disableDurationEditing();
         }
     }
 }
