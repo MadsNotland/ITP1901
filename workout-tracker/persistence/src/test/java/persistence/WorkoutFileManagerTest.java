@@ -2,11 +2,13 @@ package persistence;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -63,7 +65,9 @@ class WorkoutFileManagerTest {
         // Arrange
         Path testFile = tempDir.resolve("test-workouts.json");
         WorkoutFileManager manager = new WorkoutFileManager(testFile);
-        
+
+        assertThrows(IllegalArgumentException.class, () -> manager.saveWorkouts(null));
+
         Workout workout1 = new Workout("Running", "Morning run", LocalDate.of(2025, 9, 14), 1.5,List.of(ex("Sprints", 10, 0.0)));
         Workout workout2 = new Workout("Gym", "Strength training", LocalDate.of(2025, 9, 15), 2.0,List.of(ex("Bench Press", 8, 60.0), ex("Squats", 10, 80.0)));
         List<Workout> workouts = List.of(workout1, workout2);
@@ -104,7 +108,7 @@ class WorkoutFileManagerTest {
         WorkoutFileManager manager = new WorkoutFileManager(testFile);
         
         Workout workout = new Workout("Swimming", "Pool session", LocalDate.of(2025, 9, 16), 1.0,List.of(ex("Freestyle", 20, 0.0)));
-
+    
         // Act
         manager.addWorkout(workout);
         List<Workout> loadedWorkouts = manager.loadWorkouts();
@@ -134,5 +138,19 @@ class WorkoutFileManagerTest {
 
         // Assert
         assertTrue(loadedWorkouts.isEmpty());
+    }
+
+    /**
+     * Tests that the constructor uses the default path when null is provided.
+     */
+    @Test
+    void constructor_usesDefaultPath_whenNull() throws Exception {
+        WorkoutFileManager m = new WorkoutFileManager(null);
+
+        Field f = WorkoutFileManager.class.getDeclaredField("filePath");
+        f.setAccessible(true);
+        Path actual = (Path) f.get(m);
+
+        assertEquals(Path.of("workout-tracker/data/workouts.json"), actual);
     }
 }
