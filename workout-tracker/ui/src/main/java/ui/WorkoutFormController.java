@@ -157,7 +157,11 @@ public class WorkoutFormController extends BaseController {
 
         } 
         catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            showAlert(ERROR, "Invalid Input", e.getMessage());
+        }
+        catch (IOException e) {
+            showAlert(ERROR, "Server Connection Error", 
+                "Could not save workout. Please check that the server is running on http://localhost:8080");
         }
     }
     /**

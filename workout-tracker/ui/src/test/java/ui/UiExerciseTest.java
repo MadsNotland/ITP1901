@@ -16,6 +16,8 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
+import org.testfx.util.WaitForAsyncUtils;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -54,6 +56,7 @@ class UiExerciseTest extends ApplicationTest {
     @Test
     void exerciseFields_existInFormView() {
         clickOn("#add_workout");
+        WaitForAsyncUtils.waitForFxEvents(); // Wait for view navigation to complete
 
         TextField exerciseNameField = lookup("#exerciseNameField").query();
         ComboBox<Integer> comboBoxReps = lookup("#comboBoxReps").query();
@@ -80,6 +83,7 @@ class UiExerciseTest extends ApplicationTest {
     @Test
     void addExercise_addsRowToExerciseTable() {
         clickOn("#add_workout");
+        WaitForAsyncUtils.waitForFxEvents(); // Wait for view navigation to complete
 
         TextField exerciseNameField = lookup("#exerciseNameField").query();
         ComboBox<Integer> comboBoxReps = lookup("#comboBoxReps").query();
@@ -117,6 +121,7 @@ class UiExerciseTest extends ApplicationTest {
     @Test
     void addExercise_showsAlert_whenNameMissing() {
         clickOn("#add_workout");
+        WaitForAsyncUtils.waitForFxEvents(); // Wait for view navigation to complete
 
         ComboBox<Integer> comboBoxReps = lookup("#comboBoxReps").query();
         Spinner<Double> spinnerWeight = lookup("#spinnerWeight").query();
@@ -127,6 +132,7 @@ class UiExerciseTest extends ApplicationTest {
         });
 
         clickOn("#addExerciseButton");
+        WaitForAsyncUtils.waitForFxEvents(); // Wait for alert dialog to appear
 
         DialogPane dialog = lookup(".dialog-pane").query();
         assertNotNull(dialog, "An alert dialog should appear if exercise name is missing");

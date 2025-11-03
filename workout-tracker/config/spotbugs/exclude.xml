@@ -50,6 +50,13 @@
     <Bug pattern="CT_CONSTRUCTOR_THROW"/>
   </Match>
 
+  <!-- RestWorkoutClient is effectively immutable (final fields, no setters) -->
+  <!-- Constructor injection pattern is safe for dependency injection in tests -->
+  <Match>
+    <Class name="ui.service.WorkoutService"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
+
   <!-- Ignore Internal representation warning in Spring Boot controllers -->
   <Match>
     <Class name="server.WorkoutController"/>
