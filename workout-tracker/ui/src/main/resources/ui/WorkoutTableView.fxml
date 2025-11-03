@@ -5,11 +5,12 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
 
 <VBox 
     alignment="CENTER" 
     spacing="10" 
-    styleClass="form-container"
+    styleClass="dark-container"
     xmlns="http://javafx.com/javafx/17.0.1" 
     xmlns:fx="http://javafx.com/fxml/1" 
     fx:controller="ui.WorkoutTableController">
@@ -28,6 +29,9 @@
     </TableView>
 
     <!-- Button for adding workout session -->
-    <Button  text="Add Workout" styleClass="button-primary" fx:id="add_workout" id="add_workout" onAction="#handleAddButton" />
-
+    <StackPane>
+        <Button  text="Add Workout" styleClass="button-primary" fx:id="add_workout" id="add_workout" onAction="#handleAddButton" StackPane.alignment="CENTER" />
+        <Button fx:id="infoButton" text="ℹ" onAction="#handleInfo" styleClass="button-info" StackPane.alignment="CENTER_RIGHT" translateX="-20" />
+    </StackPane>
+    
 </VBox>

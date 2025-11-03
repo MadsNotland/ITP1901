@@ -14,7 +14,7 @@
 */
 
 /* Container */
-.form-container {
+.dark-container {
     -fx-background-color: linear-gradient(to bottom right, #2b2e4a, #1f2235);
     -fx-padding: 40;
     -fx-spacing: 15;
@@ -404,3 +404,16 @@
     -fx-background-color: #ff6659;
 }
 /* ========== Cancel Button Finished ================ */
+
+/* ========== Info Button TableView ================= */
+.button-info {
+    -fx-background-color: transparent;
+    -fx-text-fill: #dcdcdc;
+    -fx-font-size: 26px;
+    -fx-cursor: hand;
+}
+
+.button-info:hover {
+    -fx-text-fill: #5865f2;
+}
+/* =========== Info Button Finished =============== */
