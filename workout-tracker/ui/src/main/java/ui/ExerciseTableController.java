@@ -6,6 +6,12 @@ import java.util.List;
 
 import core.Exercise;
 import core.Workout;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -32,6 +38,7 @@ import ui.base.BaseController;
  *   <li>Bind Exercise properties to table columns</li>
  *   <li>Compute and display a 1-based "Set #" column based on row index</li>
  *   <li>Support navigation back to the workout table via {@link MainController}</li>
+ *   <li>Header edits (type/date/duration/notes) are staged in controller properties and do not modify the underlying {@link Workout}.</li>
  * </ul>
  */
 public class ExerciseTableController extends BaseController {
@@ -56,15 +63,6 @@ public class ExerciseTableController extends BaseController {
     @FXML private ComboBox<Integer> comboBoxMinutes;
     @FXML private TextArea notesArea;
 
-    /** Guards against firing duration commit while programmatically setting values. */
-    private boolean suppressDurationCommit = false;
-
-    /** Reference used only for navigation; set by {@link MainController} after loading. */
-    private MainController mainController;
-
-    /** The workout currently shown; kept for editing header fields. */
-    private Workout workout;
-
     /**
      * Items displayed in the table. We populate this list from {@link #setWorkout(Workout)}
      * using a snapshot of the Workout's exercises, so later edits elsewhere won't mutate
@@ -72,9 +70,26 @@ public class ExerciseTableController extends BaseController {
      */
     private final ObservableList<Exercise> exerciseItems = FXCollections.observableArrayList();
 
+    /** Reference used only for navigation; set by {@link MainController} after loading. */
+    private MainController mainController;
+
+    /** The workout currently shown; kept for editing header fields. */
+    private Workout workout;
+
+    /** Staged edits for header fields before committing to the Workout. */
+    private final StringProperty stagedType   = new SimpleStringProperty("");
+    private final StringProperty stagedNotes  = new SimpleStringProperty("");
+    private final ObjectProperty<LocalDate> stagedDate = new SimpleObjectProperty<>(null);
+    private final IntegerProperty stagedHours   = new SimpleIntegerProperty(0);
+    private final IntegerProperty stagedMinutes = new SimpleIntegerProperty(0);
+
+    /** Guards against programmatic ComboBox changes firing listeners */
+    private boolean suppressDurationListeners = false;
+
     /**
      * Called automatically by the FXMLLoader after FXML fields are injected.
-     * Wires up column bindings and connects the table to {@link #exerciseItems}.
+     * Wires up column bindings, connects the table to {@link #exerciseItems},
+     * and binds header controls to staged properties.
      */
     @FXML
     private void initialize() {
@@ -92,57 +107,22 @@ public class ExerciseTableController extends BaseController {
                 exerciseTable.getItems().indexOf(cd.getValue()) + 1
             )
         );
+
+        // Bind staged properties to the header fields
+        typeField.textProperty().bindBidirectional(stagedType);
+        notesArea.textProperty().bindBidirectional(stagedNotes);
+        datePicker.valueProperty().bindBidirectional(stagedDate);
+
         // Sorting doesn't make sense for an index column derived from position.
         setColumn.setSortable(false);
 
-        // Configure double-click-to-edit for header fields
-        setupEditableTextField(typeField, () -> {
-            String newValue = typeField.getText();
-            Workout w = this.workout;
-            if (w == null) {
-                return;
-            }
-            try {
-                w.setType(newValue);
-            } 
-            catch (IllegalArgumentException ex) {
-                // Revert UI and inform user
-                typeField.setText(w.getType());
-                showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Name", ex.getMessage());
-            }
-        });
-
-        setupEditableDatePicker(datePicker, () -> {
-            LocalDate date = datePicker.getValue();
-            Workout w = this.workout;
-            if (w == null) {
-                return;
-            }
-            try {
-                w.setDate(date);
-            } 
-            catch (IllegalArgumentException ex) {
-                datePicker.setValue(w.getDate());
-                showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Date", ex.getMessage());
-            }
-        });
-
+        /*Duration pickers: populate and wire to stagedHours/Minutes */
         initializeDurationPickers();
 
-        setupEditableTextArea(notesArea, () -> {
-            String newNotes = notesArea.getText();
-            Workout w = this.workout;
-            if (w == null) {
-                return;
-            }
-            try {
-                w.setNotes(newNotes);
-            } 
-            catch (IllegalArgumentException ex) {
-                notesArea.setText(w.getNotes());
-                showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Notes", ex.getMessage());
-            }
-        });
+        // Configure double-click-to-edit for header fields
+        setupEditableTextField(typeField);
+        setupEditableDatePicker(datePicker);
+        setupEditableTextArea(notesArea);
     }
 
     /**
@@ -159,49 +139,57 @@ public class ExerciseTableController extends BaseController {
      * Populates the view from a given {@link Workout}.
      *
      * <p>Copies a snapshot of the workout's exercises into {@link #exerciseItems} and
-     * binds the workout header fields (type, date, time, notes) to the workout's current
-     * values. Passing {@code null} clears the view.</p>
+     * seeds the staged header properties (type, date, time, notes) from the workout.
+     * Passing {@code null} clears the view and resets staged values.</p>
      *
      * @param workout workout to read exercises and header values from; if {@code null}, the view is cleared
      */
     public void setWorkout(Workout workout) {
-        this.workout = workout;
-        // Populate header fields
-        if (workout != null) {
-            typeField.setText(workout.getType());
-            datePicker.setValue(workout.getDate());
-
-            int hours = (int) Math.floor(workout.getTime());
-            int minutes = (int) Math.round((workout.getTime() - hours) * 100);
-            
-            suppressDurationCommit = true;
-            try {
-                comboBoxHours.setValue(hours);
-                comboBoxMinutes.setValue(minutes);
-            } 
-            finally {
-                suppressDurationCommit = false;
-            }
-
-            notesArea.setText(workout.getNotes());
-        } 
-        else {
-            suppressDurationCommit = true;
-            try {
-                typeField.clear();
-                datePicker.setValue(null);
-                comboBoxHours.setValue(null);
-                comboBoxMinutes.setValue(null);
-                notesArea.clear();
-            } 
-            finally {
-                suppressDurationCommit = false;
-            }
+        if (this.workout == workout) {
+            return;
         }
+        this.workout = workout;
 
         // Populate exercise table from snapshot
         List<Exercise> snapshot = (workout == null) ? List.of() : workout.getExercises();
         exerciseItems.setAll(snapshot);
+
+        // Populate header fields
+        if (workout != null) {
+            stagedType.set(workout.getType());
+            stagedDate.set(workout.getDate());
+            stagedNotes.set(workout.getNotes());
+
+            int hours = (int) Math.floor(workout.getTime());
+            int minutes = (int) Math.round((workout.getTime() - hours) * 100);
+            
+            suppressDurationListeners = true;
+            try {
+                stagedHours.set(hours);
+                stagedMinutes.set(minutes);
+                comboBoxHours.setValue(hours);
+                comboBoxMinutes.setValue(minutes);
+            } 
+            finally {
+                suppressDurationListeners = false;
+            }
+        } 
+        else {
+            stagedType.set("");
+            stagedNotes.set("");
+            stagedDate.set(null);
+
+            suppressDurationListeners = true;
+            try {
+                stagedHours.set(0);
+                stagedMinutes.set(0);
+                comboBoxHours.setValue(null);
+                comboBoxMinutes.setValue(null);
+            } 
+            finally {
+                suppressDurationListeners = false;
+            }
+        }
     }
 
     /**
@@ -215,16 +203,16 @@ public class ExerciseTableController extends BaseController {
         mainController.showWorkoutTable();
     }
 
-    // --- Helpers to enable double-click editing with commit on focus loss or Enter ---
+    // --- Helpers to enable double-click editing ---
 
     /**
-     * Configures a {@link TextField} for "double-click to edit" behavior and commits
-     * the change on Enter or when the field loses focus.
+     * Enables "double-click to edit" for a {@link TextField}.
+     * Toggles the field editable while focused and reverts to non-editable on blur/Enter.
+     * Does not write to the model; only updates the staged property bound to the control.
      *
-     * @param field     the text field to make editable on demand
-     * @param onCommit  callback executed after a successful commit (field is set back to non-editable)
+     * @param field     the text field to make editable on demand (back to non-editable on blur)
      */
-    private void setupEditableTextField(TextField field, Runnable onCommit) {
+    private void setupEditableTextField(TextField field) {
         field.setEditable(false);
         field.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
@@ -236,25 +224,23 @@ public class ExerciseTableController extends BaseController {
         field.focusedProperty().addListener((obs, oldV, hasFocus) -> {
             if (!hasFocus && field.isEditable()) {
                 field.setEditable(false);
-                onCommit.run();
             }
         });
         field.setOnAction(e -> {
             if (field.isEditable()) {
                 field.setEditable(false);
-                onCommit.run();
             }
         });
     }
 
     /**
-     * Configures a {@link TextArea} for "double-click to edit" behavior and commits
-     * the change when the area loses focus.
+     * Enables "double-click to edit" for a {@link TextArea}.
+     * Toggles the field editable while focused and reverts to non-editable on blur/Enter.
+     * Does not write to the model; only updates the staged property bound to the control.
      *
-     * @param area      the text area to make editable on demand
-     * @param onCommit  callback executed after a successful commit (area is set back to non-editable)
+     * @param area      the text area to make editable on demand (back to non-editable on blur)
      */
-    private void setupEditableTextArea(TextArea area, Runnable onCommit) {
+    private void setupEditableTextArea(TextArea area) {
         area.setEditable(false);
         area.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
@@ -265,19 +251,18 @@ public class ExerciseTableController extends BaseController {
         area.focusedProperty().addListener((obs, oldV, hasFocus) -> {
             if (!hasFocus && area.isEditable()) {
                 area.setEditable(false);
-                onCommit.run();
             }
         });
     }
 
     /**
-     * Configures a {@link DatePicker} for "double-click to edit" behavior and commits
-     * the change on action (e.g., Enter) or when the control loses focus.
+     * Enables "double-click to edit" for a {@link DatePicker}.
+     * Toggles the field editable while focused and reverts to non-editable on blur/Enter.
+     * Does not write to the model; only updates the staged property bound to the control.
      *
-     * @param picker    the date picker to make editable on demand
-     * @param onCommit  callback executed after a successful commit (picker is set back to non-editable)
+     * @param picker    the date picker to make editable on demand (back to non-editable on blur)
      */
-    private void setupEditableDatePicker(DatePicker picker, Runnable onCommit) {
+    private void setupEditableDatePicker(DatePicker picker) {
         picker.setEditable(false);
         picker.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
@@ -289,13 +274,11 @@ public class ExerciseTableController extends BaseController {
         picker.focusedProperty().addListener((obs, oldV, hasFocus) -> {
             if (!hasFocus && picker.isEditable()) {
                 picker.setEditable(false);
-                onCommit.run();
             }
         });
         picker.setOnAction(e -> {
             if (picker.isEditable()) {
                 picker.setEditable(false);
-                onCommit.run();
             }
         });
     }
@@ -303,9 +286,9 @@ public class ExerciseTableController extends BaseController {
     /**
      * Initializes the duration ComboBoxes (hours/minutes).
      *
-     * <p>Populates choices based on {@link UiConstants}, keeps both controls enabled so the
-     * user can interact directly, and wires listeners that commit changes immediately whenever
-     * a value changes or an action occurs.</p>
+     * <p>Populates choices based on {@link UiConstants}, leaves controls enabled,
+     * and wires listeners so user changes update {@link #stagedHours} / {@link #stagedMinutes} only.
+     * Programmatic changes are guarded by {@link #suppressDurationListeners} to avoid feedback loops.</p>
      */
     private void initializeDurationPickers() {
        // Populate choices
@@ -322,69 +305,33 @@ public class ExerciseTableController extends BaseController {
         comboBoxHours.setDisable(false);
         comboBoxMinutes.setDisable(false);
 
-        // Update the workout time any time either value changes
+        // When user changes a value, only update staged properties
         comboBoxHours.valueProperty().addListener((obs, oldV, newV) -> {
-            if (!suppressDurationCommit) {
-                commitDuration();
+            if (suppressDurationListeners) {
+                return;
             }
+            stagedHours.set(newV == null ? 0 : newV);
         });
         comboBoxMinutes.valueProperty().addListener((obs, oldV, newV) -> {
-            if (!suppressDurationCommit) {
-                commitDuration();
+            if (suppressDurationListeners) {
+                return;
             }
+            stagedMinutes.set(newV == null ? 0 : newV);
         });
 
-        // Also commit on "Action" (e.g., Enter/selection via keyboard)
         comboBoxHours.setOnAction(e -> { 
-            if (!suppressDurationCommit) {
-                commitDuration();
-            } 
+            if (suppressDurationListeners) {
+                return;
+            }
+            Integer v = comboBoxHours.getValue();
+            stagedHours.set(v == null ? 0 : v);
         });
         comboBoxMinutes.setOnAction(e -> { 
-            if (!suppressDurationCommit) {
-                commitDuration();
-            } 
+            if (suppressDurationListeners) {
+                return;
+            }
+            Integer v = comboBoxMinutes.getValue();
+            stagedMinutes.set(v == null ? 0 : v);
         });
-    }
-
-    /**
-     * Commits the current duration selection to the underlying {@link Workout}.
-     *
-     * <p>Reads hours/minutes from the ComboBoxes (treating {@code null} as {@code 0})
-     * and writes to {@link Workout#setTime(double)} using the {@code h + m/100.0} encoding.
-     * If the model rejects the value ({@link IllegalArgumentException}), the UI reverts to
-     * the last valid values and an error alert is shown.</p>
-     */
-    private void commitDuration() {
-        try {
-            int h = comboBoxHours.getValue() == null ? 0 : comboBoxHours.getValue();
-            int m = comboBoxMinutes.getValue() == null ? 0 : comboBoxMinutes.getValue();
-
-            Workout w = this.workout;
-            if (w != null) {
-                double time = h + (m / 100.0);
-                w.setTime(time); // Let Workout validate; we no longer block 0:00 here
-            }
-        } 
-        catch (IllegalArgumentException ex) {
-            Workout w = this.workout;
-            suppressDurationCommit = true;
-            try {
-                if (w != null) {
-                    int hoursOld = (int) Math.floor(w.getTime());
-                    int minutesOld = (int) Math.round((w.getTime() - hoursOld) * 100);
-                    comboBoxHours.setValue(hoursOld);
-                    comboBoxMinutes.setValue(minutesOld);
-                } 
-                else {
-                    comboBoxHours.setValue(null);
-                    comboBoxMinutes.setValue(null);
-                }
-            } 
-            finally {
-                suppressDurationCommit = false;
-            }
-            showAlert(javafx.scene.control.Alert.AlertType.ERROR, "Invalid Duration", ex.getMessage());
-        }
     }
 }
