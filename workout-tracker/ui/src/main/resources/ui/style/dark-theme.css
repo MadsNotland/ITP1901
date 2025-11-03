@@ -1,3 +1,17 @@
+/* ========================================
+   DARK THEME - Workout Tracker UI
+   Optimized JavaFX CSS
+   ======================================== */
+
+/* Color palette
+   PRIMARY: #5865f2
+   PRIMARY_DARK: #4752c4
+   BG_MAIN: #2f3246
+   BG_LIGHT: #3c3f58
+   TEXT: #ffffff
+   TEXT_DIM: #dcdcdc
+   TEXT_MUTED: #aaaaaa
+*/
 
 /* Container */
 .form-container {
@@ -34,7 +48,7 @@
 }
 
 
-.text-field, .text-area, .combo-box, .spinner {
+.text-field, .text-area, .combo-box, .spinner .date-picker {
     -fx-background-color: #3c3f58;
     -fx-text-fill: #ffffff;
     -fx-background-radius: 8;
@@ -46,10 +60,6 @@
 /* ========== Date-picker =========== */
 .date-picker {
     -fx-background-color: #3c3f58;
-    -fx-background-radius: 8;
-    -fx-border-color: transparent;
-    -fx-text-fill: #ffffff;
-    -fx-prompt-text-fill: #aaaaaa;
 }
 
 /* Calender Icon */
@@ -138,10 +148,6 @@
 
 /* ========== ComboBox styling (time, reps) ========== */
 .combo-box {
-    -fx-background-color: #3c3f58;
-    -fx-background-radius: 8;
-    -fx-border-color: transparent;
-    -fx-text-fill: #ffffff;
     -fx-font-size: 14px;
     -fx-alignment: CENTER; /* sentrerer teksten i feltet */
 }
@@ -191,13 +197,6 @@
 
 
 /* ========== Text Area (For notes) ========== */
-.text-area {
-    -fx-background-color: #3c3f58;
-    -fx-background-radius: 8;
-    -fx-text-fill: #ffffff;
-    -fx-prompt-text-fill: #aaaaaa;
-    -fx-border-color: transparent;
-}
 
 /* Controls backgroundcolor in ScrollPane-part */
 .text-area .scroll-pane {
@@ -222,9 +221,6 @@
 /* ========= Spinner (Weight input) ========= */
 .spinner {
     -fx-background-color: #3c3f58;
-    -fx-background-radius: 8;
-    -fx-border-color: transparent;
-    -fx-text-fill: #ffffff;
 }
 
 /* Text in spinner */

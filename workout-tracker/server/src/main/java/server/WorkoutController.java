@@ -31,7 +31,6 @@ public class WorkoutController {
      *
      * @param workoutService the workout service
      */
-    @GetMapping({"", "/"})
     public WorkoutController(WorkoutService workoutService) {
         this.workoutService = workoutService;
     }
