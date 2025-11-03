@@ -4,8 +4,6 @@ import java.time.LocalDate;
 
 import core.Workout;
 import javafx.fxml.FXML;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -82,27 +80,6 @@ public class WorkoutTableController extends BaseController {
     @FXML
     private void handleAddButton() throws IOException {
         mainController.showWorkoutForm();
-    }
-
-    /**
-     * Saves all current workouts when the "Save" button is pressed.
-     * 
-     * <p>Note: Workouts are persisted immediately via REST API when created,
-     * updated, or deleted. This method is kept for backward compatibility.</p>
-     * 
-     * Displays a confirmation alert.
-     */
-    @FXML
-    private void handleSave() {
-        try {
-            // saveWorkouts() is now a no-op since data is persisted immediately via REST
-            workoutService.saveWorkouts();
-            showAlert(INFORMATION, "Info", "Workouts are automatically saved to the server when created or updated.");
-        }
-        catch (IOException e) {
-            // This should never happen since saveWorkouts() is a no-op, but handle it anyway
-            showAlert(ERROR, "Error", "An unexpected error occurred: " + e.getMessage());
-        }
     }
 
     @FXML
