@@ -129,6 +129,7 @@ public class WorkoutTableController extends BaseController {
         });
     }
 
+    /* Simple Message-Display for Info-Button */
     @FXML
     private void handleInfo() {
         String infoText = """

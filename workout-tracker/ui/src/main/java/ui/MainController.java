@@ -1,11 +1,12 @@
 package ui;
 
+import static javafx.scene.control.Alert.AlertType.ERROR;
+
 import java.io.IOException;
 
 import core.Workout;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import static javafx.scene.control.Alert.AlertType.ERROR;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import ui.base.BaseController;
