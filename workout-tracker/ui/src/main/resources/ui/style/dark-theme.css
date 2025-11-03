@@ -21,6 +21,12 @@
     -fx-background-radius: 15;
 }
 
+/* Background Mainview */
+.border-pane {
+    -fx-background-color: linear-gradient(to bottom right, #2b2e4a, #1f2235);
+}
+
+
 /* Title */
 .label-title {
     -fx-font-size: 26;
@@ -48,7 +54,7 @@
 }
 
 
-.text-field, .text-area, .combo-box, .spinner .date-picker {
+.text-field, .text-area, .combo-box, .spinner {
     -fx-background-color: #3c3f58;
     -fx-text-fill: #ffffff;
     -fx-background-radius: 8;
@@ -60,6 +66,10 @@
 /* ========== Date-picker =========== */
 .date-picker {
     -fx-background-color: #3c3f58;
+    -fx-text-fill: #ffffff;
+    -fx-background-radius: 8;
+    -fx-border-color: transparent;
+    -fx-prompt-text-fill: #aaaaaa;
 }
 
 /* Calender Icon */
@@ -326,6 +336,7 @@
 .exercise-table .table-row-cell:hover {
     -fx-background-color: #4752c4;
     -fx-text-fill: white;
+    -fx-cursor: hand;
 }
 
 /* Highlight chosen row */
@@ -350,7 +361,7 @@
 }
 /* ========== Exercise Table Finished ========== */
 
-/* Delete exerciseButton */
+/* ========== Delete exerciseButton ============ */
 .button-delete-side {
     -fx-background-color: #e74c3c;
     -fx-text-fill: white;
@@ -364,6 +375,8 @@
 .button-delete-side:hover {
     -fx-background-color: #ff6659;
 }
+/* ========== Delete exerciseButton Finished ============ */
+
 
 
 /* ========== Add Workout Button ======== */
@@ -380,9 +393,14 @@
 }
 /* ========== Add Workout Button Finished ======== */
 
-/* Cancel Button */
+/* ========== Cancel Button ================ */
 .button-danger {
     -fx-background-color: #e74c3c;
     -fx-text-fill: white;
     -fx-background-radius: 10;
+    -fx-cursor: hand;
 }
+.button-danger:hover {
+    -fx-background-color: #ff6659;
+}
+/* ========== Cancel Button Finished ================ */
