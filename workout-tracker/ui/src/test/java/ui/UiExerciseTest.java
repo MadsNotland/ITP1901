@@ -167,9 +167,11 @@ class UiExerciseTest extends ApplicationTest {
      */
     @Test
     void exerciseFields_existInFormView() {
+
         navigateToWorkoutForm("#exerciseNameField");
         
         FormFields fields = getExerciseFormFields();
+
 
         assertNotNull(fields.exerciseNameField, "exerciseNameField should exist in the form");
         assertNotNull(fields.comboBoxReps, "comboBoxReps should exist in the form");
@@ -190,10 +192,12 @@ class UiExerciseTest extends ApplicationTest {
      */
     @Test
     void addExercise_addsRowToExerciseTable() {
+
         navigateToWorkoutForm("#exerciseNameField");
         
         FormFields fields = getExerciseFormFields();
         int before = fields.exerciseTable.getItems().size();
+
 
         fillExerciseFields("Bench Press", 10, 60.0);
         clickAddExercise();
@@ -221,6 +225,7 @@ class UiExerciseTest extends ApplicationTest {
         
         fillExerciseFields(null, 8, 40.0); // Name is null/missing
         clickAddExercise();
+
 
         DialogPane dialog = lookup(".dialog-pane").query();
         assertNotNull(dialog, "An alert dialog should appear if exercise name is missing");

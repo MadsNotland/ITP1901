@@ -37,13 +37,13 @@ public class MainController extends BaseController {
     @FXML
     private BorderPane contentArea;
     
-    // WorkoutService for handling saving and loading to file (WorkoutTracker and WorkoutFileManager)
+    // WorkoutService for handling persistence via REST API (WorkoutTracker and RestWorkoutClient)
     private final WorkoutService workoutService = new WorkoutService();
 
     /**
      * Called automatically after the FXML file is loaded.
      * Initializes the application by showing the main table view
-     * and attempting to load workout data from file using the workoutService {@link ui.service.WorkoutService}
+     * and attempting to load workout data from the server via REST API.
      *
      * @throws IOException if an error occurs while loading the initial view
      */
@@ -54,7 +54,8 @@ public class MainController extends BaseController {
             workoutService.loadWorkouts();
         } 
         catch (IOException e) {
-            showAlert(ERROR, "Load Error", "Could not load workouts from file " + e.getMessage());
+            showAlert(ERROR, "Server Connection Error", 
+                "Could not connect to the server. Please check that the server is running on http://localhost:8080");
         }   
     }
 
