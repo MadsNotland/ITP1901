@@ -22,7 +22,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import ui.UiConstants;
 import ui.base.BaseController;
 
 /**
@@ -72,9 +71,6 @@ public class ExerciseTableController extends BaseController {
 
     /** Reference used only for navigation; set by {@link MainController} after loading. */
     private MainController mainController;
-
-    /** The workout currently shown; kept for editing header fields. */
-    private Workout workout;
 
     /** Staged edits for header fields before committing to the Workout. */
     private final StringProperty stagedType   = new SimpleStringProperty("");
@@ -145,11 +141,6 @@ public class ExerciseTableController extends BaseController {
      * @param workout workout to read exercises and header values from; if {@code null}, the view is cleared
      */
     public void setWorkout(Workout workout) {
-        if (this.workout == workout) {
-            return;
-        }
-        this.workout = workout;
-
         // Populate exercise table from snapshot
         List<Exercise> snapshot = (workout == null) ? List.of() : workout.getExercises();
         exerciseItems.setAll(snapshot);
