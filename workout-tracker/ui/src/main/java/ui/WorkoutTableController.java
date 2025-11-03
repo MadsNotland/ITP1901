@@ -1,12 +1,11 @@
 package ui;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
-
 import java.io.IOException;
 import java.time.LocalDate;
 
 import core.Workout;
 import javafx.fxml.FXML;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -59,6 +58,7 @@ public class WorkoutTableController extends BaseController {
     @FXML
     void initializeData() {
         setTableView();
+        setupTableSelectionListener();
     }
 
     /**
@@ -125,5 +125,30 @@ public class WorkoutTableController extends BaseController {
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
+    }
+
+    /**
+     * Sets up a listener for user interactions with the workout table.
+     * <p>
+     * This listener detects when the user clicks outside the {@link #workoutTable}
+     * and clears any existing selection. It improves the overall user experience
+     * by preventing a row from remaining highlighted when the user interacts with
+     * other parts of the view.
+     * </p>
+     * <p>
+     * The listener is attached dynamically once the table’s {@link javafx.scene.Scene}
+     * becomes available, ensuring proper event handling after the FXML view is loaded.
+     * </p>
+     */
+    private void setupTableSelectionListener() {
+        workoutTable.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, e -> {
+                    if (!workoutTable.isHover()) {
+                        workoutTable.getSelectionModel().clearSelection();
+                    }
+                });
+            }
+        });
     }
 }
