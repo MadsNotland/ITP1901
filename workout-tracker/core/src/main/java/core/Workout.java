@@ -60,13 +60,11 @@ public class Workout {
     }
 
     /** Returns the workout ID. */
-    @JsonProperty("id")
     public Long getId() {
         return id;
     }
 
     /** Sets the workout ID. */
-    @JsonProperty("id")
     public void setId(Long id) {
         this.id = id;
     }
