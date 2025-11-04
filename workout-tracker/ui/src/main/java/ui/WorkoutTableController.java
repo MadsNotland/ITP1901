@@ -1,7 +1,4 @@
 package ui;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
-
 import java.io.IOException;
 import java.time.LocalDate;
 
@@ -59,6 +56,7 @@ public class WorkoutTableController extends BaseController {
     @FXML
     void initializeData() {
         setTableView();
+        setupTableSelectionListener();
     }
 
     /**
@@ -84,27 +82,6 @@ public class WorkoutTableController extends BaseController {
         mainController.showWorkoutForm();
     }
 
-    /**
-     * Saves all current workouts when the "Save" button is pressed.
-     * 
-     * <p>Note: Workouts are persisted immediately via REST API when created,
-     * updated, or deleted. This method is kept for backward compatibility.</p>
-     * 
-     * Displays a confirmation alert.
-     */
-    @FXML
-    private void handleSave() {
-        try {
-            // saveWorkouts() is now a no-op since data is persisted immediately via REST
-            workoutService.saveWorkouts();
-            showAlert(INFORMATION, "Info", "Workouts are automatically saved to the server when created or updated.");
-        }
-        catch (IOException e) {
-            // This should never happen since saveWorkouts() is a no-op, but handle it anyway
-            showAlert(ERROR, "Error", "An unexpected error occurred: " + e.getMessage());
-        }
-    }
-
     @FXML
     private void handleRowClick(MouseEvent event) throws IOException {
         if (event.getClickCount() == 2) {
@@ -125,5 +102,47 @@ public class WorkoutTableController extends BaseController {
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
+    }
+
+    /**
+     * Sets up a listener for user interactions with the workout table.
+     * <p>
+     * This listener detects when the user clicks outside the {@link #workoutTable}
+     * and clears any existing selection. It improves the overall user experience
+     * by preventing a row from remaining highlighted when the user interacts with
+     * other parts of the view.
+     * </p>
+     * <p>
+     * The listener is attached dynamically once the table’s {@link javafx.scene.Scene}
+     * becomes available, ensuring proper event handling after the FXML view is loaded.
+     * </p>
+     */
+    private void setupTableSelectionListener() {
+        workoutTable.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, e -> {
+                    if (!workoutTable.isHover()) {
+                        workoutTable.getSelectionModel().clearSelection();
+                    }
+                });
+            }
+        });
+    }
+
+    /* Simple Message-Display for Info-Button */
+    @FXML
+    private void handleInfo() {
+        String infoText = """
+                     Workout Tracker App Guide
+            
+            • Click "Add Workout" button to add a workout.
+            • Fill in necessary input-fields and add workout.
+            • Each workout is saved automatically.
+            • Doubleclick a workout-row to view its exercises.
+            • Click outside the table to clear a selection.
+            """;
+
+        showAlert(javafx.scene.control.Alert.AlertType.INFORMATION,
+            "About Workout Tracker", infoText);
     }
 }
