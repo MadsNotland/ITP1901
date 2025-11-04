@@ -270,6 +270,7 @@ public class ExerciseTableController extends BaseController {
         } 
         catch (IllegalArgumentException e) {
             showAlert(ERROR, "Save Error", "Could not add new workout fields: " + e.getMessage());
+            return;
         }
 
         // Build a fresh list of copies (immutable to the UI list)
