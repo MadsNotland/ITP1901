@@ -1,31 +1,23 @@
-# ============================================
+### ============================================
 #  .mailmap
-#  Maps multiple author emails to the same official identity
-#  Ensures consistent contributor info across commits and GitHub stats
-# ============================================
+### Maps multiple author emails to the same official identity
+###  Ensures consistent contributor info across commits and GitHub stats
+### ============================================
 
-# Format:
-# Official Name <student@email> commit name <commit@email>
+
+### Format: `Official Name <student@email> commit name <commit@email>`
+
 
 # --- David ---
 daviros <daviros@stud.ntnu.no> David Rossavik <daviros@stud.ntnu.no>
 daviros <daviros@stud.ntnu.no> David Privat <rossavikdavid@gmail.com>
 
+
 # --- Alexandra ---
-anhugli <anhugli@stud.ntnu.no> Alexandra <anhugli@stud.ntnu.no>
-anhugli <anhugli@stud.ntnu.no> Alexandra Hügli <anhugli@stud.ntnu.no>
 anhugli <anhugli@stud.ntnu.no> Alexandra H. <hueglialexandra@gmail.com>
 anhugli <anhugli@stud.ntnu.no> alexandra <hueglialexandra@gmail.com>
+
 
 # --- Trym ---
 trymajo <trymajo@stud.ntnu.no> Trym Johnsen <trymajo@stud.ntnu.no>
 trymajo <trymajo@stud.ntnu.no> Trym Andreas Johnsen <trymajo@stud.ntnu.no>
-
-# --- Mads ---
-madsnot <madsnot@stud.ntnu.no> Mads Nøtland <madsnot@stud.ntnu.no>
-
-# --- Konrad ---
-konradj <konradj@stud.ntnu.no> Konrad Hogstad Johannessen <konradj@stud.ntnu.no>
-
-# --- Martin ---
-markrin <markrin@stud.ntnu.no> Martin Kringstad <markrin@stud.ntnu.no>
