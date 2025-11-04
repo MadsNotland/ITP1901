@@ -16,6 +16,8 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
+import org.testfx.util.WaitForAsyncUtils;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -44,6 +46,118 @@ class UiExerciseTest extends ApplicationTest {
     }
 
     /**
+     * Waits for a node to appear in the scene graph by retrying the query.
+     * 
+     * @param query the node query string (e.g., "#exerciseNameField")
+     * @param maxAttempts maximum number of attempts
+     */
+    private void waitForNode(String query, int maxAttempts) {
+        for (int i = 0; i < maxAttempts; i++) {
+            WaitForAsyncUtils.waitForFxEvents();
+            var node = lookup(query).tryQuery();
+            if (node.isPresent()) {
+                return;
+            }
+            sleep(100); // Wait 100ms between attempts
+        }
+    }
+
+    /**
+     * Navigates to the workout form view and waits for it to load.
+     * Handles dismissing any server connection error alerts that may appear
+     * (since tests run without a server).
+     * 
+     * @param nodeToWaitFor the node query string to wait for to confirm the form is loaded
+     *                      (e.g., "#exerciseNameField" or "#comboBoxReps")
+     */
+    private void navigateToWorkoutForm(String nodeToWaitFor) {
+        clickOn("#add_workout");
+        
+        // Dismiss server connection error alert if it appears (tests run without server)
+        try {
+            WaitForAsyncUtils.waitForFxEvents();
+            var alert = lookup(".dialog-pane").tryQuery();
+            if (alert.isPresent()) {
+                clickOn("OK"); // Dismiss the alert
+                WaitForAsyncUtils.waitForFxEvents();
+            }
+        } catch (Exception e) {
+            // No alert present, continue
+        }
+        
+        // Wait for the form view to actually appear
+        waitForNode(nodeToWaitFor, 50);
+    }
+
+    /**
+     * Gets references to all exercise form fields.
+     * Assumes the form view is already loaded.
+     * Waits for fields to be available before querying.
+     * 
+     * @return FormFields object containing all exercise form components
+     */
+    private FormFields getExerciseFormFields() {
+        // Ensure fields are ready before querying
+        WaitForAsyncUtils.waitForFxEvents();
+        waitForNode("#exerciseNameField", 50);
+        
+        return new FormFields(
+            lookup("#exerciseNameField").query(),
+            lookup("#comboBoxReps").query(),
+            lookup("#spinnerWeight").query(),
+            lookup("#exerciseTable").queryTableView()
+        );
+    }
+
+    /**
+     * Fills in the exercise form fields with the provided values.
+     * 
+     * @param name the exercise name (can be null or empty)
+     * @param repetitions the number of repetitions
+     * @param weight the weight in kg
+     */
+    private void fillExerciseFields(String name, Integer repetitions, Double weight) {
+        FormFields fields = getExerciseFormFields();
+        interact(() -> {
+            if (name != null) {
+                fields.exerciseNameField.setText(name);
+            }
+            if (repetitions != null) {
+                fields.comboBoxReps.setValue(repetitions);
+            }
+            if (weight != null) {
+                fields.spinnerWeight.getValueFactory().setValue(weight);
+            }
+        });
+    }
+
+    /**
+     * Clicks the "Add Exercise" button and waits for the action to complete.
+     */
+    private void clickAddExercise() {
+        clickOn("#addExerciseButton");
+        WaitForAsyncUtils.waitForFxEvents();
+    }
+
+    /**
+     * Helper class to hold references to exercise form fields.
+     */
+    private static class FormFields {
+        final TextField exerciseNameField;
+        final ComboBox<Integer> comboBoxReps;
+        final Spinner<Double> spinnerWeight;
+        final TableView<?> exerciseTable;
+
+        FormFields(TextField exerciseNameField, ComboBox<Integer> comboBoxReps,
+                   Spinner<Double> spinnerWeight, TableView<?> exerciseTable) {
+            this.exerciseNameField = exerciseNameField;
+            this.comboBoxReps = comboBoxReps;
+            this.spinnerWeight = spinnerWeight;
+            this.exerciseTable = exerciseTable;
+        }
+    }
+
+    /**
      * Checks that exercise-related fields exist in the form view
      * after navigating there.
      *
@@ -53,17 +167,16 @@ class UiExerciseTest extends ApplicationTest {
      */
     @Test
     void exerciseFields_existInFormView() {
-        clickOn("#add_workout");
 
-        TextField exerciseNameField = lookup("#exerciseNameField").query();
-        ComboBox<Integer> comboBoxReps = lookup("#comboBoxReps").query();
-        Spinner<Double> spinnerWeight = lookup("#spinnerWeight").query();
-        TableView<?> exerciseTable = lookup("#exerciseTable").queryTableView();
+        navigateToWorkoutForm("#exerciseNameField");
+        
+        FormFields fields = getExerciseFormFields();
 
-        assertNotNull(exerciseNameField, "exerciseNameField should exist in the form");
-        assertNotNull(comboBoxReps, "comboBoxReps should exist in the form");
-        assertNotNull(spinnerWeight, "spinnerWeight should exist in the form");
-        assertNotNull(exerciseTable, "exerciseTable should exist in the form");
+
+        assertNotNull(fields.exerciseNameField, "exerciseNameField should exist in the form");
+        assertNotNull(fields.comboBoxReps, "comboBoxReps should exist in the form");
+        assertNotNull(fields.spinnerWeight, "spinnerWeight should exist in the form");
+        assertNotNull(fields.exerciseTable, "exerciseTable should exist in the form");
 
         assertDoesNotThrow(
             () -> lookup("#addExerciseButton").query(),
@@ -79,25 +192,17 @@ class UiExerciseTest extends ApplicationTest {
      */
     @Test
     void addExercise_addsRowToExerciseTable() {
-        clickOn("#add_workout");
 
-        TextField exerciseNameField = lookup("#exerciseNameField").query();
-        ComboBox<Integer> comboBoxReps = lookup("#comboBoxReps").query();
-        Spinner<Double> spinnerWeight = lookup("#spinnerWeight").query();
-        TableView<?> exerciseTable = lookup("#exerciseTable").queryTableView();
+        navigateToWorkoutForm("#exerciseNameField");
+        
+        FormFields fields = getExerciseFormFields();
+        int before = fields.exerciseTable.getItems().size();
 
-        int before = exerciseTable.getItems().size();
 
-        interact(() -> {
-            exerciseNameField.setText("Bench Press");
-            comboBoxReps.setValue(10);
-            spinnerWeight.getValueFactory().setValue(60.0);
-        });
+        fillExerciseFields("Bench Press", 10, 60.0);
+        clickAddExercise();
 
-        clickOn("#addExerciseButton");
-
-        int after = exerciseTable.getItems().size();
-
+        int after = fields.exerciseTable.getItems().size();
         assertEquals(
             before + 1,
             after,
@@ -116,17 +221,11 @@ class UiExerciseTest extends ApplicationTest {
      */
     @Test
     void addExercise_showsAlert_whenNameMissing() {
-        clickOn("#add_workout");
+        navigateToWorkoutForm("#comboBoxReps");
+        
+        fillExerciseFields(null, 8, 40.0); // Name is null/missing
+        clickAddExercise();
 
-        ComboBox<Integer> comboBoxReps = lookup("#comboBoxReps").query();
-        Spinner<Double> spinnerWeight = lookup("#spinnerWeight").query();
-
-        interact(() -> {
-            comboBoxReps.setValue(8);
-            spinnerWeight.getValueFactory().setValue(40.0);
-        });
-
-        clickOn("#addExerciseButton");
 
         DialogPane dialog = lookup(".dialog-pane").query();
         assertNotNull(dialog, "An alert dialog should appear if exercise name is missing");
@@ -136,5 +235,42 @@ class UiExerciseTest extends ApplicationTest {
             message.contains("cannot be empty") || message.contains("exercise name"),
             "Alert text should explain that exercise name is required"
         );
+    }
+
+    @Test
+    void addExercise_showsAlert_whenRepetitionsMissing() {
+        navigateToWorkoutForm("#exerciseNameField");
+        
+        fillExerciseFields("Squats", null, 100.0); // Repetitions missing
+        clickAddExercise();
+        
+        // Wait for alert dialog to appear
+        waitForNode(".dialog-pane", 50);
+        DialogPane dialog = lookup(".dialog-pane").query();
+        assertNotNull(dialog, "Alert should appear when repetitions are missing");
+        
+        String message = dialog.getContentText().toLowerCase();
+        assertTrue(
+            message.contains("repetitions") || message.contains("select"),
+            "Alert text should mention repetitions"
+        );
+    }
+
+
+    @Test
+    void addMultipleExercises_addsMultipleRows() {
+        navigateToWorkoutForm("#exerciseNameField");
+        FormFields fields = getExerciseFormFields();
+        
+        int before = fields.exerciseTable.getItems().size();
+        
+        fillExerciseFields("Push-ups", 20, 0.0);
+        clickAddExercise();
+        
+        fillExerciseFields("Pull-ups", 10, 0.0);
+        clickAddExercise();
+        
+        int after = fields.exerciseTable.getItems().size();
+        assertEquals(before + 2, after, "Should add 2 exercises");
     }
 }
