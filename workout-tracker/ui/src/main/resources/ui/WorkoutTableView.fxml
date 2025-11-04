@@ -4,8 +4,12 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
+
+
 
 <VBox 
     alignment="CENTER" 
@@ -30,8 +34,16 @@
 
     <!-- Button for adding workout session -->
     <StackPane>
-        <Button  text="Add Workout" styleClass="button-primary" fx:id="add_workout" id="add_workout" onAction="#handleAddButton" StackPane.alignment="CENTER" />
-        <Button fx:id="infoButton" text="ℹ" onAction="#handleInfo" styleClass="button-info" StackPane.alignment="CENTER_RIGHT" translateX="-20" />
+        <Button  text="Add Workout" styleClass="button-primary" fx:id="add_workout" onAction="#handleAddButton" StackPane.alignment="CENTER" />
+        <Button fx:id="infoButton" onAction="#handleInfo" styleClass="button-info" StackPane.alignment="CENTER_RIGHT" translateX="-20" >
+            <graphic>
+                <ImageView fitHeight="40" fitWidth="40">
+                    <image>
+                        <Image url="@images/info.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
     </StackPane>
     
 </VBox>
