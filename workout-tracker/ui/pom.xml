@@ -130,22 +130,82 @@
                     </excludes>
                 </configuration>
             </plugin>
-            <!-- JavaFX Maven plugin - run/pack the JavaFX application -->
-            <plugin>
-                <groupId>org.openjfx</groupId>
-                <artifactId>javafx-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>ui.WorkoutTrackerApp</mainClass>
-                    <options>
-                        <option>--add-exports</option>
-                        <option>javafx.base/javafx.collections=ALL-UNNAMED</option>
-                    </options>
-                </configuration>
-            </plugin>
+
+            <!-- Spotbugs -->
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
             </plugin>
+
+            <!-- JavaFX Maven plugin - run/pack the JavaFX application (and Jlink) 
+                 JLink and packaging setup inspired by the IT1901 Todo List Example:
+                 https://gitlab.stud.idi.ntnu.no/it1901/todo-list-example
+            -->
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>workout.tracker.ui/ui.WorkoutTrackerApp</mainClass>
+
+                    <!-- These 4 controls the jlink-part -->
+                    <compress>2</compress>
+                    <stripDebug>true</stripDebug>
+                    <noHeaderFiles>true</noHeaderFiles>
+                    <noManPages>true</noManPages>
+
+                    <!-- Name on runtime image and runnable launcher -->
+                    <launcher>workout-tracker</launcher>
+                    <jlinkImageName>workout-tracker-${os.target}</jlinkImageName>
+                    <jlinkZipName>workout-tracker-${os.target}</jlinkZipName>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    
+    <!-- OS-specific build profiles.
+         These profiles allow building JavaFX runtime images for different platforms (Linux, macOS, Windows)
+         by setting the appropriate properties used by the javafx-maven-plugin.
+    -->
+    <profiles>
+        <!-- Linux -->
+        <profile>
+            <id>linux</id>
+            <activation>
+            <os>
+                <family>unix</family>
+            </os>
+            </activation>
+            <properties>
+            <os.target>linux</os.target>
+            <javafx.platform>linux</javafx.platform>
+            </properties>
+        </profile>
+        <!-- Windows -->
+        <profile>
+            <id>win</id>
+            <activation>
+            <os>
+                <family>windows</family>
+            </os>
+            </activation>
+            <properties>
+            <os.target>win</os.target>
+            <javafx.platform>win</javafx.platform>
+            </properties>
+        </profile>
+        <!-- macOS -->
+        <profile>
+            <id>mac</id>
+            <activation>
+            <os>
+                <family>mac</family>
+            </os>
+            </activation>
+            <properties>
+            <os.target>mac</os.target>
+            <javafx.platform>mac</javafx.platform>
+            </properties>
+        </profile>
+    </profiles>
+
 </project>
