@@ -1,11 +1,31 @@
+/* ========================================
+   DARK THEME - Workout Tracker UI
+   Optimized JavaFX CSS
+   ======================================== */
+
+/* Color palette
+   PRIMARY: #5865f2
+   PRIMARY_DARK: #4752c4
+   BG_MAIN: #2f3246
+   BG_LIGHT: #3c3f58
+   TEXT: #ffffff
+   TEXT_DIM: #dcdcdc
+   TEXT_MUTED: #aaaaaa
+*/
 
 /* Container */
-.form-container {
+.dark-container {
     -fx-background-color: linear-gradient(to bottom right, #2b2e4a, #1f2235);
     -fx-padding: 40;
     -fx-spacing: 15;
     -fx-background-radius: 15;
 }
+
+/* Background Mainview */
+.border-pane {
+    -fx-background-color: linear-gradient(to bottom right, #2b2e4a, #1f2235);
+}
+
 
 /* Title */
 .label-title {
@@ -46,9 +66,9 @@
 /* ========== Date-picker =========== */
 .date-picker {
     -fx-background-color: #3c3f58;
+    -fx-text-fill: #ffffff;
     -fx-background-radius: 8;
     -fx-border-color: transparent;
-    -fx-text-fill: #ffffff;
     -fx-prompt-text-fill: #aaaaaa;
 }
 
@@ -138,10 +158,6 @@
 
 /* ========== ComboBox styling (time, reps) ========== */
 .combo-box {
-    -fx-background-color: #3c3f58;
-    -fx-background-radius: 8;
-    -fx-border-color: transparent;
-    -fx-text-fill: #ffffff;
     -fx-font-size: 14px;
     -fx-alignment: CENTER; /* sentrerer teksten i feltet */
 }
@@ -191,13 +207,6 @@
 
 
 /* ========== Text Area (For notes) ========== */
-.text-area {
-    -fx-background-color: #3c3f58;
-    -fx-background-radius: 8;
-    -fx-text-fill: #ffffff;
-    -fx-prompt-text-fill: #aaaaaa;
-    -fx-border-color: transparent;
-}
 
 /* Controls backgroundcolor in ScrollPane-part */
 .text-area .scroll-pane {
@@ -222,9 +231,6 @@
 /* ========= Spinner (Weight input) ========= */
 .spinner {
     -fx-background-color: #3c3f58;
-    -fx-background-radius: 8;
-    -fx-border-color: transparent;
-    -fx-text-fill: #ffffff;
 }
 
 /* Text in spinner */
@@ -330,6 +336,7 @@
 .exercise-table .table-row-cell:hover {
     -fx-background-color: #4752c4;
     -fx-text-fill: white;
+    -fx-cursor: hand;
 }
 
 /* Highlight chosen row */
@@ -354,7 +361,7 @@
 }
 /* ========== Exercise Table Finished ========== */
 
-/* Delete exerciseButton */
+/* ========== Delete exerciseButton ============ */
 .button-delete-side {
     -fx-background-color: #e74c3c;
     -fx-text-fill: white;
@@ -368,6 +375,8 @@
 .button-delete-side:hover {
     -fx-background-color: #ff6659;
 }
+/* ========== Delete exerciseButton Finished ============ */
+
 
 
 /* ========== Add Workout Button ======== */
@@ -384,9 +393,27 @@
 }
 /* ========== Add Workout Button Finished ======== */
 
-/* Cancel Button */
+/* ========== Cancel Button ================ */
 .button-danger {
     -fx-background-color: #e74c3c;
     -fx-text-fill: white;
     -fx-background-radius: 10;
+    -fx-cursor: hand;
 }
+.button-danger:hover {
+    -fx-background-color: #ff6659;
+}
+/* ========== Cancel Button Finished ================ */
+
+/* ========== Info Button TableView ================= */
+.button-info {
+    -fx-background-color: transparent; 
+    -fx-border-color: transparent;      
+    -fx-padding: 0;                      
+    -fx-cursor: hand;                    
+}
+
+.button-info:hover {
+    -fx-opacity: 0.8;
+}
+/* =========== Info Button Finished =============== */
