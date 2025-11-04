@@ -1,0 +1,9 @@
+
+#teamwork
+This release builds on our reflection from release 2. We kept the core setup that already worked; lightweight upfront planning with issues and a milestone, while tightening coordination as the deadline approached. In the final week we scheduled more frequent check-ins, aiming to finish by Friday (ahead of the Monday due date) to avoid the last-minute fixes we experienced previously. That buffer reflects what we learned from earlier releases, making a shift in our mindset from being in a rush, towards stabilizing and polishing.
+
+Workload distribution improved as we aligned people to clear responsibility areas (e.g., server, testing, tooling, UI, and user stories). Without over specializing, this focus reduced context switching and made handoffs smoother. Communication remained largely the same because we have felt it has been effective, but collaboration increased on cross-cutting tasks like user stories touching both client and server.
+
+Our workflow and technical collaboration also matured. We introduced a commit message template and continued using feature branches per issue with pull requests as the only path to `main`. Code reviews became stricter, and reviewers consistently pulled the latest branch before reviewing, an adjustment that removed a source of avoidable bugs. Backend–frontend integration was notably smooth this time, with very few merge conflicts. We coordinated API changes early and informed each other of plans so that client work and server updates stayed in sync.
+
+Key lessons from release 3: finish earlier to create time for quality, keep responsibilities focused but flexible, and treat the PR/review process as a quality gate rather than a formality. Overall, we saw better predictability, cleaner integration, and a more deliberate pace than in release 2. 
