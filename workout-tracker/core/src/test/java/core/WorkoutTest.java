@@ -138,13 +138,20 @@ class WorkoutTest {
         Workout w = validWorkout();
         Exercise squat = exercise("Squat", 5, 80.0);
 
+        assertNull(w.findExerciseById(null));
+        assertNull(w.findExerciseById(" "));
+        assertNull(w.findExerciseById("\n\t "));
+
         w.addExercise(squat);
         assertEquals(2, w.getExercises().size());
         assertSame(squat, w.findExerciseById(squat.getId()));
+        assertThrows(IllegalArgumentException.class, () -> w.addExercise(squat));
 
         w.removeExercise(squat);
         assertEquals(1, w.getExercises().size());
         assertNull(w.findExerciseById(squat.getId()));
+
+        assertThrows(IllegalArgumentException.class, () -> w.removeExercise(squat));
     }
 
     /**
