@@ -74,6 +74,10 @@ public class WorkoutService {
         // No-op: workouts are persisted immediately via REST API
     }
 
+    public void updateWorkout(Long id, Workout workout) throws IOException {
+        restClient.updateWorkout(id, workout);
+    }
+
     /**
      * Returns the shared {@link WorkoutTracker} instance used by the application.
      *

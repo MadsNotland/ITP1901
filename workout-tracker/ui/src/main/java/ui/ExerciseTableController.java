@@ -1,12 +1,16 @@
 package ui;
 
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
+
 import java.io.IOException;
-import java.util.ArrayList;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import core.Exercise;
 import core.Workout;
+import core.WorkoutTracker;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -17,9 +21,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.SelectionMode;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -29,6 +33,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import ui.base.BaseController;
+import ui.service.WorkoutService;
 
 /**
  * Controller for {@code ExerciseTableView.fxml}.
@@ -78,6 +83,8 @@ public class ExerciseTableController extends BaseController {
 
     /** Reference used only for navigation; set by {@link MainController} after loading. */
     private MainController mainController;
+
+    private WorkoutService workoutService;
 
     /** Staged edits for header fields before committing to the Workout. */
     private final StringProperty stagedType   = new SimpleStringProperty("");
@@ -212,6 +219,20 @@ public class ExerciseTableController extends BaseController {
         }
     }
 
+    /**
+     * Injects the shared {@link WorkoutService} instance used to store and manage
+     * all workouts in the application via the {@link WorkoutTracker}.
+     * <p>
+     * This reference is provided by the {@link MainController} after FXML loading,
+     * ensuring that all controllers operate on the same underlying data model.
+     * </p>
+     *
+     * @param workoutService the shared {@link WorkoutService} instance
+     */
+    public void setWorkoutService(WorkoutService workoutService) {
+        this.workoutService = workoutService;
+    }
+
     /** Back = discard edits and go to workout table. */
     @FXML
     private void handleBack() throws IOException {
@@ -225,6 +246,32 @@ public class ExerciseTableController extends BaseController {
         if (w == null) {
             return;
         }
+
+        // Pull staged values
+        String type = stagedType.get() == null ? "" : stagedType.get().trim();
+        String notes = stagedNotes.get() == null ? "" : stagedNotes.get().trim();
+        LocalDate date = stagedDate.get();
+        int hours = stagedHours.get();
+        int minutes = stagedMinutes.get();
+
+        // Convert to your HH.MM storage convention (minutes as hundredths)
+        double time = hours + (minutes / 100.0);
+
+        if (time <= 0.0) {
+            showAlert(INFORMATION, "Duration must be greater than 0.\n", "Please set hours or minutes before saving.");
+            return;
+        }
+
+        try {
+            w.setType(type);     // throws if blank/null
+            w.setNotes(notes);   // throws if blank/null
+            w.setDate(date);     // throws if null
+            w.setTime(time);     // throws if <= 0
+        } 
+        catch (IllegalArgumentException e) {
+            showAlert(ERROR, "Save Error", "Could not add new workout fields: " + e.getMessage());
+        }
+
         // Build a fresh list of copies (immutable to the UI list)
         List<Exercise> updated = new ArrayList<>(exerciseItems.size());
         for (Exercise e : exerciseItems) {
@@ -233,8 +280,13 @@ public class ExerciseTableController extends BaseController {
         // Replace model list (see Workout#setExercises below)
         w.setExercises(updated);
 
-        mainController.saveAllWorkoutsWithAlert();
-
+        try {
+            workoutService.updateWorkout(workoutId, w);
+            showAlert(INFORMATION, "Saved", "Workouts saved to file.");
+        } 
+        catch (IOException e) {
+            showAlert(ERROR, "Save Error", "Could not save workouts: " + e.getMessage());
+        }
     }
 
     /** Add a new CLONED exercise to the editor only (not the model until Save). */
@@ -295,7 +347,12 @@ public class ExerciseTableController extends BaseController {
             System.out.println("mainController == null || workoutId == null");
             return null;
         }
-        return mainController.findWorkoutById(workoutId);
+        return workoutService.getWorkoutTracker()
+                .getAllWorkouts()
+                .stream()
+                .filter(w -> workoutId.equals(w.getId()))
+                .findFirst()
+                .orElse(null);
     }
     // --- Helpers to enable double-click editing ---
 

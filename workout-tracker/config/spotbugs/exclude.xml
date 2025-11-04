@@ -57,6 +57,12 @@
     <Bug pattern="EI_EXPOSE_REP2"/>
   </Match>
 
+  <Match>
+    <Class name="ui.ExerciseTableController"/>
+    <Method name="setWorkoutService"/>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+  </Match>
+
   <!-- Ignore Internal representation warning in Spring Boot controllers -->
   <Match>
     <Class name="server.WorkoutController"/>
