@@ -50,13 +50,8 @@ public class MainController extends BaseController {
     @FXML
     private void initialize() throws IOException {
         showWorkoutTable();
-        try {
-            workoutService.loadWorkouts();
-        } 
-        catch (IOException e) {
-            showAlert(ERROR, "Server Connection Error", 
-                "Could not connect to the server. Please check that the server is running on http://localhost:8080");
-        }   
+        loadWorkoutsFromServer();
+        addCssListener();  
     }
 
     /**
@@ -119,5 +114,50 @@ public class MainController extends BaseController {
         controller.setWorkout(workout);
 
         contentArea.setCenter(tableView);
+    }
+
+    /**
+     * Attempts to load all saved workouts from the remote REST server using {@link WorkoutService}.
+     * <p>
+     * This method is called during initialization to ensure that previously stored workouts are available
+     * when the application starts. If the server cannot be reached or a network error occurs,
+     * an error alert is displayed to inform the user.
+     * </p>
+     * <p>
+     * The alert message includes a suggestion to verify that the backend server is running on
+     * {@code http://localhost:8080}.
+     * </p>
+     */
+    public void loadWorkoutsFromServer() {
+        try {
+            workoutService.loadWorkouts();
+        } 
+        catch (IOException e) {
+            showAlert(ERROR, "Server Connection Error", 
+                "Could not connect to the server. Please check that the server is running on http://localhost:8080");
+        } 
+    }
+
+    /**
+     * Adds a listener to the {@link #contentArea} scene property that automatically applies the
+     * global dark theme stylesheet once the scene becomes available.
+     * <p>
+     * This ensures that the {@code dark-theme.css} file is loaded dynamically when the root layout
+     * ({@link javafx.scene.layout.BorderPane}) is attached to a {@link javafx.scene.Scene}.
+     * As a result, all current and future views inserted into the content area will inherit
+     * the same consistent dark styling across the application.
+     * </p>
+     * <p>
+     * The stylesheet is located at {@code /ui/style/dark-theme.css} within the application's resources.
+     * </p>
+     */
+    public void addCssListener() {
+        contentArea.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.getStylesheets().add(
+                    getClass().getResource("/ui/style/dark-theme.css").toExternalForm()
+                );
+            }
+        });
     }
 }

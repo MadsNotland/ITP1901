@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 public class WorkoutTrackerApp extends Application {
 
     private static Scene scene;
-    private static final Scene SCENE = new Scene(new Pane(), 700, 550);
+    private static final Scene SCENE = new Scene(new Pane(), 700, 700);
 
 
     @Override
