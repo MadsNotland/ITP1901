@@ -182,6 +182,70 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals(1.00, sample.getTime(), 0.0001, "Model time should remain unchanged");
     }
 
+    /** Clicking "Add" adds a row to the snapshot table (no need to call private handleAdd). */
+    @Test
+    void addButton_click_addsRow() {
+        TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
+        int before = table.getItems().size();
+
+        // simulate user click
+        clickOn("#addButton");
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals(before + 1, table.getItems().size(), "Add button should append a row");
+    }
+
+    /** Select a row and click "Delete" -> row removed from snapshot. */
+    @Test
+    void deleteButton_click_removesSelectedRows() {
+        TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
+
+        // ensure there is at least one row to delete; add via UI if needed
+        if (table.getItems().isEmpty()) {
+            clickOn("#addButton");
+            WaitForAsyncUtils.waitForFxEvents();
+        }
+
+        int before = table.getItems().size();
+
+        // select last row, then click delete
+        interact(() -> table.getSelectionModel().selectLast());
+        clickOn("#deleteButton");
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals(before - 1, table.getItems().size(), "Delete button should remove selected row(s)");
+    }
+
+    /** After add/delete, the computed "Set #" column reindexes to 1..n. */
+    @Test
+    void setColumn_reindexes_afterAddDelete() {
+        TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
+
+        clickOn("#addButton");
+        WaitForAsyncUtils.waitForFxEvents();
+
+        @SuppressWarnings("unchecked")
+        TableColumn<Exercise, Number> setCol =
+            (TableColumn<Exercise, Number>) table.getColumns().get(0);
+
+        for (int i = 0; i < table.getItems().size(); i++) {
+            int setNo = setCol.getCellObservableValue(i).getValue().intValue();
+            assertEquals(i + 1, setNo, "Row "+i+" should display set #"+(i+1));
+        }
+
+        interact(() -> table.getSelectionModel().select(0));
+        clickOn("#deleteButton");
+        WaitForAsyncUtils.waitForFxEvents();
+
+        for (int i = 0; i < table.getItems().size(); i++) {
+            int setNo = setCol.getCellObservableValue(i).getValue().intValue();
+            assertEquals(i + 1, setNo, "Row "+i+" should display set #"+(i+1));
+        }
+    }
+
+
+
+
     /** Minimal, valid Workout with two exercises for driving the UI. */
     private static Workout sampleWorkout() {
         Exercise e1 = new Exercise("Warmup", 0, 0.0, "ex-1");

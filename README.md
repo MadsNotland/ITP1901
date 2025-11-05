@@ -13,6 +13,11 @@ Our team is developing a Workout Tracker in JavaFX over three planned releases. 
 ```bash
 How to run:
 
+cd workout-tracker/server
+mvn spring-boot:run
+
+then open a new terminal and
+
 cd workout-tracker/ui
 mvn javafx:run
 ```
@@ -54,7 +59,7 @@ mvn javafx:run
     │   │    ├── classDiagram.md            # Class diagram
     │   │    ├── release2.md                # Release 2 documentation
     │   │    └── # more documentation...
-    │   └── ai-tools.md                # AI usage documentation
+    │   └── release3/                  # Release 3
     ├── devfile.yaml               # devfile for Eclipse Che
     └── README.md                  # This file
 

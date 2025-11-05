@@ -62,6 +62,23 @@ public class WorkoutService {
     }
 
     /**
+     * Saves all workouts currently in the {@link WorkoutTracker} to file.
+     *
+     * <p>This method is now a no-op since workouts are persisted immediately
+     * via REST API when they are created, updated, or deleted. This method is
+     * kept for backward compatibility with existing UI code.</p>
+     *
+     * @throws IOException never thrown (method is a no-op)
+     */
+    public void saveWorkouts() throws IOException {
+        // No-op: workouts are persisted immediately via REST API
+    }
+
+    public void updateWorkout(Long id, Workout workout) throws IOException {
+        restClient.updateWorkout(id, workout);
+    }
+
+    /**
      * Returns the shared {@link WorkoutTracker} instance used by the application.
      *
      * @return the internal {@code WorkoutTracker}
@@ -109,5 +126,18 @@ public class WorkoutService {
         }
         restClient.deleteWorkout(workout.getId());
         workoutTracker.getAllWorkouts().removeIf(w -> w.getId().equals(workout.getId()));
+    }
+  
+    // Method for finding a workout given a workoutId
+    public Workout findWorkout(Long workoutId) {
+        if (workoutId == null) {
+            return null;
+        }
+        return getWorkoutTracker()
+                .getAllWorkouts()
+                .stream()
+                .filter(w -> workoutId.equals(w.getId()))
+                .findFirst()
+                .orElse(null);
     }
 }

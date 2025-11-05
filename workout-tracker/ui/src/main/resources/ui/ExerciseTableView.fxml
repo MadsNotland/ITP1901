@@ -10,6 +10,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?> 
 <?import javafx.scene.layout.GridPane?>
 
 <VBox alignment="CENTER" spacing="10" style="-fx-padding: 20;" 
@@ -17,8 +18,12 @@
     xmlns:fx="http://javafx.com/fxml/1" 
     fx:controller="ui.ExerciseTableController">
 
-    <HBox alignment="CENTER_LEFT">
-        <Button mnemonicParsing="false" onAction="#handleBack" text="Back" />
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Button text="Back" onAction="#handleBack"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="addButton" text="Add Set" onAction="#handleAdd"/>
+        <Button fx:id="deleteButton" text="Delete Selected" onAction="#handleDelete"/>
+        <Button fx:id="saveButton" text="Save" onAction="#handleSave"/>
     </HBox>
    
     <!-- Workout Details -->

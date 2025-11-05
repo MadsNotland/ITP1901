@@ -112,6 +112,7 @@ public class MainController extends BaseController {
         ExerciseTableController controller = loader.getController();
         controller.setMainController(this);
         controller.setWorkout(workout);
+        controller.setWorkoutService(workoutService);
 
         contentArea.setCenter(tableView);
     }
