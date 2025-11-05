@@ -125,7 +125,7 @@ public class WorkoutService {
             throw new IllegalArgumentException("Workout cannot be null");
         }
         restClient.deleteWorkout(workout.getId());
-        workoutTracker.getAllWorkouts().removeIf(w -> w.getId().equals(workout.getId()));
+        workoutTracker.removeWorkoutById(workout.getId());
     }
   
     // Method for finding a workout given a workoutId

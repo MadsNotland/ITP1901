@@ -30,6 +30,19 @@ public class WorkoutTracker {
         }
         workouts.add(0, workout);
     }
+
+    /**
+     * Removes the workout with the specified ID from the tracker.
+     *
+     * @param id the unique identifier of the workout to remove
+     * @throws IllegalArgumentException if {@code id} is {@code null}
+     */
+    public void removeWorkoutById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Workout ID cannot be null");
+        }
+        workouts.removeIf(w -> id.equals(w.getId()));
+    }
     
     /**
      * Returns the live observable list of workouts.
