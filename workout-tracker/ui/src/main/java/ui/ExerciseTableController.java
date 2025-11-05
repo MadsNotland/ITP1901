@@ -1,8 +1,5 @@
 package ui;
 
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -20,6 +17,8 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -309,6 +308,24 @@ public class ExerciseTableController extends BaseController {
         if (!selected.isEmpty()) {
             exerciseItems.removeAll(selected);
         }
+    }
+
+    /* Simple Message-Display for Info-Button */
+    @FXML
+    private void handleInfo() {
+        String infoText = """
+                     Workout Edit Guide
+            
+            • Double-click a field to edit
+            • Click on columns in exercise to edit them
+            • Click set "Add set" to add a new exercise
+            • Mark exercise and click "Delete Selected" to delete
+            • Click "Save" to confirm changes
+            • Click "Back" to discard changes and return to homepage
+            """;
+
+        showAlert(javafx.scene.control.Alert.AlertType.INFORMATION,
+            "About Workout Tracker", infoText);
     }
 
     // ---- edit commit handlers ----

@@ -8,9 +8,12 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?> 
+<?import javafx.scene.layout.StackPane?> 
 <?import javafx.scene.layout.GridPane?>
 
 <VBox alignment="CENTER" spacing="10" styleClass="dark-container" 
@@ -66,4 +69,16 @@
             <TableColumn fx:id="weightColumn" prefWidth="139.0" text="Weight" />
         </columns>
     </TableView>
+
+    <StackPane>
+        <Button fx:id="infoButton" onAction="#handleInfo" styleClass="button-info" StackPane.alignment="CENTER_RIGHT" translateX="-20" >
+            <graphic>
+                <ImageView fitHeight="40" fitWidth="40">
+                    <image>
+                        <Image url="@images/info.png" />
+                    </image>
+                </ImageView>
+            </graphic>
+        </Button>
+    </StackPane>
 </VBox>
