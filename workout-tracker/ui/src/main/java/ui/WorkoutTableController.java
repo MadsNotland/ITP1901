@@ -64,26 +64,7 @@ public class WorkoutTableController extends BaseController {
     void initializeData() {
         setTableView();
         setupWorkoutTableSelectionListener();
-
-        // Initially hide the delete button
-        deleteWorkoutButton.setVisible(false);
-        deleteButtonSlot.setManaged(true);
-        deleteWorkoutButton.setManaged(true);
-        
-        // Prevent HBox from managing the StackPane's vertical position
-        // We'll manage it manually via translateY
-        deleteButtonSlot.setManaged(true); // Keep managed so it takes up space horizontally
-        
-        // Position delete button next to selected row
-        workoutTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                positionDeleteButtonForSelectedRow();
-            } 
-            else {
-                deleteWorkoutButton.setVisible(false);
-                deleteButtonSlot.setTranslateY(0);
-            }
-        });
+        setupDeleteButtonBehavior();
     }
 
     /**
@@ -153,7 +134,7 @@ public class WorkoutTableController extends BaseController {
             return;
         }
 
-        boolean confirmed = confirm(
+        boolean confirmed = showConfirmation(
             "Delete workout",
             "Are you sure you want to delete this workout?",
             "Type: %s%nDate: %s%nTime: %s%n%nThis cannot be undone."
@@ -324,13 +305,38 @@ public class WorkoutTableController extends BaseController {
         }
     }
 
-    /* Helper for confirm box for deleting exercises */
-    private boolean confirm(String title, String header, String content) {
-        var alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(header);
-        alert.setContentText(content);
-        var result = alert.showAndWait();
-        return result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK;
+    /**
+     * Sets up the delete button’s initial state and its dynamic visibility behavior.
+     * <p>
+     * This method ensures the delete button is hidden by default and becomes visible
+     * only when a workout row is selected in the table. It also listens for selection
+     * changes to reposition the delete button vertically, aligning it with the selected row.
+     * When no row is selected, the button is hidden and reset to its default position.
+     * </p>
+     * <p>
+     * Extracted for readability to keep {@link #initializeData()} focused on initialization flow
+     * rather than UI layout logic.
+     * </p>
+     */
+    private void setupDeleteButtonBehavior() {
+        // Initially hide the delete button
+        deleteWorkoutButton.setVisible(false);
+        deleteButtonSlot.setManaged(true);
+        deleteWorkoutButton.setManaged(true);
+        
+        // Prevent HBox from managing the StackPane's vertical position
+        // We'll manage it manually via translateY
+        deleteButtonSlot.setManaged(true); // Keep managed so it takes up space horizontally
+        
+        // Position delete button next to selected row
+        workoutTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                positionDeleteButtonForSelectedRow();
+            } 
+            else {
+                deleteWorkoutButton.setVisible(false);
+                deleteButtonSlot.setTranslateY(0);
+            }
+        });
     }
 }
