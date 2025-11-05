@@ -2,17 +2,21 @@ package ui;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
-import javafx.scene.Parent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import ui.service.RestWorkoutClient;
 
 import static org.junit.jupiter.api.Assertions.*;
 /**
@@ -25,19 +29,40 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 public class UiWorkoutTest extends ApplicationTest {
 
-    private Parent root;
-    /**
-     * Starts the application under test by invoking {@link WorkoutTrackerApp#start(Stage)}.
-     * Using the real app entry point ensures coverage of the app startup path.
-     *
-     * @param stage primary stage provided by TestFX
-     * @throws IOException if the application fails to load FXML
-     */
+    private static final String RUN_TAG = "UI-" + System.nanoTime() + "-"; //unique per testrun
+    private RestWorkoutClient restClient;
+
+    /* Start the JavaFX application before tests */
     @Override
     public void start(Stage stage) throws Exception {
         new WorkoutTrackerApp().start(stage);
-        // Optional: keep a reference to the root if you need it later
-        root = (Parent) stage.getScene().getRoot();
+    }
+
+    /* Setup RestWorkoutClient before each test */
+    @BeforeEach
+    void setupClient() {
+        restClient = new RestWorkoutClient();
+    }
+    /**
+    * Cleans up any workouts created during UI tests by deleting those with notes
+    * starting with the unique RUN_TAG.
+    */
+    @AfterEach
+    void cleanupUiData() {
+        try {
+            for (core.Workout w : restClient.getAllWorkouts()) {
+                String notes = w.getNotes();
+                if (notes != null && notes.startsWith(RUN_TAG) && w.getId() != null) {
+                    try {
+                        restClient.deleteWorkout(w.getId());
+                    } catch (IOException ioe) {
+                        System.err.println("Cleanup delete failed for id " + w.getId() + ": " + ioe.getMessage());
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Cleanup list failed: " + e.getMessage());
+        }
     }
 
     /**
@@ -53,7 +78,7 @@ void handleAddWorkout_createsRowWithUniqueNotes() {
     var a = lookup(".dialog-pane").tryQuery();
     if (a.isPresent()) { clickOn("OK"); WaitForAsyncUtils.waitForFxEvents(); }
 
-    String unique = "UI-" + System.currentTimeMillis();
+    String unique = RUN_TAG  + System.currentTimeMillis();
 
     interact(() -> {
         lookup("#typeField").<TextField>query().setText("Strength");

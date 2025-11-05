@@ -46,28 +46,4 @@
     "id" : "2f8551a9-c9a3-4874-b3af-51cf3c9387e5"
   } ],
   "id" : 3
-}, {
-  "type" : "Strength",
-  "notes" : "UI-1762332416305",
-  "date" : [ 2025, 11, 5 ],
-  "time" : 1.3,
-  "exercises" : [ {
-    "name" : "Squat",
-    "repetitions" : 10,
-    "weight" : 100.0,
-    "id" : "739d54c1-cd51-494e-9dfc-b7492051b052"
-  } ],
-  "id" : 21
-}, {
-  "type" : "Strength",
-  "notes" : "UI-1762333109280",
-  "date" : [ 2025, 11, 5 ],
-  "time" : 1.3,
-  "exercises" : [ {
-    "name" : "Squat",
-    "repetitions" : 10,
-    "weight" : 100.0,
-    "id" : "f27590b7-7bd9-4b9c-982a-b04957c2a450"
-  } ],
-  "id" : 22
 } ]
