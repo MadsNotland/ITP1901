@@ -59,7 +59,7 @@ mvn javafx:run
     │   │    ├── classDiagram.md            # Class diagram
     │   │    ├── release2.md                # Release 2 documentation
     │   │    └── # more documentation...
-    │   └── ai-tools.md                # AI usage documentation
+    │   └── release3/                  # Release 3
     ├── devfile.yaml               # devfile for Eclipse Che
     └── README.md                  # This file
 
