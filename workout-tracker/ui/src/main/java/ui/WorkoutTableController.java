@@ -147,7 +147,6 @@ public class WorkoutTableController extends BaseController {
         }
         try {
             workoutService.deleteWorkout(selected);
-            workoutTable.getSelectionModel().clearSelection();
         } 
         catch (IllegalArgumentException iae) {
             showAlert(
