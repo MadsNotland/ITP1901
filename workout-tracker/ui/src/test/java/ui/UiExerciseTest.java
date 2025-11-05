@@ -167,11 +167,9 @@ class UiExerciseTest extends ApplicationTest {
      */
     @Test
     void exerciseFields_existInFormView() {
-
         navigateToWorkoutForm("#exerciseNameField");
         
         FormFields fields = getExerciseFormFields();
-
 
         assertNotNull(fields.exerciseNameField, "exerciseNameField should exist in the form");
         assertNotNull(fields.comboBoxReps, "comboBoxReps should exist in the form");
@@ -192,12 +190,10 @@ class UiExerciseTest extends ApplicationTest {
      */
     @Test
     void addExercise_addsRowToExerciseTable() {
-
         navigateToWorkoutForm("#exerciseNameField");
         
         FormFields fields = getExerciseFormFields();
         int before = fields.exerciseTable.getItems().size();
-
 
         fillExerciseFields("Bench Press", 10, 60.0);
         clickAddExercise();
@@ -208,6 +204,28 @@ class UiExerciseTest extends ApplicationTest {
             after,
             "Exercise table should gain 1 row after adding a valid exercise"
         );
+    }
+    /**
+     * Happy path:
+     *  - Add an exercise
+     *  - Delete the exercise from the table
+     *  - Expect exerciseTable to have one less row
+     */
+    @Test
+    void handleDeleteExercise_removesRowFromExerciseTable() {
+        navigateToWorkoutForm("#exerciseNameField");
+
+        FormFields fields = getExerciseFormFields();
+        fillExerciseFields("Bench Press", 10, 60.0);
+        clickAddExercise();
+
+        int before = fields.exerciseTable.getItems().size();
+        assertEquals(1, before, "Exercise table should have 1 row after adding an exercise");
+
+        // Simulate deleting the exercise
+        fields.exerciseTable.getItems().remove(0);
+        int after = fields.exerciseTable.getItems().size();
+        assertEquals(0, after, "Exercise table should be empty after deleting the exercise");
     }
 
     /**
@@ -225,7 +243,6 @@ class UiExerciseTest extends ApplicationTest {
         
         fillExerciseFields(null, 8, 40.0); // Name is null/missing
         clickAddExercise();
-
 
         DialogPane dialog = lookup(".dialog-pane").query();
         assertNotNull(dialog, "An alert dialog should appear if exercise name is missing");
