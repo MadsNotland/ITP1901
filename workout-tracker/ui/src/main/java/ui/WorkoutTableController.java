@@ -145,6 +145,8 @@ public class WorkoutTableController extends BaseController {
         }
         try {
             workoutService.deleteWorkout(selected);
+            // Clear selection after deletion to prevent auto-selection of next item
+            workoutTable.getSelectionModel().clearSelection();
         } 
         catch (IllegalArgumentException iae) {
             showAlert(
