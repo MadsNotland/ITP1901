@@ -159,6 +159,39 @@
                     <jlinkZipName>workout-tracker-${os.target}</jlinkZipName>
                 </configuration>
             </plugin>
+
+            <!-- Jpackage plugin - creates platform installers from the jlink runtime image -->
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <!-- Basic metadata -->
+                    <name>WorkoutTracker</name>
+                    <appVersion>1.0.0</appVersion>
+                    <vendor>NTNU</vendor>
+                    <!-- Where to place the installer -->
+                    <destination>target/dist-${os.target}</destination>
+                    <!-- Use the runtime image built by jlink -->
+                    <runtimeImage>target/workout-tracker-${os.target}</runtimeImage>
+                    <module>workout.tracker.ui/ui.WorkoutTrackerApp</module>
+                    <!-- Optional launcher and icon -->
+                    <javaOptions>
+                        <option>-Dfile.encoding=UTF-8</option>
+                    </javaOptions>
+                    <!-- Platform-specific options -->
+                    <winShortcut>true</winShortcut>
+                    <winMenu>true</winMenu>
+                    <winDirChooser>true</winDirChooser>
+
+                    <linuxShortcut>false</linuxShortcut>
+                    <linuxMenuGroup></linuxMenuGroup>
+
+                    <macPackageIdentifier>no.ntnu.workouttracker</macPackageIdentifier>
+                    <macPackageName>WorkoutTracker</macPackageName>
+                </configuration>
+
+            </plugin>
         </plugins>
     </build>
     
