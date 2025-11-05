@@ -3,7 +3,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import core.Workout;
-import core.WorkoutTracker;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -118,50 +117,88 @@ public class WorkoutTableController extends BaseController {
         }
     }
 
-    /* Deletes the selected workout after user confirmation */
+    /* Deletes the selected workout(s) after user confirmation */
     @FXML
     private void handleDeleteWorkout() {
-        Workout selected = workoutTable.getSelectionModel().getSelectedItem();
-        if (selected == null) {
+        var selectedItems = workoutTable.getSelectionModel().getSelectedItems();
+        if (selectedItems.isEmpty()) {
             return;
         }
 
-        if (selected.getId() == null) {
+        // Check if any selected workouts don't have IDs
+        var workoutsWithoutId = selectedItems.stream()
+            .filter(w -> w.getId() == null)
+            .toList();
+        
+        if (!workoutsWithoutId.isEmpty()) {
             showAlert(Alert.AlertType.WARNING,
                 "Cannot delete",
-                "This workout hasn’t been saved to the server yet, so it has no ID.\n" +
-                "Save it first, then try deleting.");
+                "%d workout(s) haven't been saved to the server yet, so they have no ID.%nSave them first, then try deleting."
+                    .formatted(workoutsWithoutId.size()));
             return;
+        }
+
+        // Build confirmation message
+        String confirmationMessage;
+        if (selectedItems.size() == 1) {
+            Workout selected = selectedItems.get(0);
+            confirmationMessage = "Type: %s%nDate: %s%nTime: %s%n%nThis cannot be undone."
+                .formatted(selected.getType(), selected.getDate(), selected.getTime());
+        } 
+        else {
+            confirmationMessage = "You are about to delete %d workouts.%n%nThis cannot be undone."
+                .formatted(selectedItems.size());
         }
 
         boolean confirmed = showConfirmation(
-            "Delete workout",
-            "Are you sure you want to delete this workout?",
-            "Type: %s%nDate: %s%nTime: %s%n%nThis cannot be undone."
-                .formatted(selected.getType(), selected.getDate(), selected.getTime())
+            selectedItems.size() == 1 ? "Delete workout" : "Delete workouts",
+            selectedItems.size() == 1 
+                ? "Are you sure you want to delete this workout?"
+                : "Are you sure you want to delete these workouts?",
+            confirmationMessage
         );
         if (!confirmed) {
             return;
         }
-        try {
-            workoutService.deleteWorkout(selected);
-            // Clear selection after deletion to prevent auto-selection of next item
-            workoutTable.getSelectionModel().clearSelection();
-        } 
-        catch (IllegalArgumentException iae) {
-            showAlert(
-                Alert.AlertType.WARNING,
-                "Delete failed",
-                iae.getMessage()
-            );
+
+        // Create a copy of selected items to avoid modification during iteration
+        var workoutsToDelete = new java.util.ArrayList<>(selectedItems);
+        
+        // Delete all selected workouts
+        var deleted = new java.util.ArrayList<Workout>();
+        var errors = new java.util.ArrayList<String>();
+        
+        for (Workout workout : workoutsToDelete) {
+            try {
+                workoutService.deleteWorkout(workout);
+                deleted.add(workout);
+            } 
+            catch (IllegalArgumentException iae) {
+                errors.add("Failed to delete %s (%s): %s"
+                    .formatted(workout.getType(), workout.getDate(), iae.getMessage()));
+            }
+            catch (IOException ioe) {
+                errors.add("Network error deleting %s (%s): %s"
+                    .formatted(workout.getType(), workout.getDate(), ioe.getMessage()));
+            }
         }
-        catch (IOException ioe) {
-            showAlert(
-                Alert.AlertType.ERROR,
-                "Network Error",
-                "Could not delete workout from server.\n\n" + ioe.getMessage()
-            );
+
+        // Show results
+        if (!errors.isEmpty()) {
+            String errorMessage = String.join("%n", errors);
+            if (deleted.isEmpty()) {
+                showAlert(Alert.AlertType.ERROR, "Delete failed", errorMessage);
+            } 
+            else {
+                showAlert(Alert.AlertType.WARNING,
+                    "Partial delete",
+                    "Deleted %d workout(s), but %d failed:%n%n%s"
+                        .formatted(deleted.size(), errors.size(), errorMessage));
+            }
         }
+
+        // Clear selection after deletion to prevent auto-selection of next item
+        workoutTable.getSelectionModel().clearSelection();
     }
 
     /**
@@ -177,6 +214,11 @@ public class WorkoutTableController extends BaseController {
         
         // Prevent extra empty column from appearing when table expands
         workoutTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        
+        // Enable multiple selection mode
+        workoutTable.getSelectionModel().setSelectionMode(
+            javafx.scene.control.SelectionMode.MULTIPLE
+        );
     }
 
     /**
@@ -223,6 +265,7 @@ public class WorkoutTableController extends BaseController {
             • Fill in necessary input-fields and add workout.
             • Each workout is saved automatically.
             • Doubleclick a workout-row to view its exercises.
+            • Click or Ctrl+Click to select multiple workouts for deletion.
             • Click outside the table to clear a selection.
             """;
 
@@ -231,11 +274,20 @@ public class WorkoutTableController extends BaseController {
     }
 
     /**
-     * Positions the delete button vertically aligned with the currently selected row.
+     * Positions the delete button vertically aligned with the first selected row.
+     * When multiple rows are selected, positions the button at the first selected row.
      * Calculates the row's Y position relative to the table and translates the button slot accordingly.
      */
     private void positionDeleteButtonForSelectedRow() {
-        int selectedIndex = workoutTable.getSelectionModel().getSelectedIndex();
+        var selectedItems = workoutTable.getSelectionModel().getSelectedItems();
+        if (selectedItems.isEmpty()) {
+            deleteWorkoutButton.setVisible(false);
+            deleteButtonSlot.setTranslateY(0);
+            return;
+        }
+        
+        // Use the first selected item's index for positioning
+        int selectedIndex = workoutTable.getItems().indexOf(selectedItems.get(0));
         if (selectedIndex < 0) {
             deleteWorkoutButton.setVisible(false);
             deleteButtonSlot.setTranslateY(0);
@@ -244,8 +296,10 @@ public class WorkoutTableController extends BaseController {
         
         // Use Platform.runLater to ensure layout is complete before calculating positions
         javafx.application.Platform.runLater(() -> {
-            // Double-check selection is still valid
-            if (workoutTable.getSelectionModel().getSelectedIndex() == selectedIndex) {
+            // Verify selection still exists and first item hasn't changed
+            var currentSelected = workoutTable.getSelectionModel().getSelectedItems();
+            if (!currentSelected.isEmpty() && 
+                workoutTable.getItems().indexOf(currentSelected.get(0)) == selectedIndex) {
                 positionButtonNow();
             }
         });
@@ -254,9 +308,16 @@ public class WorkoutTableController extends BaseController {
     /**
      * Helper method that performs the actual button positioning calculation.
      * Uses scene coordinates to account for scrolling.
+     * Positions button at the first selected row when multiple rows are selected.
      */
     private void positionButtonNow() {
-        int selectedIndex = workoutTable.getSelectionModel().getSelectedIndex();
+        var selectedItems = workoutTable.getSelectionModel().getSelectedItems();
+        if (selectedItems.isEmpty()) {
+            return;
+        }
+        
+        // Use the first selected item's index for positioning
+        int selectedIndex = workoutTable.getItems().indexOf(selectedItems.get(0));
         if (selectedIndex < 0) {
             return;
         }
@@ -346,25 +407,27 @@ public class WorkoutTableController extends BaseController {
         
         // Prevent HBox from managing the StackPane's vertical position
         // We'll manage it manually via translateY
-        deleteButtonSlot.setManaged(true); // Keep managed so it takes up space horizontally
+        deleteButtonSlot.setManaged(true);
         
-        // Position delete button next to selected row when selection changes
-        workoutTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                positionDeleteButtonForSelectedRow();
-            } 
-            else {
-                deleteWorkoutButton.setVisible(false);
-                deleteButtonSlot.setTranslateY(0);
+        // Position delete button next to selected row(s) when selection changes
+        workoutTable.getSelectionModel().getSelectedItems().addListener(
+            (javafx.collections.ListChangeListener<Workout>) change -> {
+                if (!workoutTable.getSelectionModel().getSelectedItems().isEmpty()) {
+                    positionDeleteButtonForSelectedRow();
+                } 
+                else {
+                    deleteWorkoutButton.setVisible(false);
+                    deleteButtonSlot.setTranslateY(0);
+                }
             }
-        });
+        );
         
         // Reposition button when table is scrolled (so it follows the selected row)
         workoutTable.setOnScroll(e -> {
-            if (workoutTable.getSelectionModel().getSelectedItem() != null) {
+            if (!workoutTable.getSelectionModel().getSelectedItems().isEmpty()) {
                 // Use Platform.runLater to ensure layout is updated after scroll
                 javafx.application.Platform.runLater(() -> {
-                    if (workoutTable.getSelectionModel().getSelectedItem() != null) {
+                    if (!workoutTable.getSelectionModel().getSelectedItems().isEmpty()) {
                         positionDeleteButtonForSelectedRow();
                     }
                 });
@@ -381,10 +444,10 @@ public class WorkoutTableController extends BaseController {
                         workoutTable.lookup(".scroll-bar:vertical");
                     if (vScrollBar != null) {
                         vScrollBar.valueProperty().addListener((scrollObs, oldVal, newVal) -> {
-                            if (workoutTable.getSelectionModel().getSelectedItem() != null) {
+                            if (!workoutTable.getSelectionModel().getSelectedItems().isEmpty()) {
                                 // Use Platform.runLater to ensure layout is updated after scroll
                                 javafx.application.Platform.runLater(() -> {
-                                    if (workoutTable.getSelectionModel().getSelectedItem() != null) {
+                                    if (!workoutTable.getSelectionModel().getSelectedItems().isEmpty()) {
                                         positionDeleteButtonForSelectedRow();
                                     }
                                 });
