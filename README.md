@@ -13,6 +13,11 @@ Our team is developing a Workout Tracker in JavaFX over three planned releases. 
 ```bash
 How to run:
 
+cd workout-tracker/server
+mvn spring-boot:run
+
+then open a new terminal and
+
 cd workout-tracker/ui
 mvn javafx:run
 ```
