@@ -242,7 +242,7 @@ public class ExerciseTableController extends BaseController {
     /** Save = merge deep snapshot into the model (memory only), then stay here or navigate—your call. */
     @FXML
     private void handleSave() {
-        Workout w = findWorkout();
+        Workout w = workoutService.findWorkout(this.workoutId);
         if (w == null) {
             return;
         }
@@ -342,19 +342,6 @@ public class ExerciseTableController extends BaseController {
         }
     }
 
-    // ---- helpers ----
-    private Workout findWorkout() {
-        if (mainController == null || workoutId == null) {
-            System.out.println("mainController == null || workoutId == null");
-            return null;
-        }
-        return workoutService.getWorkoutTracker()
-                .getAllWorkouts()
-                .stream()
-                .filter(w -> workoutId.equals(w.getId()))
-                .findFirst()
-                .orElse(null);
-    }
     // --- Helpers to enable double-click editing ---
 
     /**

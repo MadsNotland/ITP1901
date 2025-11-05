@@ -109,4 +109,17 @@ public class WorkoutService {
         // Add the created workout (with server-assigned ID) to tracker
         workoutTracker.addWorkout(createdWorkout);
     }
+
+    // Method for finding a workout given a workoutId
+    public Workout findWorkout(Long workoutId) {
+        if (workoutId == null) {
+            return null;
+        }
+        return getWorkoutTracker()
+                .getAllWorkouts()
+                .stream()
+                .filter(w -> workoutId.equals(w.getId()))
+                .findFirst()
+                .orElse(null);
+    }
 }
