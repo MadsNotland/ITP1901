@@ -251,6 +251,7 @@ public class WorkoutTableController extends BaseController {
     
     /**
      * Helper method that performs the actual button positioning calculation.
+     * Uses scene coordinates to account for scrolling.
      */
     private void positionButtonNow() {
         int selectedIndex = workoutTable.getSelectionModel().getSelectedIndex();
@@ -274,27 +275,43 @@ public class WorkoutTableController extends BaseController {
         }
         
         if (selectedRow != null) {
-            // Get the row's bounds relative to the table (its parent VirtualFlow)
+            // Get the row's bounds relative to the table (accounts for scrolling automatically)
             javafx.geometry.Bounds rowBounds = selectedRow.getBoundsInParent();
             
             // Get the table header height
             javafx.scene.Node header = workoutTable.lookup(".column-header-background");
             double tableHeaderHeight = header != null ? header.getBoundsInLocal().getHeight() : 30.0;
             
+            // Check if the row is visible in the viewport
+            // rowBounds.getMinY() is relative to VirtualFlow content area (starts at 0 below header)
+            // If row is scrolled above viewport, getMinY() will be negative
+            // If row is scrolled below viewport, getMinY() will be >= visible height
+            double visibleHeight = workoutTable.getHeight() - tableHeaderHeight;
+            boolean isRowVisible = rowBounds.getMinY() >= 0 && rowBounds.getMinY() < visibleHeight 
+                && rowBounds.getMaxY() > 0 && rowBounds.getMaxY() < visibleHeight;
+            
+            if (!isRowVisible) {
+                // Row is not visible in viewport, hide the button
+                deleteWorkoutButton.setVisible(false);
+                return;
+            }
+            
             // Calculate the row's center Y position relative to the table's top
-            // rowBounds.getMinY() is relative to the VirtualFlow, which starts below the header
+            // rowBounds.getMinY() is relative to the VirtualFlow content area (below header)
+            // but we need it relative to the table's top including header
             double rowCenterY = rowBounds.getMinY() + (rowBounds.getHeight() / 2);
             
-            // Since both table and buttonSlot are in the same HBox,
-            // we need to add the header height to get the absolute position
+            // Since both table and buttonSlot are in the same HBox (inner HBox),
+            // we need to add the header height to position relative to table top
             double buttonSlotY = tableHeaderHeight + rowCenterY - (deleteButtonSlot.getHeight() / 2);
             
-            // Set the translation relative to the button slot's parent (HBox)
+            // Set the translation relative to the button slot's parent (inner HBox)
             deleteButtonSlot.setTranslateY(buttonSlotY);
             deleteWorkoutButton.setVisible(true);
         } 
         else {
             // Fallback: use a simpler calculation based on row index
+            // This fallback doesn't account for scrolling, but is better than nothing
             double rowHeight = workoutTable.getFixedCellSize() > 0 
                 ? workoutTable.getFixedCellSize() 
                 : 32.0; // Default row height from CSS
@@ -306,12 +323,13 @@ public class WorkoutTableController extends BaseController {
     }
 
     /**
-     * Sets up the delete button’s initial state and its dynamic visibility behavior.
+     * Sets up the delete button's initial state and its dynamic visibility behavior.
      * <p>
      * This method ensures the delete button is hidden by default and becomes visible
      * only when a workout row is selected in the table. It also listens for selection
-     * changes to reposition the delete button vertically, aligning it with the selected row.
-     * When no row is selected, the button is hidden and reset to its default position.
+     * changes and scroll events to reposition the delete button vertically, aligning it
+     * with the selected row. When no row is selected, the button is hidden and reset
+     * to its default position.
      * </p>
      * <p>
      * Extracted for readability to keep {@link #initializeData()} focused on initialization flow
@@ -328,7 +346,7 @@ public class WorkoutTableController extends BaseController {
         // We'll manage it manually via translateY
         deleteButtonSlot.setManaged(true); // Keep managed so it takes up space horizontally
         
-        // Position delete button next to selected row
+        // Position delete button next to selected row when selection changes
         workoutTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 positionDeleteButtonForSelectedRow();
@@ -336,6 +354,42 @@ public class WorkoutTableController extends BaseController {
             else {
                 deleteWorkoutButton.setVisible(false);
                 deleteButtonSlot.setTranslateY(0);
+            }
+        });
+        
+        // Reposition button when table is scrolled (so it follows the selected row)
+        workoutTable.setOnScroll(e -> {
+            if (workoutTable.getSelectionModel().getSelectedItem() != null) {
+                // Use Platform.runLater to ensure layout is updated after scroll
+                javafx.application.Platform.runLater(() -> {
+                    if (workoutTable.getSelectionModel().getSelectedItem() != null) {
+                        positionDeleteButtonForSelectedRow();
+                    }
+                });
+            }
+        });
+        
+        // Also listen for scroll bar changes (when user drags scrollbar)
+        workoutTable.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                // Wait for scene to be fully laid out before finding scrollbar
+                javafx.application.Platform.runLater(() -> {
+                    // Find the vertical scrollbar and listen for value changes
+                    javafx.scene.control.ScrollBar vScrollBar = (javafx.scene.control.ScrollBar) 
+                        workoutTable.lookup(".scroll-bar:vertical");
+                    if (vScrollBar != null) {
+                        vScrollBar.valueProperty().addListener((scrollObs, oldVal, newVal) -> {
+                            if (workoutTable.getSelectionModel().getSelectedItem() != null) {
+                                // Use Platform.runLater to ensure layout is updated after scroll
+                                javafx.application.Platform.runLater(() -> {
+                                    if (workoutTable.getSelectionModel().getSelectedItem() != null) {
+                                        positionDeleteButtonForSelectedRow();
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
             }
         });
     }
