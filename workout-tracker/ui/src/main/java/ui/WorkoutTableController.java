@@ -65,12 +65,25 @@ public class WorkoutTableController extends BaseController {
         setTableView();
         setupWorkoutTableSelectionListener();
 
-        // Show/hide the side delete button when a row is selected
-        deleteWorkoutButton.visibleProperty().bind(
-            workoutTable.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0)
-        );
+        // Initially hide the delete button
+        deleteWorkoutButton.setVisible(false);
         deleteButtonSlot.setManaged(true);
         deleteWorkoutButton.setManaged(true);
+        
+        // Prevent HBox from managing the StackPane's vertical position
+        // We'll manage it manually via translateY
+        deleteButtonSlot.setManaged(true); // Keep managed so it takes up space horizontally
+        
+        // Position delete button next to selected row
+        workoutTable.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                positionDeleteButtonForSelectedRow();
+            } 
+            else {
+                deleteWorkoutButton.setVisible(false);
+                deleteButtonSlot.setTranslateY(0);
+            }
+        });
     }
 
     /**
@@ -117,6 +130,10 @@ public class WorkoutTableController extends BaseController {
             if (selected != null) {
                 mainController.showExerciseTable(selected);
             }
+        } 
+        else {
+            // Position delete button when row is clicked (single click)
+            positionDeleteButtonForSelectedRow();
         }
     }
 
@@ -174,6 +191,9 @@ public class WorkoutTableController extends BaseController {
         typeColumn.setCellValueFactory(new PropertyValueFactory<>("type"));
         timeColumn.setCellValueFactory(new PropertyValueFactory<>("time"));
         notesColumn.setCellValueFactory(new PropertyValueFactory<>("notes"));
+        
+        // Prevent extra empty column from appearing when table expands
+        workoutTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     /**
@@ -225,6 +245,83 @@ public class WorkoutTableController extends BaseController {
 
         showAlert(javafx.scene.control.Alert.AlertType.INFORMATION,
             "About Workout Tracker", infoText);
+    }
+
+    /**
+     * Positions the delete button vertically aligned with the currently selected row.
+     * Calculates the row's Y position relative to the table and translates the button slot accordingly.
+     */
+    private void positionDeleteButtonForSelectedRow() {
+        int selectedIndex = workoutTable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex < 0) {
+            deleteWorkoutButton.setVisible(false);
+            deleteButtonSlot.setTranslateY(0);
+            return;
+        }
+        
+        // Use Platform.runLater to ensure layout is complete before calculating positions
+        javafx.application.Platform.runLater(() -> {
+            // Double-check selection is still valid
+            if (workoutTable.getSelectionModel().getSelectedIndex() == selectedIndex) {
+                positionButtonNow();
+            }
+        });
+    }
+    
+    /**
+     * Helper method that performs the actual button positioning calculation.
+     */
+    private void positionButtonNow() {
+        int selectedIndex = workoutTable.getSelectionModel().getSelectedIndex();
+        if (selectedIndex < 0) {
+            return;
+        }
+        
+        // Find the TableRow for the selected index
+        javafx.scene.control.TableRow<Workout> selectedRow = null;
+        var rowCells = workoutTable.lookupAll(".table-row-cell");
+        for (var node : rowCells) {
+            if (node instanceof javafx.scene.control.TableRow) {
+                @SuppressWarnings("unchecked")
+                javafx.scene.control.TableRow<Workout> tableRow = 
+                    (javafx.scene.control.TableRow<Workout>) node;
+                if (tableRow.getIndex() == selectedIndex && !tableRow.isEmpty()) {
+                    selectedRow = tableRow;
+                    break;
+                }
+            }
+        }
+        
+        if (selectedRow != null) {
+            // Get the row's bounds relative to the table (its parent VirtualFlow)
+            javafx.geometry.Bounds rowBounds = selectedRow.getBoundsInParent();
+            
+            // Get the table header height
+            javafx.scene.Node header = workoutTable.lookup(".column-header-background");
+            double tableHeaderHeight = header != null ? header.getBoundsInLocal().getHeight() : 30.0;
+            
+            // Calculate the row's center Y position relative to the table's top
+            // rowBounds.getMinY() is relative to the VirtualFlow, which starts below the header
+            double rowCenterY = rowBounds.getMinY() + (rowBounds.getHeight() / 2);
+            
+            // Since both table and buttonSlot are in the same HBox,
+            // we need to add the header height to get the absolute position
+            double buttonSlotY = tableHeaderHeight + rowCenterY - (deleteButtonSlot.getHeight() / 2);
+            
+            // Set the translation relative to the button slot's parent (HBox)
+            deleteButtonSlot.setTranslateY(buttonSlotY);
+            deleteWorkoutButton.setVisible(true);
+        } 
+        else {
+            // Fallback: use a simpler calculation based on row index
+            double rowHeight = workoutTable.getFixedCellSize() > 0 
+                ? workoutTable.getFixedCellSize() 
+                : 32.0; // Default row height from CSS
+            double tableHeaderHeight = 30.0;
+            double rowY = selectedIndex * rowHeight;
+            deleteButtonSlot.setTranslateY(rowY + tableHeaderHeight + (rowHeight / 2) - (deleteButtonSlot.getHeight() / 2));
+            deleteWorkoutButton.setVisible(true);
+        }
     }
 
     /* Helper for confirm box for deleting exercises */
