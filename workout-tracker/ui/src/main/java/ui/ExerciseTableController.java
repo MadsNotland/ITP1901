@@ -1,11 +1,16 @@
 package ui;
 
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
+
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import core.Exercise;
 import core.Workout;
+import core.WorkoutTracker;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -15,18 +20,29 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.DoubleStringConverter;
+import javafx.util.converter.IntegerStringConverter;
 import ui.base.BaseController;
+import ui.service.WorkoutService;
 
 /**
  * Controller for {@code ExerciseTableView.fxml}.
  *
+ * Editing uses a deep snapshot:
+ * - On load, we CLONE each Exercise (preserving id) into an internal ObservableList.
+ * - Add/Delete/Edit affect ONLY these clones.
+ * - "Save" merges the edited clones back into the bound Workout.
+ * - "Back" navigates away and DISCARDs edits (no merge).
  * <p>Shows the list of {@link Exercise} items that belong to a given {@link Workout}.
  * This controller is intentionally <b>read-only</b>: it receives a Workout and
  * copies its exercises into an internal ObservableList (a snapshot) rather than
@@ -42,19 +58,16 @@ import ui.base.BaseController;
  */
 public class ExerciseTableController extends BaseController {
 
-    /** Table showing the exercises snapshot. */
     @FXML private TableView<Exercise> exerciseTable;
 
     @FXML private TableColumn<Exercise, String>  nameColumn;
     @FXML private TableColumn<Exercise, Integer> repsColumn;
     @FXML private TableColumn<Exercise, Double>  weightColumn;
-
-    /**
-     * Computed "Set #" column—shows a 1-based index for each visible row.
-     * This is not a model property; it is derived from the row position.
-     */
     @FXML private TableColumn<Exercise, Number>  setColumn;
 
+    @FXML private Button addButton;
+    @FXML private Button deleteButton;
+    @FXML private Button saveButton;
     // Workout details fields (editable on double-click)
     @FXML private TextField typeField;
     @FXML private DatePicker datePicker;
@@ -62,15 +75,16 @@ public class ExerciseTableController extends BaseController {
     @FXML private ComboBox<Integer> comboBoxMinutes;
     @FXML private TextArea notesArea;
 
-    /**
-     * Items displayed in the table. We populate this list from {@link #setWorkout(Workout)}
-     * using a snapshot of the Workout's exercises, so later edits elsewhere won't mutate
-     * what's shown here unless {@code setWorkout(...)} is called again.
-     */
+    /** We keep only the immutable identifier to avoid SpotBugs EI_EXPOSE_REP2. */
+    private Long workoutId;
+
+    /** Deep-snapshot (cloned) items shown/edited in the table. */
     private final ObservableList<Exercise> exerciseItems = FXCollections.observableArrayList();
 
     /** Reference used only for navigation; set by {@link MainController} after loading. */
     private MainController mainController;
+
+    private WorkoutService workoutService;
 
     /** Staged edits for header fields before committing to the Workout. */
     private final StringProperty stagedType   = new SimpleStringProperty("");
@@ -89,20 +103,39 @@ public class ExerciseTableController extends BaseController {
      */
     @FXML
     private void initialize() {
-        // Bind columns to Exercise bean properties (via JavaFX PropertyValueFactory reflection).
+        // Bind columns to bean properties
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         repsColumn.setCellValueFactory(new PropertyValueFactory<>("repetitions"));
         weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
 
-        // Show the observable items in the table.
         exerciseTable.setItems(exerciseItems);
 
-        // Compute "Set #" as 1-based row index; use current items to look up the item's position.
+        // Computed 1-based index column, not sortable
         setColumn.setCellValueFactory(cd ->
             new javafx.beans.property.ReadOnlyObjectWrapper<>(
                 exerciseTable.getItems().indexOf(cd.getValue()) + 1
             )
         );
+        setColumn.setSortable(false);
+
+        // Inline editing
+        exerciseTable.setEditable(true);
+        nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        nameColumn.setOnEditCommit(this::onNameEditCommit);
+
+        repsColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        repsColumn.setOnEditCommit(this::onRepsEditCommit);
+
+        weightColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        weightColumn.setOnEditCommit(this::onWeightEditCommit);
+
+        // Selection & toolbar state
+        exerciseTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        if (deleteButton != null) {
+            deleteButton.disableProperty().bind(
+                exerciseTable.getSelectionModel().selectedItemProperty().isNull()
+            );
+        }
 
         // Bind staged properties to the header fields
         typeField.textProperty().bindBidirectional(stagedType);
@@ -121,18 +154,16 @@ public class ExerciseTableController extends BaseController {
         setupEditableTextArea(notesArea);
     }
 
-    /**
-     * Injects the parent controller for navigation.
-     * Must be called by {@link MainController} after loading this controller.
-     *
-     * @param mainController parent controller used to navigate back
-     */
+    /** Provided by MainController after loading. */
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
     }
 
     /**
-     * Populates the view from a given {@link Workout}.
+     * Load a workout into the editor: deep-copy each Exercise to isolate edits.
+     */
+
+    /* Populates the view from a given {@link Workout}.
      *
      * <p>Copies a snapshot of the workout's exercises into {@link #exerciseItems} and
      * seeds the staged header properties (type, date, time, notes) from the workout.
@@ -141,12 +172,17 @@ public class ExerciseTableController extends BaseController {
      * @param workout workout to read exercises and header values from; if {@code null}, the view is cleared
      */
     public void setWorkout(Workout workout) {
-        // Populate exercise table from snapshot
-        List<Exercise> snapshot = (workout == null) ? List.of() : workout.getExercises();
-        exerciseItems.setAll(snapshot);
+        this.workoutId = (workout == null) ? null : workout.getId();
+        exerciseItems.clear();
 
         // Populate header fields
         if (workout != null) {
+            for (Exercise e : workout.getExercises()) {
+                // Clone: keep id so we can merge by identity
+                exerciseItems.add(new Exercise(e.getName(), 
+                                    e.getRepetitions(), e.getWeight(), e.getId()));
+            }
+
             stagedType.set(workout.getType());
             stagedDate.set(workout.getDate());
             stagedNotes.set(workout.getNotes());
@@ -164,7 +200,7 @@ public class ExerciseTableController extends BaseController {
             finally {
                 suppressDurationListeners = false;
             }
-        } 
+        }
         else {
             stagedType.set("");
             stagedNotes.set("");
@@ -176,7 +212,7 @@ public class ExerciseTableController extends BaseController {
                 stagedMinutes.set(0);
                 comboBoxHours.setValue(null);
                 comboBoxMinutes.setValue(null);
-            } 
+            }
             finally {
                 suppressDurationListeners = false;
             }
@@ -184,14 +220,126 @@ public class ExerciseTableController extends BaseController {
     }
 
     /**
-     * Handles the Back button: navigates to the workout table view.
+     * Injects the shared {@link WorkoutService} instance used to store and manage
+     * all workouts in the application via the {@link WorkoutTracker}.
+     * <p>
+     * This reference is provided by the {@link MainController} after FXML loading,
+     * ensuring that all controllers operate on the same underlying data model.
+     * </p>
      *
-     * @throws IOException if the destination view fails to load
+     * @param workoutService the shared {@link WorkoutService} instance
      */
+    public void setWorkoutService(WorkoutService workoutService) {
+        this.workoutService = workoutService;
+    }
+
+    /** Back = discard edits and go to workout table. */
     @FXML
     private void handleBack() throws IOException {
-        // Assumes MainController was injected; if not, this will NPE—caller must set it.
         mainController.showWorkoutTable();
+    }
+
+    /** Save = merge deep snapshot into the model (memory only), then stay here or navigate—your call. */
+    @FXML
+    private void handleSave() {
+        Workout w = workoutService.findWorkout(this.workoutId);
+        if (w == null) {
+            return;
+        }
+
+        // Pull staged values
+        String type = stagedType.get() == null ? "" : stagedType.get().trim();
+        String notes = stagedNotes.get() == null ? "" : stagedNotes.get().trim();
+        LocalDate date = stagedDate.get();
+        int hours = stagedHours.get();
+        int minutes = stagedMinutes.get();
+
+        // Convert to your HH.MM storage convention (minutes as hundredths)
+        double time = hours + (minutes / 100.0);
+
+        if (time <= 0.0) {
+            showAlert(INFORMATION, "Duration must be greater than 0.\n", "Please set hours or minutes before saving.");
+            return;
+        }
+
+        try {
+            w.setType(type);     // throws if blank/null
+            w.setNotes(notes);   // throws if blank/null
+            w.setDate(date);     // throws if null
+            w.setTime(time);     // throws if <= 0
+        } 
+        catch (IllegalArgumentException e) {
+            showAlert(ERROR, "Save Error", "Could not add new workout fields: " + e.getMessage());
+            return;
+        }
+
+        // Build a fresh list of copies (immutable to the UI list)
+        List<Exercise> updated = new ArrayList<>(exerciseItems.size());
+        for (Exercise e : exerciseItems) {
+            updated.add(new Exercise(e.getName(), e.getRepetitions(), e.getWeight(), e.getId()));
+        }
+        // Replace model list (see Workout#setExercises below)
+        w.setExercises(updated);
+
+        try {
+            workoutService.updateWorkout(workoutId, w);
+            showAlert(INFORMATION, "Saved", "Workouts saved to file.");
+        } 
+        catch (IOException e) {
+            showAlert(ERROR, "Save Error", "Could not save workouts: " + e.getMessage());
+        }
+    }
+
+    /** Add a new CLONED exercise to the editor only (not the model until Save). */
+    @FXML
+    private void handleAdd() {
+        Exercise ex = new Exercise("New exercise", 8, 0.0, null); // id auto-UUID
+        exerciseItems.add(ex);
+
+        int row = exerciseItems.size() - 1;
+        exerciseTable.getSelectionModel().clearAndSelect(row, nameColumn);
+        exerciseTable.scrollTo(row);
+        exerciseTable.edit(row, nameColumn);
+    }
+
+    /** Delete selection from editor only (not the model until Save). */
+    @FXML
+    private void handleDelete() {
+        var selected = new ArrayList<>(exerciseTable.getSelectionModel().getSelectedItems());
+        if (!selected.isEmpty()) {
+            exerciseItems.removeAll(selected);
+        }
+    }
+
+    // ---- edit commit handlers ----
+    private void onNameEditCommit(TableColumn.CellEditEvent<Exercise, String> evt) {
+        String v = (evt.getNewValue() == null) ? "" : evt.getNewValue().trim();
+        if (!v.isBlank()) {
+            evt.getRowValue().setName(v);
+        }
+        else {
+            exerciseTable.refresh();
+        }
+    }
+
+    private void onRepsEditCommit(TableColumn.CellEditEvent<Exercise, Integer> evt) {
+        Integer v = evt.getNewValue();
+        if (v != null && v >= 0) {
+            evt.getRowValue().setRepetitions(v);
+        }
+        else {
+            exerciseTable.refresh();
+        }
+    }
+
+    private void onWeightEditCommit(TableColumn.CellEditEvent<Exercise, Double> evt) {
+        Double v = evt.getNewValue();
+        if (v != null && v >= 0.0) {
+            evt.getRowValue().setWeight(v);
+        }
+        else {
+            exerciseTable.refresh();
+        }
     }
 
     // --- Helpers to enable double-click editing ---

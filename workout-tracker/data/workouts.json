@@ -1,16 +1,4 @@
 [ {
-  "type" : "Run",
-  "notes" : "Previous workout",
-  "date" : [ 2025, 10, 1 ],
-  "time" : 0.5,
-  "exercises" : [ {
-    "name" : "Warmup",
-    "repetitions" : 0,
-    "weight" : 0.0,
-    "id" : "seed-1"
-  } ],
-  "id" : null
-}, {
   "type" : "r",
   "notes" : "tde",
   "date" : [ 2025, 11, 7 ],
