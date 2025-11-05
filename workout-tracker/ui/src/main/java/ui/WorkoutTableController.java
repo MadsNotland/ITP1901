@@ -139,7 +139,7 @@ public class WorkoutTableController extends BaseController {
         boolean confirmed = confirm(
             "Delete workout",
             "Are you sure you want to delete this workout?",
-            "Type: %s\nDate: %s\nTime: %s\n\nThis cannot be undone."
+            "Type: %s%nDate: %s%nTime: %s%n%nThis cannot be undone."
                 .formatted(selected.getType(), selected.getDate(), selected.getTime())
         );
         if(!confirmed){
