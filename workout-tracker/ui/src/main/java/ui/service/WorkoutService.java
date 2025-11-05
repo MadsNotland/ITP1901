@@ -92,4 +92,22 @@ public class WorkoutService {
         // Add the created workout (with server-assigned ID) to tracker
         workoutTracker.addWorkout(createdWorkout);
     }
+
+    /**
+     * Deletes a workout from the server and removes it from the tracker.
+     *
+     * <p>This method deletes the workout immediately from the server via REST API.
+     * If the deletion is successful, the workout is also removed from the tracker.</p>
+     *
+     * @param workout the workout to delete
+     * @throws IOException if the HTTP request fails or the server cannot be reached
+     * @throws IllegalArgumentException if workout is null or does not exist
+     */
+    public void deleteWorkout(Workout workout) throws IOException{
+        if (workout == null) {
+            throw new IllegalArgumentException("Workout cannot be null");
+        }
+        restClient.deleteWorkout(workout.getId());
+        workoutTracker.getAllWorkouts().removeIf(w -> w.getId().equals(workout.getId()));
+    }
 }

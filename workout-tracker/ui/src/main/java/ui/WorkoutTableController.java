@@ -3,7 +3,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import core.Workout;
+import core.WorkoutTracker;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -44,6 +47,10 @@ public class WorkoutTableController extends BaseController {
     private TableColumn<Workout, Double> timeColumn;
     @FXML
     private TableColumn<Workout, String> notesColumn;
+    @FXML 
+    private Button deleteWorkoutButton;
+    @FXML
+    private javafx.scene.layout.StackPane deleteButtonSlot;
 
     // Core dependencies (injected by MainController)
     private MainController mainController;
@@ -56,7 +63,14 @@ public class WorkoutTableController extends BaseController {
     @FXML
     void initializeData() {
         setTableView();
-        setupTableSelectionListener();
+        setupWorkoutTableSelectionListener();
+
+        // Show/hide the side delete button when a row is selected
+        deleteWorkoutButton.visibleProperty().bind(
+            workoutTable.getSelectionModel().selectedIndexProperty().greaterThanOrEqualTo(0)
+        );
+        deleteButtonSlot.setManaged(true);
+        deleteWorkoutButton.setManaged(true);
     }
 
     /**
@@ -68,6 +82,16 @@ public class WorkoutTableController extends BaseController {
         this.mainController = mainController;
     }
 
+    /**
+     * Injects the shared {@link WorkoutService} instance used to store and manage
+     * all workouts in the application via the {@link WorkoutTracker}.
+     * <p>
+     * This reference is provided by the {@link MainController} after FXML loading,
+     * ensuring that all controllers operate on the same underlying data model.
+     * </p>
+     * 
+     * @param workoutService
+     */
     public void setWorkoutService(WorkoutService workoutService) {
         this.workoutService = workoutService;
     }
@@ -82,6 +106,10 @@ public class WorkoutTableController extends BaseController {
         mainController.showWorkoutForm();
     }
 
+    /**
+     * Loads workouts from the server via {@link WorkoutService}
+     * and handles any potential IO exceptions.
+     */
     @FXML
     private void handleRowClick(MouseEvent event) throws IOException {
         if (event.getClickCount() == 2) {
@@ -89,6 +117,51 @@ public class WorkoutTableController extends BaseController {
             if (selected != null) {
                 mainController.showExerciseTable(selected);
             }
+        }
+    }
+
+    /* Deletes the selected workout after user confirmation */
+    @FXML
+    private void handleDeleteWorkout(){
+        Workout selected = workoutTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            return;
+        }
+
+        if (selected.getId() == null){
+            showAlert(Alert.AlertType.WARNING,
+                "Cannot delete",
+                "This workout hasn’t been saved to the server yet, so it has no ID.\n" +
+                "Save it first, then try deleting.");
+            return;
+        }
+
+        boolean confirmed = confirm(
+            "Delete workout",
+            "Are you sure you want to delete this workout?",
+            "Type: %s\nDate: %s\nTime: %s\n\nThis cannot be undone."
+                .formatted(selected.getType(), selected.getDate(), selected.getTime())
+        );
+        if(!confirmed){
+            return;
+        }
+        try {
+            workoutService.deleteWorkout(selected);
+            workoutTable.getSelectionModel().clearSelection();
+        } 
+        catch (IllegalArgumentException iae) {
+            showAlert(
+                Alert.AlertType.WARNING,
+                "Delete failed",
+                iae.getMessage()
+            );
+        }
+        catch (IOException ioe) {
+            showAlert(
+                Alert.AlertType.ERROR,
+                "Network Error",
+                "Could not delete workout from server.\n\n" + ioe.getMessage()
+            );
         }
     }
 
@@ -117,11 +190,20 @@ public class WorkoutTableController extends BaseController {
      * becomes available, ensuring proper event handling after the FXML view is loaded.
      * </p>
      */
-    private void setupTableSelectionListener() {
+    private void setupWorkoutTableSelectionListener() {
         workoutTable.sceneProperty().addListener((obs, oldScene, newScene) -> {
             if (newScene != null) {
                 newScene.addEventFilter(javafx.scene.input.MouseEvent.MOUSE_PRESSED, e -> {
-                    if (!workoutTable.isHover()) {
+                    javafx.scene.Node node = (javafx.scene.Node) e.getTarget();
+                    boolean inside = false;
+                    while (node != null) {
+                        if (node == workoutTable || node == deleteWorkoutButton || node == deleteButtonSlot) {
+                            inside = true;
+                            break;
+                        }
+                        node = node.getParent();
+                    }
+                    if (!inside) {
                         workoutTable.getSelectionModel().clearSelection();
                     }
                 });
@@ -144,5 +226,15 @@ public class WorkoutTableController extends BaseController {
 
         showAlert(javafx.scene.control.Alert.AlertType.INFORMATION,
             "About Workout Tracker", infoText);
+    }
+
+    /* Helper for confirm box for deleting exercises */
+    private boolean confirm(String title, String header, String content) {
+        var alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        var result = alert.showAndWait();
+        return result.isPresent() && result.get() == javafx.scene.control.ButtonType.OK;
     }
 }
