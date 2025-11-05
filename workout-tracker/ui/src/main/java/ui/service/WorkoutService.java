@@ -75,7 +75,7 @@ public class WorkoutService {
     }
 
     public void updateWorkout(Long id, Workout workout) throws IOException {
-        restClient.updateWorkout(id, workout);
+        client.updateWorkout(id, workout);
     }
 
     /**
