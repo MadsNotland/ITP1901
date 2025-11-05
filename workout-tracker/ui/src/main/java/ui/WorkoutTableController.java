@@ -122,13 +122,13 @@ public class WorkoutTableController extends BaseController {
 
     /* Deletes the selected workout after user confirmation */
     @FXML
-    private void handleDeleteWorkout(){
+    private void handleDeleteWorkout() {
         Workout selected = workoutTable.getSelectionModel().getSelectedItem();
         if (selected == null) {
             return;
         }
 
-        if (selected.getId() == null){
+        if (selected.getId() == null) {
             showAlert(Alert.AlertType.WARNING,
                 "Cannot delete",
                 "This workout hasn’t been saved to the server yet, so it has no ID.\n" +
@@ -142,7 +142,7 @@ public class WorkoutTableController extends BaseController {
             "Type: %s%nDate: %s%nTime: %s%n%nThis cannot be undone."
                 .formatted(selected.getType(), selected.getDate(), selected.getTime())
         );
-        if(!confirmed){
+        if (!confirmed) {
             return;
         }
         try {

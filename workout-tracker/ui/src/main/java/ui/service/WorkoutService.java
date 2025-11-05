@@ -103,7 +103,7 @@ public class WorkoutService {
      * @throws IOException if the HTTP request fails or the server cannot be reached
      * @throws IllegalArgumentException if workout is null or does not exist
      */
-    public void deleteWorkout(Workout workout) throws IOException{
+    public void deleteWorkout(Workout workout) throws IOException {
         if (workout == null) {
             throw new IllegalArgumentException("Workout cannot be null");
         }
