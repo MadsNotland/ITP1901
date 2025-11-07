@@ -22,4 +22,16 @@
     "id" : "60f10475-67ad-4caf-94d9-9b0498f8d30d"
   } ],
   "id" : 2
+}, {
+  "type" : "Strength",
+  "notes" : "Leg day",
+  "date" : [ 2025, 11, 4 ],
+  "time" : 1.3,
+  "exercises" : [ {
+    "name" : "Squat",
+    "repetitions" : 10,
+    "weight" : 100.0,
+    "id" : "2f8551a9-c9a3-4874-b3af-51cf3c9387e5"
+  } ],
+  "id" : 3
 } ]
