@@ -1,5 +1,6 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.debug.settings.onBuildFailureProceed": true,
-    "css.validate": false
+    "css.validate": false,
+    "java.compile.nullAnalysis.mode": "automatic"
 }

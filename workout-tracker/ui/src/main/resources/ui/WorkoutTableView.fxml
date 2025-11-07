@@ -6,8 +6,10 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Region?>
 
 
 
@@ -23,14 +25,29 @@
     <Label text="Workout Sessions" styleClass="label-title" />
 
     <!-- Table -->
-    <TableView fx:id="workoutTable" styleClass="exercise-table" prefHeight="300" prefWidth="449" onMouseClicked="#handleRowClick">
-        <columns>
-            <TableColumn fx:id="dateColumn" prefWidth="100" text="Date" />
-            <TableColumn fx:id="typeColumn" prefWidth="150" text="Type" />
-            <TableColumn fx:id="timeColumn" prefWidth="100" text="Time" />
-            <TableColumn fx:id="notesColumn" prefWidth="255" text="Notes" />
-        </columns>
-    </TableView>
+    <HBox>
+        <Region HBox.hgrow="ALWAYS" />
+        <HBox>
+            <TableView fx:id="workoutTable" styleClass="exercise-table" prefHeight="300" prefWidth="650" onMouseClicked="#handleRowClick">
+                <columns>
+                    <TableColumn fx:id="dateColumn" prefWidth="100" text="Date" />
+                    <TableColumn fx:id="typeColumn" prefWidth="150" text="Type" />
+                    <TableColumn fx:id="timeColumn" prefWidth="100" text="Time" />
+                    <TableColumn fx:id="notesColumn" prefWidth="255" text="Notes" />
+                </columns>
+            </TableView>
+
+            <StackPane fx:id="deleteButtonSlot"
+                       minWidth="48" prefWidth="48" maxWidth="48"
+                       alignment="CENTER_RIGHT">
+                <Button fx:id="deleteWorkoutButton"
+                        text="x"
+                        onAction="#handleDeleteWorkout"
+                        styleClass="button-delete-side" />
+            </StackPane>
+        </HBox>
+        <Region HBox.hgrow="ALWAYS" />
+    </HBox>
 
     <!-- Button for adding workout session -->
     <StackPane>
