@@ -23,7 +23,7 @@ import core.WorkoutTracker;
  */
 public class WorkoutService {
     
-    private final RestWorkoutClient restClient;
+    private final WorkoutClient client;
     private final WorkoutTracker workoutTracker;
 
     /**
@@ -44,10 +44,10 @@ public class WorkoutService {
      * of a mock or test implementation of {@link RestWorkoutClient} to avoid
      * making actual HTTP requests during unit tests.</p>
      * 
-     * @param restClient the REST client to use for server communication
+     * @param client the REST client to use for server communication
      */
-    public WorkoutService(RestWorkoutClient restClient) {
-        this.restClient = restClient;
+    public WorkoutService(WorkoutClient client) {
+        this.client = client;
         this.workoutTracker = new WorkoutTracker();
     }
 
@@ -57,7 +57,7 @@ public class WorkoutService {
      * @throws IOException if the HTTP request fails or the server cannot be reached
      */
     public void loadWorkouts() throws IOException {
-        var loadedWorkouts = restClient.getAllWorkouts();
+        var loadedWorkouts = client.getAllWorkouts();
         workoutTracker.getAllWorkouts().setAll(loadedWorkouts);
     }
 
@@ -75,7 +75,7 @@ public class WorkoutService {
     }
 
     public void updateWorkout(Long id, Workout workout) throws IOException {
-        restClient.updateWorkout(id, workout);
+        client.updateWorkout(id, workout);
     }
 
     /**
@@ -104,7 +104,7 @@ public class WorkoutService {
         }
         
         // Persist to server immediately - server assigns ID
-        Workout createdWorkout = restClient.createWorkout(workout);
+        Workout createdWorkout = client.createWorkout(workout);
         
         // Add the created workout (with server-assigned ID) to tracker
         workoutTracker.addWorkout(createdWorkout);
@@ -124,7 +124,7 @@ public class WorkoutService {
         if (workout == null) {
             throw new IllegalArgumentException("Workout cannot be null");
         }
-        restClient.deleteWorkout(workout.getId());
+        client.deleteWorkout(workout.getId());
         workoutTracker.removeWorkoutById(workout.getId());
     }
   

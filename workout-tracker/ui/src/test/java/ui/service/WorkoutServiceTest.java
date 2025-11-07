@@ -15,7 +15,7 @@ import core.Workout;
 /**
  * Test class for WorkoutService functionality.
  * 
- * <p>Tests that WorkoutService correctly interacts with RestWorkoutClient
+ * <p>Tests that WorkoutService correctly interacts with WorkoutClient
  * and maintains workout data in the WorkoutTracker.</p>
  * 
  * <p>This test uses a mock implementation of RestWorkoutClient to avoid
@@ -36,7 +36,7 @@ class WorkoutServiceTest {
     @Test
     void addWorkout_appendsToTrackerList() throws IOException {
         // Arrange: Create a mock REST client that simulates server behavior
-        MockRestWorkoutClient mockClient = new MockRestWorkoutClient();
+        MockWorkoutClient mockClient = new MockWorkoutClient();
         WorkoutService service = new WorkoutService(mockClient);
         int before = service.getWorkoutTracker().getAllWorkouts().size();
 
@@ -62,7 +62,7 @@ class WorkoutServiceTest {
     }
 
     /**
-     * Mock implementation of RestWorkoutClient for unit testing.
+     * Mock implementation of WorkoutClient for unit testing.
      * 
      * <p>This mock simulates server behavior without making actual HTTP requests:
      * - Maintains an internal list of workouts
@@ -72,7 +72,7 @@ class WorkoutServiceTest {
      * <p>This allows WorkoutService to be tested in isolation without requiring
      * a running server or network connectivity.</p>
      */
-    private static class MockRestWorkoutClient extends RestWorkoutClient {
+    private static class MockWorkoutClient implements WorkoutClient {
         
         private final List<Workout> mockWorkouts = new ArrayList<>();
         private long nextId = 1L;
@@ -84,8 +84,7 @@ class WorkoutServiceTest {
          * HttpClient and ObjectMapper, but we override the methods that
          * actually make HTTP requests.</p>
          */
-        public MockRestWorkoutClient() {
-            super(); // Initialize parent (HttpClient, ObjectMapper)
+        public MockWorkoutClient() {
         }
 
         /**
@@ -130,6 +129,40 @@ class WorkoutServiceTest {
 
             // Return workout with ID (simulating server response)
             return workoutWithId;
+        }
+
+        /**
+         * Mock implementation of updateWorkout().
+         * 
+         * <p>Not used in current tests, but required by WorkoutClient interface.</p>
+         * 
+         * @param id the ID of the workout to update
+         * @param workout the updated workout data
+         * @return the updated workout
+         * @throws IOException never thrown in mock implementation
+         */
+        @Override
+        public Workout updateWorkout(Long id, Workout workout) throws IOException {
+            if (workout == null) {
+                throw new IllegalArgumentException("Workout cannot be null");
+            }
+            
+            // Simple mock: just update the workout with the ID and return it
+            workout.setId(id);
+            return workout;
+        }
+
+        /**
+         * Mock implementation of deleteWorkout().
+         * 
+         * <p>Not used in current tests, but required by WorkoutClient interface.</p>
+         * 
+         * @param id the ID of the workout to delete
+         * @throws IOException never thrown in mock implementation
+         */
+        @Override
+        public void deleteWorkout(Long id) throws IOException {
+            mockWorkouts.removeIf(w -> w.getId().equals(id));
         }
     }
 }

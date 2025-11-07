@@ -26,7 +26,7 @@ import core.Workout;
  * <p>All methods throw {@link IOException} if network communication fails,
  * allowing callers to handle server connectivity issues appropriately.</p>
  */
-public class RestWorkoutClient {
+public class RestWorkoutClient implements WorkoutClient {
 
     private static final String BASE_URL = "http://localhost:8080/api/workouts";
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
@@ -55,6 +55,7 @@ public class RestWorkoutClient {
      * @return a list of all workouts from the server
      * @throws IOException if the HTTP request fails or the server cannot be reached
      */
+    @Override
     public List<Workout> getAllWorkouts() throws IOException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL))
@@ -88,6 +89,7 @@ public class RestWorkoutClient {
      * @throws IOException if the HTTP request fails or the server cannot be reached
      * @throws IllegalArgumentException if workout is null
      */
+    @Override
     public Workout createWorkout(Workout workout) throws IOException {
         if (workout == null) {
             throw new IllegalArgumentException("Workout cannot be null");
@@ -126,6 +128,7 @@ public class RestWorkoutClient {
      *                     or the workout with the given ID is not found (404)
      * @throws IllegalArgumentException if workout is null
      */
+    @Override
     public Workout updateWorkout(Long id, Workout workout) throws IOException {
         if (workout == null) {
             throw new IllegalArgumentException("Workout cannot be null");
@@ -164,6 +167,7 @@ public class RestWorkoutClient {
      * @throws IOException if the HTTP request fails, the server cannot be reached,
      *                     or the workout with the given ID is not found (404)
      */
+    @Override
     public void deleteWorkout(Long id) throws IOException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "/" + id))
