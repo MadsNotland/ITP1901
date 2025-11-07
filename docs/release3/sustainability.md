@@ -30,6 +30,6 @@ Overall, the system demonstrates good sustainability across most dimensions. It 
 
 ![SusAD-diagram](susAD.png)
 *Social -> Individual: Social features may increase the individual motivation and mental health* <br>
-*Technical -> Environmental: Effective code and local datastorage reduces energyconsumption.* <br>
+*Technical -> Environmental: Effective code and local data storage reduces energy consumption.* <br>
 *Technical -> Social: Stable and user-friendly system increases trust and therefore social participation* <br>
 *Technical -> Economic: Technical choices (enabling) reduces maintanence costs over time (structural)
