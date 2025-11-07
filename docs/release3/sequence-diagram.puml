@@ -1,0 +1,124 @@
+'==============================================================
+' Description:
+'   Sequence diagram showing the end-to-end flow when a user
+'   adds a new Workout in the Workout Tracker application.
+'   The diagram abstracts away specific method names to focus
+'   on logical interactions between layers:
+'       - UI (View & Controller)
+'       - Client-side service and REST client
+'       - Server-side REST API and file persistence.
+'
+' Notes:
+'   • Method names are omitted intentionally to emphasize 
+'     system responsibilities and message flow rather than 
+'     specific code implementation.
+'   • Includes notes
+'
+' Extensions to download for preview to work:
+'   • PlantUML extension (jebbs)
+'   • PlantUML Previewer (Mebrahtom Guesh)
+'   (Click Ctrl + P to preview)
+'==============================================================
+
+@startuml sequence-diagram
+'--- Styling ---
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 15
+skinparam sequenceParticipant underline
+skinparam lifelineStrategy solid
+autonumber "<b>[0]"
+
+title <b>Sequence: User adds a new Workout</b>\n(UI → REST → JSON file)
+
+actor User #LightSkyBlue
+
+box "Client Application" #LightYellow
+    participant "WorkoutFormView" as View
+    control "WorkoutFormController" as Form
+    control "WorkoutService (client)" as Service
+    collections "WorkoutTracker" as Tracker
+    boundary "WorkoutRestClient" as RestClient
+end box
+
+box "Server (Spring Boot)" #LightBlue
+    control "WorkoutController (REST)" as ServerCtrl
+    control "WorkoutService (server)" as ServerSvc
+    database "WorkoutFileManager" as FileManager
+end box
+
+'--- Flow ---
+User -> View: Fill in input fields
+User -> View: Click <b>"Add Workout"</b>
+activate View
+View -> Form: Submit workout input
+activate Form
+
+
+group Validation and Creation
+    note right of Form #lightskyblue
+        Exercises are stored locally until
+        the user submits the Workout 
+    end note
+    
+    note right of Form #lightskyblue
+        Validates input fields before creating
+        the Workout object
+    end note
+
+    Form -> Form: create Workout from Exercises and input
+end
+
+Form -> Service: Send new Workout to service
+activate Service
+
+Service -> RestClient: Send Workout to server
+activate RestClient
+note right of Service #lightskyblue
+    WorkoutService delegates REST call
+    to WorkoutRestClient
+end note
+
+note right of RestClient: Serialize object\nand send HTTP request
+RestClient -> ServerCtrl: HTTP POST /api/workouts
+activate ServerCtrl
+
+group Server Processing
+    ServerCtrl -> ServerSvc: Request to persist Workout
+    note right of ServerCtrl #lightsteelblue
+        REST Controller delegates storage
+        responsibility to Service layer
+    end note
+    activate ServerSvc
+    note right of ServerSvc #aqua: Adds Workout to list
+    ServerSvc -> FileManager: Save Workout to file
+    activate FileManager
+    note right of FileManager #palegreen: Write to data/workouts.json
+    FileManager --> ServerSvc: success
+    deactivate FileManager
+    ServerSvc --> ServerCtrl: return saved Workout (with ID)
+    deactivate ServerSvc
+end
+
+ServerCtrl --> RestClient: HTTP 201 Created
+deactivate ServerCtrl
+RestClient --> Service: Return created Workout
+deactivate RestClient
+
+Service -> Tracker: Update local workout list
+activate Tracker
+note right of Tracker #lightyellow
+    Adds created Workout to ObservableList
+    so UI table updates automatically
+end note
+Tracker --> Service: confirm
+deactivate Tracker
+
+Service --> Form: success
+deactivate Service
+
+Form -> View: Navigate to WorkoutTableView
+View --> User: Show updated list
+deactivate Form
+deactivate View
+
+@enduml
