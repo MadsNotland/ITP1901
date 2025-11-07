@@ -153,7 +153,7 @@ void handleDeleteExercise_removesSelectedRow_andHidesButton() {
     javafx.scene.control.TableView<?> exerciseTable = lookup("#exerciseTable").query();
 
     int before = exerciseTable.getItems().size();
-    assertTrue(before >= 2, "Forventer minst to rader før sletting");
+    assertTrue(before >= 2, "Expecting at least two rows before deletion");
 
     clickOn(".table-row-cell");
     WaitForAsyncUtils.waitForFxEvents();

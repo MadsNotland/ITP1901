@@ -3,6 +3,7 @@ package core;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -158,8 +159,16 @@ public class ExerciseTest {
     @Test
     void equals_returnsTrue_forSameId() {
         Exercise a = new Exercise("A", 1, 1.0, "id1");
-        Exercise b = new Exercise("B", 2, 2.0, "id1"); 
+        Exercise b = new Exercise("B", 2, 2.0, "id1");
+        Exercise c = new Exercise("C", 2, 2.0, "id1");
+        //reflexive
+        assertTrue(a.equals(a));
+        //Symmetric
         assertTrue(a.equals(b));
+        assertTrue(b.equals(a));
+        //Transitive
+        assertTrue(b.equals(c));
+        assertTrue(a.equals(c));
     }
     /**
      * Tests that equals returns false for different ids or null.
@@ -168,8 +177,8 @@ public class ExerciseTest {
     void equals_returnsFalse_forDifferentIdOrNull() {
         Exercise a = new Exercise("A", 1, 1.0, "id1");
         Exercise b = new Exercise("A", 1, 1.0, "id2");
-        assertFalse(a.equals(b));
-        assertFalse(a.equals(null)); 
+        assertNotEquals(a, b);
+        assertNotEquals(a, null);
     }
     /**
      * Tests that hashCode is consistent with equals based on id.
