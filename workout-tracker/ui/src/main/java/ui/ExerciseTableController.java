@@ -108,49 +108,9 @@ public class ExerciseTableController extends BaseController {
      */
     @FXML
     private void initialize() {
-        // Bind columns to bean properties
-        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        repsColumn.setCellValueFactory(new PropertyValueFactory<>("repetitions"));
-        weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
-
-        exerciseTable.setItems(exerciseItems);
-
-        // Computed 1-based index column, not sortable
-        setColumn.setCellValueFactory(cd ->
-            new javafx.beans.property.ReadOnlyObjectWrapper<>(
-                exerciseTable.getItems().indexOf(cd.getValue()) + 1
-            )
-        );
-        setColumn.setSortable(false);
-
-        // Inline editing
-        exerciseTable.setEditable(true);
-        nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        nameColumn.setOnEditCommit(this::onNameEditCommit);
-
-        repsColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        repsColumn.setOnEditCommit(this::onRepsEditCommit);
-
-        weightColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
-        weightColumn.setOnEditCommit(this::onWeightEditCommit);
-
-        // Selection & toolbar state
-        exerciseTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        if (deleteButton != null) {
-            deleteButton.disableProperty().bind(
-                exerciseTable.getSelectionModel().selectedItemProperty().isNull()
-            );
-        }
-
-        // Bind staged properties to the header fields
-        typeField.textProperty().bindBidirectional(stagedType);
-        notesArea.textProperty().bindBidirectional(stagedNotes);
-        datePicker.valueProperty().bindBidirectional(stagedDate);
-
-        // Sorting doesn't make sense for an index column derived from position.
-        setColumn.setSortable(false);
-
-        /*Duration pickers: populate and wire to stagedHours/Minutes */
+        initializeColumns();
+        initializeSelectionAndEditing();
+        initializeHeaderBindings();
         initializeDurationPickers();
 
         // Configure double-click-to-edit for header fields
@@ -167,66 +127,6 @@ public class ExerciseTableController extends BaseController {
     }
 
     /**
-     * Load a workout into the editor: deep-copy each Exercise to isolate edits.
-     */
-
-    /* Populates the view from a given {@link Workout}.
-     *
-     * <p>Copies a snapshot of the workout's exercises into {@link #exerciseItems} and
-     * seeds the staged header properties (type, date, time, notes) from the workout.
-     * Passing {@code null} clears the view and resets staged values.</p>
-     *
-     * @param workout workout to read exercises and header values from; if {@code null}, the view is cleared
-     */
-    public void setWorkout(Workout workout) {
-        this.workoutId = (workout == null) ? null : workout.getId();
-        exerciseItems.clear();
-
-        // Populate header fields
-        if (workout != null) {
-            for (Exercise e : workout.getExercises()) {
-                // Clone: keep id so we can merge by identity
-                exerciseItems.add(new Exercise(e.getName(), 
-                                    e.getRepetitions(), e.getWeight(), e.getId()));
-            }
-
-            stagedType.set(workout.getType());
-            stagedDate.set(workout.getDate());
-            stagedNotes.set(workout.getNotes());
-
-            int hours = (int) Math.floor(workout.getTime());
-            int minutes = (int) Math.round((workout.getTime() - hours) * 100);
-            
-            suppressDurationListeners = true;
-            try {
-                stagedHours.set(hours);
-                stagedMinutes.set(minutes);
-                comboBoxHours.setValue(hours);
-                comboBoxMinutes.setValue(minutes);
-            } 
-            finally {
-                suppressDurationListeners = false;
-            }
-        }
-        else {
-            stagedType.set("");
-            stagedNotes.set("");
-            stagedDate.set(null);
-
-            suppressDurationListeners = true;
-            try {
-                stagedHours.set(0);
-                stagedMinutes.set(0);
-                comboBoxHours.setValue(null);
-                comboBoxMinutes.setValue(null);
-            }
-            finally {
-                suppressDurationListeners = false;
-            }
-        }
-    }
-
-    /**
      * Injects the shared {@link WorkoutService} instance used to store and manage
      * all workouts in the application via the {@link WorkoutTracker}.
      * <p>
@@ -238,6 +138,94 @@ public class ExerciseTableController extends BaseController {
      */
     public void setWorkoutService(WorkoutService workoutService) {
         this.workoutService = workoutService;
+    }
+
+    /* Populates the view from a given {@link Workout}.
+     *
+     * <p>Copies a snapshot of the workout's exercises into {@link #exerciseItems} and
+     * seeds the staged header properties (type, date, time, notes) from the workout.
+     * Passing {@code null} clears the view and resets staged values.</p>
+     *
+     * @param workout workout to read exercises and header values from; if {@code null}, the view is cleared
+     */
+
+    public void setWorkout(Workout workout) {
+        exerciseItems.clear();
+        this.workoutId = (workout == null) ? null : workout.getId();
+
+        if (workout == null) {
+            clearWorkoutView();
+        }
+        else {
+            populateWorkoutView(workout);
+        }
+    }
+    
+    /**
+     * Populates the UI fields and exercise table with data from the given workout.
+     * <p>
+     * Creates deep copies of exercises, updates staged header values, and synchronizes
+     * duration ComboBoxes with hours and minutes.
+     * </p>
+     *
+     * @param workout the workout whose data will be displayed
+     */
+    private void populateWorkoutView(Workout workout) {
+        // Clone exercises so edits don't affect the original until saved
+        for (Exercise e : workout.getExercises()) {
+            // Clone: keep id so we can merge by identity
+            exerciseItems.add(new Exercise(e.getName(), 
+                                e.getRepetitions(), e.getWeight(), e.getId()));
+        }
+
+        // Copy header values
+        stagedType.set(workout.getType());
+        stagedDate.set(workout.getDate());
+        stagedNotes.set(workout.getNotes());
+        // Update hours/minutes pickers from workout time
+        updateDurationPickers(workout);
+    }
+
+    /**
+     * Updates the staged hour/minute values and ComboBoxes based on the workout time.
+     * <p>
+     * Uses the suppress flag to prevent unwanted listener triggers during programmatic changes.
+     * </p>
+     */
+    private void updateDurationPickers(Workout workout) {
+        int hours = (int) Math.floor(workout.getTime());
+        int minutes = (int) Math.round((workout.getTime() - hours) * 100);
+        
+        suppressDurationListeners = true;
+        try {
+            stagedHours.set(hours);
+            stagedMinutes.set(minutes);
+            comboBoxHours.setValue(hours);
+            comboBoxMinutes.setValue(minutes);
+        } 
+        finally {
+            suppressDurationListeners = false;
+        }
+    }
+
+    /**
+     * Clears all staged values and resets the UI when no workout is selected.
+     */
+    private void clearWorkoutView() {
+        stagedType.set("");
+        stagedNotes.set("");
+        stagedDate.set(null);
+
+        suppressDurationListeners = true;
+        try {
+            stagedHours.set(0);
+            stagedMinutes.set(0);
+            comboBoxHours.setValue(null);
+            comboBoxMinutes.setValue(null);
+        }
+        finally {
+            suppressDurationListeners = false;
+        }
     }
 
     /** Back = discard edits and go to workout table. */
@@ -349,7 +337,127 @@ public class ExerciseTableController extends BaseController {
         }
     }
 
-    // --- Helpers to enable double-click editing ---
+
+    // ======================== INITIALIZE-FUNCTIONS ========================
+
+    /**
+     * Initializes the duration ComboBoxes (hours/minutes).
+     *
+     * <p>Populates choices based on {@link UiConstants}, leaves controls enabled,
+     * and wires listeners so user changes update {@link #stagedHours} / {@link #stagedMinutes} only.
+     * Programmatic changes are guarded by {@link #suppressDurationListeners} to avoid feedback loops.</p>
+     */
+    private void initializeDurationPickers() {
+       // Populate choices
+        comboBoxHours.getItems().clear();
+        for (int h = 0; h <= UiConstants.MAX_HOURS; h++) {
+            comboBoxHours.getItems().add(h);
+        }
+        comboBoxMinutes.getItems().clear();
+        for (int m = 0; m < 60; m += UiConstants.MINUTES_STEP) {
+            comboBoxMinutes.getItems().add(m);
+        }
+
+        // Always enabled so the user can click the arrows directly
+        comboBoxHours.setDisable(false);
+        comboBoxMinutes.setDisable(false);
+
+        // When user changes a value, only update staged properties
+        comboBoxHours.valueProperty().addListener((obs, oldV, newV) -> {
+            if (suppressDurationListeners) {
+                return;
+            }
+            stagedHours.set(newV == null ? 0 : newV);
+        });
+        comboBoxMinutes.valueProperty().addListener((obs, oldV, newV) -> {
+            if (suppressDurationListeners) {
+                return;
+            }
+            stagedMinutes.set(newV == null ? 0 : newV);
+        });
+
+        comboBoxHours.setOnAction(e -> { 
+            if (suppressDurationListeners) {
+                return;
+            }
+            Integer v = comboBoxHours.getValue();
+            stagedHours.set(v == null ? 0 : v);
+        });
+        comboBoxMinutes.setOnAction(e -> { 
+            if (suppressDurationListeners) {
+                return;
+            }
+            Integer v = comboBoxMinutes.getValue();
+            stagedMinutes.set(v == null ? 0 : v);
+        });
+    }
+
+    /**
+     * Initializes the table columns by binding them to {@link Exercise} properties.
+     * <p>
+     * Sets up the data source, property value factories, and a computed 1-based
+     * "Set #" index column that reflects the row position.
+     * </p>
+     */
+    private void initializeColumns() {
+        // Bind columns to bean properties
+        nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        repsColumn.setCellValueFactory(new PropertyValueFactory<>("repetitions"));
+        weightColumn.setCellValueFactory(new PropertyValueFactory<>("weight"));
+
+        exerciseTable.setItems(exerciseItems);
+
+        // Computed 1-based index column, not sortable
+        setColumn.setCellValueFactory(cd ->
+            new javafx.beans.property.ReadOnlyObjectWrapper<>(
+                exerciseTable.getItems().indexOf(cd.getValue()) + 1
+            )
+        );
+        setColumn.setSortable(false);
+    }
+
+    /**
+     * Configures selection and inline editing behavior for the exercise table.
+     * <p>
+     * Enables in-place editing for name, repetitions, and weight columns,
+     * wires edit-commit handlers, and binds the delete button state to
+     * the current selection.
+     * </p>
+     */
+    private void initializeSelectionAndEditing() {
+        // Inline editing
+        exerciseTable.setEditable(true);
+        nameColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        nameColumn.setOnEditCommit(this::onNameEditCommit);
+
+        repsColumn.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        repsColumn.setOnEditCommit(this::onRepsEditCommit);
+
+        weightColumn.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+        weightColumn.setOnEditCommit(this::onWeightEditCommit);
+
+        // Selection & toolbar state
+        exerciseTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        if (deleteButton != null) {
+            deleteButton.disableProperty().bind(
+                exerciseTable.getSelectionModel().selectedItemProperty().isNull()
+            );
+        }
+    }
+
+    /**
+     * Binds the staged header properties to their corresponding UI controls.
+     * <p>
+     * Ensures two-way synchronization between the type, notes, and date fields
+     * and the controller’s staged values.
+     * </p>
+     */
+    private void initializeHeaderBindings() {
+        // Bind staged properties to the header fields
+        typeField.textProperty().bindBidirectional(stagedType);
+        notesArea.textProperty().bindBidirectional(stagedNotes);
+        datePicker.valueProperty().bindBidirectional(stagedDate);
+    }
 
     /**
      * Enables "double-click to edit" for a {@link TextField}.
@@ -429,57 +537,9 @@ public class ExerciseTableController extends BaseController {
         });
     }
 
-    /**
-     * Initializes the duration ComboBoxes (hours/minutes).
-     *
-     * <p>Populates choices based on {@link UiConstants}, leaves controls enabled,
-     * and wires listeners so user changes update {@link #stagedHours} / {@link #stagedMinutes} only.
-     * Programmatic changes are guarded by {@link #suppressDurationListeners} to avoid feedback loops.</p>
-     */
-    private void initializeDurationPickers() {
-       // Populate choices
-        comboBoxHours.getItems().clear();
-        for (int h = 0; h <= UiConstants.MAX_HOURS; h++) {
-            comboBoxHours.getItems().add(h);
-        }
-        comboBoxMinutes.getItems().clear();
-        for (int m = 0; m < 60; m += UiConstants.MINUTES_STEP) {
-            comboBoxMinutes.getItems().add(m);
-        }
 
-        // Always enabled so the user can click the arrows directly
-        comboBoxHours.setDisable(false);
-        comboBoxMinutes.setDisable(false);
+    // ======================== INITIALIZE-FUNCTIONS ========================
 
-        // When user changes a value, only update staged properties
-        comboBoxHours.valueProperty().addListener((obs, oldV, newV) -> {
-            if (suppressDurationListeners) {
-                return;
-            }
-            stagedHours.set(newV == null ? 0 : newV);
-        });
-        comboBoxMinutes.valueProperty().addListener((obs, oldV, newV) -> {
-            if (suppressDurationListeners) {
-                return;
-            }
-            stagedMinutes.set(newV == null ? 0 : newV);
-        });
-
-        comboBoxHours.setOnAction(e -> { 
-            if (suppressDurationListeners) {
-                return;
-            }
-            Integer v = comboBoxHours.getValue();
-            stagedHours.set(v == null ? 0 : v);
-        });
-        comboBoxMinutes.setOnAction(e -> { 
-            if (suppressDurationListeners) {
-                return;
-            }
-            Integer v = comboBoxMinutes.getValue();
-            stagedMinutes.set(v == null ? 0 : v);
-        });
-    }
 
     /** Enables drag-and-drop row reordering on exerciseTable. */
     private void installRowReorderDnD() {
