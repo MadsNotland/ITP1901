@@ -51,7 +51,7 @@
         </HBox>
 
         <Label text="Notes:" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="label-field" />
-        <TextArea fx:id="notesArea" editable="false" prefRowCount="3"
+        <TextArea fx:id="notesArea" promptText="Notes..." editable="false" prefRowCount="3"
                   GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="text-field" />
     </GridPane>
 

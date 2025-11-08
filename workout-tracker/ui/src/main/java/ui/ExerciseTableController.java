@@ -1,5 +1,8 @@
 package ui;
 
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
+
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
