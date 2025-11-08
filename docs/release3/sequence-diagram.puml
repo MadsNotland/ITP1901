@@ -12,7 +12,11 @@
 '   • Method names are omitted intentionally to emphasize 
 '     system responsibilities and message flow rather than 
 '     specific code implementation.
-'   • Includes notes
+'   • Includes color-coded notes:
+'         > lightsteelblue: UI
+'         > lightskyblue: core
+'         > aqua: server
+'         > palegreen: persistence
 '
 ' Extensions to download for preview to work:
 '   • PlantUML extension (jebbs)
@@ -55,12 +59,12 @@ activate Form
 
 
 group Validation and Creation
-    note right of Form #lightskyblue
+    note right of Form #lightsteelblue
         Exercises are stored locally until
         the user submits the Workout 
     end note
     
-    note right of Form #lightskyblue
+    note right of Form #lightsteelblue
         Validates input fields before creating
         the Workout object
     end note
@@ -78,13 +82,13 @@ note right of Service #lightskyblue
     to WorkoutRestClient
 end note
 
-note right of RestClient: Serialize object\nand send HTTP request
+note right of RestClient #lightskyblue: Serialize object\nand send HTTP request
 RestClient -> ServerCtrl: HTTP POST /api/workouts
 activate ServerCtrl
 
 group Server Processing
     ServerCtrl -> ServerSvc: Request to persist Workout
-    note right of ServerCtrl #lightsteelblue
+    note right of ServerCtrl #aqua
         REST Controller delegates storage
         responsibility to Service layer
     end note
@@ -106,16 +110,20 @@ deactivate RestClient
 
 Service -> Tracker: Update local workout list
 activate Tracker
-note right of Tracker #lightyellow
+note right of Tracker #lightskyblue
     Adds created Workout to ObservableList
     so UI table updates automatically
 end note
-Tracker --> Service: confirm
+Tracker --> User: Show updated workout list in TableView 
 deactivate Tracker
 
 Service --> Form: success
 deactivate Service
 
+note left of Form #lightsteelblue
+    MainController does the navigation
+    from WorkoutFormview to WorkoutTableView.
+end note
 Form -> View: Navigate to WorkoutTableView
 View --> User: Show updated list
 deactivate Form
