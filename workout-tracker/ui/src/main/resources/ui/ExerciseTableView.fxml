@@ -21,7 +21,7 @@
     xmlns:fx="http://javafx.com/fxml/1" 
     fx:controller="ui.ExerciseTableController">
 
-    <HBox alignment="CENTER_LEFT" spacing="10">
+    <HBox alignment="CENTER_LEFT" spacing="10" maxWidth="700">
         <Button text="Back" onAction="#handleBack" styleClass="button-danger" />
         <Region HBox.hgrow="ALWAYS"/>
         <Button fx:id="addButton" text="Add Set" onAction="#handleAdd" styleClass="button-success" />
@@ -30,9 +30,9 @@
     </HBox>
    
     <!-- Workout Details -->
-    <GridPane hgap="10" vgap="8">
-        <columnConstraints/>
-        <rowConstraints/>
+    <GridPane hgap="10" vgap="8" maxWidth="700">
+        <columnConstraints />
+        <rowConstraints />
 
         <Label text="Name:" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="label-field" />
         <TextField fx:id="typeField" editable="false" promptText="Workout name"
@@ -60,17 +60,19 @@
     <Label text="Exercises" styleClass="label-undertitle" />
 
     <!-- Table -->
-    <TableView fx:id="exerciseTable" prefHeight="300" prefWidth="520" styleClass="exercise-table" >
-        <columns>
-            <!-- Set # is computed in controller via cell factory -->
-            <TableColumn fx:id="setColumn" prefWidth="70" text="Set #" />
-            <TableColumn fx:id="nameColumn" prefWidth="221.0" text="Name" />
-            <TableColumn fx:id="repsColumn" prefWidth="87.0" text="Reps" />
-            <TableColumn fx:id="weightColumn" prefWidth="139.0" text="Weight" />
-        </columns>
-    </TableView>
+    <HBox alignment="CENTER" maxWidth="800">
+        <TableView fx:id="exerciseTable" prefHeight="300" prefWidth="520" styleClass="exercise-table" >
+            <columns>
+                <!-- Set # is computed in controller via cell factory -->
+                <TableColumn fx:id="setColumn" prefWidth="70" text="Set #" />
+                <TableColumn fx:id="nameColumn" prefWidth="221.0" text="Name" />
+                <TableColumn fx:id="repsColumn" prefWidth="87.0" text="Reps" />
+                <TableColumn fx:id="weightColumn" prefWidth="139.0" text="Weight" />
+            </columns>
+        </TableView>
+    </HBox>
 
-    <StackPane>
+    <StackPane maxWidth="700">
         <Button fx:id="infoButton" onAction="#handleInfo" styleClass="button-info" StackPane.alignment="CENTER_RIGHT" translateX="-20" >
             <graphic>
                 <ImageView fitHeight="40" fitWidth="40">
