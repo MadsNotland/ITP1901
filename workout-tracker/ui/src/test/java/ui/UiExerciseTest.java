@@ -33,14 +33,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class UiExerciseTest extends ApplicationTest {
 
-    private MainController controller;
     private Parent root;
 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("MainView.fxml"));
         root = fxmlLoader.load();
-        controller = fxmlLoader.getController();
         stage.setScene(new Scene(root));
         stage.show();
     }

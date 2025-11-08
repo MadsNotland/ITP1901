@@ -1,13 +1,15 @@
 module workout.tracker.ui {
     // Dependencies on internal modules
-    requires workout.tracker.core;
+    // Use 'transitive' so clients of this module can access core types from exported packages
+    requires transitive workout.tracker.core;
     requires workout.tracker.persistence;
 
     // JavaFX dependencies
-    requires javafx.controls;
-    requires javafx.fxml;
+    // Use 'transitive' so clients of this module can access JavaFX types from exported packages
+    requires transitive javafx.controls;
+    requires transitive javafx.fxml;
     // Stage lives in javafx.graphics (referenced in WorkoutTrackerApp.java)
-    requires javafx.graphics;
+    requires transitive javafx.graphics;
     // Needed for JFXPanel when initializing toolkit in tests
     requires javafx.swing;
 
@@ -26,6 +28,8 @@ module workout.tracker.ui {
 
     // Export UI package to consumers
     exports ui;
+    // Export service package since it's used in public API of exported controllers
+    exports ui.service;
 
     // Open package for JavaFX reflection (FXML) and for testing
     opens ui to javafx.graphics, javafx.fxml, org.junit.jupiter;

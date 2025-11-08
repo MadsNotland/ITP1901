@@ -12,6 +12,7 @@ import org.testfx.util.WaitForAsyncUtils;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Spinner;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -149,8 +150,7 @@ void handleDeleteExercise_removesSelectedRow_andHidesButton() {
     clickOn("#addExerciseButton");
     WaitForAsyncUtils.waitForFxEvents();
 
-    @SuppressWarnings("unchecked")
-    javafx.scene.control.TableView<?> exerciseTable = lookup("#exerciseTable").query();
+    TableView<?> exerciseTable = lookup("#exerciseTable").query();
 
     int before = exerciseTable.getItems().size();
     assertTrue(before >= 2, "Expecting at least two rows before deletion");

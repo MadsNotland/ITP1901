@@ -135,7 +135,7 @@
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ui.WorkoutTrackerApp</mainClass>
+                    <mainClass>workout.tracker.ui/ui.WorkoutTrackerApp</mainClass>
                     <options>
                         <option>--add-exports</option>
                         <option>javafx.base/javafx.collections=ALL-UNNAMED</option>
