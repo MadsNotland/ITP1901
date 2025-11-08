@@ -1,8 +1,5 @@
 package ui;
 
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
-
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,6 +19,8 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -312,12 +311,13 @@ public class ExerciseTableController extends BaseController {
         String infoText = """
                      Workout Edit Guide
             
-            • Double-click a field to edit
-            • Click on columns in exercise to edit them
-            • Click set "Add set" to add a new exercise
-            • Mark exercise and click "Delete Selected" to delete
+            • Edit exercise: Double-click the table-cell
+            • Add exercise: Click "Add set"
+            • Delete exercise: mark & click "Delete Selected"
+            • Reorder exercises: drag and drop rows
+
             • Click "Save" to confirm changes
-            • Click "Back" to discard changes and return to homepage
+            • Click "Back" to discard changes & return home
             """;
 
         showAlert(javafx.scene.control.Alert.AlertType.INFORMATION,

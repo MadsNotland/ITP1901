@@ -261,12 +261,12 @@ public class WorkoutTableController extends BaseController {
         String infoText = """
                      Workout Tracker App Guide
             
-            • Click "Add Workout" button to add a workout.
-            • Fill in necessary input-fields and add workout.
-            • Each workout is saved automatically.
-            • Doubleclick a workout-row to view its exercises.
-            • Click or Ctrl+Click to select multiple workouts for deletion.
+            • Add a workout: Click "Add Workout" button.
+            • View the workout: Doubleclick a workout-row.
+            • Delete multiple workouts: Ctrl+Click
+            
             • Click outside the table to clear a selection.
+            • Each workout is saved automatically.
             """;
 
         showAlert(javafx.scene.control.Alert.AlertType.INFORMATION,
