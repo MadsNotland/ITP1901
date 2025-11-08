@@ -306,6 +306,25 @@ public class ExerciseTableController extends BaseController {
         }
     }
 
+    /* Simple Message-Display for Info-Button */
+    @FXML
+    private void handleInfo() {
+        String infoText = """
+                     Workout Edit Guide
+            
+            • Edit exercise: Double-click the table-cell
+            • Add exercise: Click "Add set"
+            • Delete exercise: mark & click "Delete Selected"
+            • Reorder exercises: drag and drop rows
+
+            • Click "Save" to confirm changes
+            • Click "Back" to discard changes & return home
+            """;
+
+        showAlert(javafx.scene.control.Alert.AlertType.INFORMATION,
+            "About Workout Tracker", infoText);
+    }
+
     // ---- edit commit handlers ----
     private void onNameEditCommit(TableColumn.CellEditEvent<Exercise, String> evt) {
         String v = (evt.getNewValue() == null) ? "" : evt.getNewValue().trim();

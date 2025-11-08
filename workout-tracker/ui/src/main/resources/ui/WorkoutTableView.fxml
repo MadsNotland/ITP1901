@@ -50,7 +50,7 @@
     </HBox>
 
     <!-- Button for adding workout session -->
-    <StackPane>
+    <StackPane maxWidth="700">
         <Button  text="Add Workout" styleClass="button-primary" fx:id="add_workout" onAction="#handleAddButton" StackPane.alignment="CENTER" />
         <Button fx:id="infoButton" onAction="#handleInfo" styleClass="button-info" StackPane.alignment="CENTER_RIGHT" translateX="-20" >
             <graphic>
