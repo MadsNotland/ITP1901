@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import core.Workout;
+import core.service.WorkoutService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -11,7 +12,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import ui.base.BaseController;
-import ui.service.WorkoutService;
 
 /**
  * Controller class for the {@code WorkoutTableView.fxml} view.
@@ -25,13 +25,13 @@ import ui.service.WorkoutService;
  * <ul>
  *   <li>Bind {@link core.Workout} data to the table columns</li>
  *   <li>Delegate navigation to {@link MainController}</li>
- *   <li>Persist workout data via {@link ui.service.WorkoutService}</li>
+ *   <li>Persist workout data via {@link core.service.WorkoutService}</li>
  * </ul>
  * </p>
  *
  * @see ui.WorkoutFormController
  * @see core.Workout
- * @see ui.service.WorkoutService
+ * @see core.service.WorkoutService
  */
 public class WorkoutTableController extends BaseController {
 

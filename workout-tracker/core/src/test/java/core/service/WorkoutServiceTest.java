@@ -1,4 +1,4 @@
-package ui.service;
+package core.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

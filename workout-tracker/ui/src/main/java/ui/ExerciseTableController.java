@@ -11,6 +11,7 @@ import java.util.List;
 import core.Exercise;
 import core.Workout;
 import core.WorkoutTracker;
+import core.service.WorkoutService;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -38,7 +39,6 @@ import javafx.scene.input.TransferMode;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 import ui.base.BaseController;
-import ui.service.WorkoutService;
 
 /**
  * Controller for {@code ExerciseTableView.fxml}.
