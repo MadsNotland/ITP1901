@@ -7,38 +7,7 @@ Viewing options:
 -->
 ```mermaid
 classDiagram
-direction LR
-
-%% Core domain
-class Exercise {
-  - name : String
-  - repetitions : int
-  - weight : double
-  - id : final String
-}
-class Workout {
-  - id : Long
-  - date : LocalDate
-  - time : double
-  - notes : String
-  - type : String
-  - exercises : final List~Exercise~
-  + getExercises() : List~Exercise~
-  + addExercise(exercise : Exercise) : void
-  + removeExercise(exercise : Exercise) : void
-  + findExerciseById(id : String) : Exercise
-}
-class WorkoutTracker {
-  - workouts : final ObservableList~Workout~
-  + addWorkout(workout : Workout)
-  + getAllWorkouts() : ObservableList~Workout~
-}
-
-%% Persistence
-class WorkoutFileManager {
-  + saveWorkouts(workouts : List~Workout~)
-  + loadWorkouts() : List~Workout~
-}
+direction TB
 
 %% UI layer
 class MainController {
@@ -58,6 +27,8 @@ class ExerciseTableController {
   + setWorkout(workout : Workout)
   + handleSave()
 }
+
+%% Application services
 class WorkoutService {
   + loadWorkouts()
   + addWorkout(workout : Workout)
@@ -78,7 +49,36 @@ class RestWorkoutClient {
   + deleteWorkout(id : Long) : void
 }
 
-%% server.WorkoutService represents the Spring service in the server module
+%% Domain
+class WorkoutTracker {
+  - workouts : final ObservableList~Workout~
+  + addWorkout(workout : Workout)
+  + getAllWorkouts() : ObservableList~Workout~
+}
+class Workout {
+  - id : Long
+  - date : LocalDate
+  - time : double
+  - notes : String
+  - type : String
+  - exercises : final List~Exercise~
+  + getExercises() : List~Exercise~
+  + addExercise(exercise : Exercise) : void
+  + removeExercise(exercise : Exercise) : void
+  + findExerciseById(id : String) : Exercise
+}
+class Exercise {
+  - name : String
+  - repetitions : int
+  - weight : double
+  - id : final String
+}
+
+%% Persistence & server
+class WorkoutFileManager {
+  + saveWorkouts(workouts : List~Workout~)
+  + loadWorkouts() : List~Workout~
+}
 class ServerWorkoutService {
   + getAllWorkouts() : List~Workout~
   + createWorkout(workout : Workout) : Workout
@@ -93,10 +93,6 @@ class WorkoutController {
 }
 
 %% Relationships
-Workout "1" *-- "0..*" Exercise : contains
-WorkoutTracker o-- "*" Workout
-WorkoutFileManager ..> Workout : serializes
-
 MainController --> WorkoutService
 MainController ..> WorkoutTableController
 MainController ..> WorkoutFormController
@@ -109,6 +105,10 @@ WorkoutService --> WorkoutTracker
 WorkoutService --> WorkoutClient
 RestWorkoutClient ..|> WorkoutClient
 RestWorkoutClient ..> Workout
+
+WorkoutTracker o-- "*" Workout
+Workout "1" *-- "0..*" Exercise
+WorkoutFileManager ..> Workout : serializes
 
 ServerWorkoutService --> WorkoutFileManager
 WorkoutController --> ServerWorkoutService
