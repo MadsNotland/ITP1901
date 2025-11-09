@@ -54,7 +54,16 @@ mvn javafx:run -pl ui
 ### Requirements
 - Java: 17
 - Apache Maven: 3.8+
-- Dependencies: JavaFX, JUnit 5, TestFX
+- JavaFX: 17.0.1
+- JUnit: 5.10.0
+- TestFX: 4.0.16.alpha
+- Hamcrest: 2.2
+- Jackson: 2.15.2
+- Jacoco: 0.8.13
+- SpotBugs: 4.9.6.0
+- CheckStyle: 3.3.1
+- Spring Boot: 3.3.4
+- JPackage: 1.4.0
 
 ### Repository structure
     .
