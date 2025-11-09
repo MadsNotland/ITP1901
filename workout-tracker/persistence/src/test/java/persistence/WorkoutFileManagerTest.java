@@ -21,7 +21,7 @@ import core.Workout;
  * 
  * <p>Tests the persistence layer's ability to save, load and append workout data,
  * using Jackson JSON serialization. Covers both happy path scenarios and edge cases
- * like non-existent files and empty data.
+ * like non-existent files and empty data.</p>
  * 
  * Test strategy:
  * <ul>
@@ -31,7 +31,7 @@ import core.Workout;
  *   <li>Test integration between load and save operations</li>
  * </ul>
  * 
- * <p>Uses JUnit 5 @TempDir for isolated test file operations.
+ * <p>Uses JUnit 5 @TempDir for isolated test file operations.</p>
  */
 class WorkoutFileManagerTest {
 
@@ -41,6 +41,11 @@ class WorkoutFileManagerTest {
     /**
      * Helper to create an Exercise with a given name, sets and reps for reuse across tests.
      * Pass null for id to trigger auto-UUID generation.
+     * 
+     * @param name the name of the exercise
+     * @param reps the number of repetitions
+     * @param weight the weight of the exercise
+     * @return the created exercise
      */
     private Exercise ex(String name, int reps, double weight) {
         return new Exercise(name, reps, weight,null);
@@ -56,9 +61,13 @@ class WorkoutFileManagerTest {
      *   <li>Workout objects maintain their exact values after serialization/deserialization</li>
      *   <li>The number of workouts is preserved</li>
      * </ul>
+     * </p>
      * 
      * <p>Note: This test verifies data integrity but does not specifically test
-     * JSON format or Jackson serialization details.
+     * JSON format or Jackson serialization details.</p>
+     * 
+     * @throws IOException if an I/O error occurs while saving or loading workouts
+     * @throws IllegalArgumentException if the workouts list is null
      */
     @Test
     void testSaveAndLoadWorkouts() throws IOException {
@@ -96,10 +105,12 @@ class WorkoutFileManagerTest {
      * Tests that adding a single workout works correctly.
      * 
      * <p>Verifies the complete workflow: add single workout, then load all workouts.
-     * This tests the integration between loadWorkouts() and saveWorkouts() methods.
+     * This tests the integration between loadWorkouts() and saveWorkouts() methods.</p>
      * 
      * <p>Note: This is more of an integration test than a unit test, as it
-     * combines multiple operations in sequence.
+     * combines multiple operations in sequence.</p>
+     * 
+     * @throws IOException if an I/O error occurs while saving or loading workouts
      */
     @Test
     void testAppendWorkout() throws IOException {
@@ -122,10 +133,12 @@ class WorkoutFileManagerTest {
      * Tests that loading from non-existent file returns empty list.
      * 
      * <p>Verifies graceful handling of missing files, which is important for
-     * first-time application startup when no data file exists yet.
+     * first-time application startup when no data file exists yet.</p>
      * 
      * <p>This edge case prevents application crashes when users run the app
-     * for the first time.
+     * for the first time.</p>
+     * 
+     * @throws IOException if an I/O error occurs while loading workouts
      */
     @Test
     void testLoadFromNonExistentFile() throws IOException {
@@ -142,6 +155,8 @@ class WorkoutFileManagerTest {
 
     /**
      * Tests that the constructor uses the default path when null is provided.
+     * 
+     * @throws Exception if an exception occurs while accessing the file path
      */
     @Test
     void constructor_usesDefaultPath_whenNull() throws Exception {

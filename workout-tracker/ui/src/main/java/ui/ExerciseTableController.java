@@ -210,6 +210,9 @@ public class ExerciseTableController extends BaseController {
 
     /**
      * Clears all staged values and resets the UI when no workout is selected.
+     * <p>
+     * Resets the staged values and resets the duration ComboBoxes.
+     * </p>
      */
     private void clearWorkoutView() {
         stagedType.set("");
@@ -228,13 +231,22 @@ public class ExerciseTableController extends BaseController {
         }
     }
 
-    /** Back = discard edits and go to workout table. */
+    /**
+     * Discards the edits and goes to the workout table.
+     * <p>
+     * Navigates back to the workout table.
+     * </p>
+     */
     @FXML
     private void handleBack() throws IOException {
         mainController.showWorkoutTable();
     }
 
-    /** Save = merge deep snapshot into the model (memory only), then stay here or navigate—your call. */
+    /** Save = merge deep snapshot into the model (memory only), then stay here or navigate—your call.
+     * <p>
+     * Merges the deep snapshot into the model and saves it to the file.
+     * </p>
+     */
     @FXML
     private void handleSave() {
         Workout w = workoutService.findWorkout(this.workoutId);
@@ -285,7 +297,12 @@ public class ExerciseTableController extends BaseController {
         }
     }
 
-    /** Add a new CLONED exercise to the editor only (not the model until Save). */
+    /**
+     * Adds a new CLONED exercise to the editor only (not the model until Save).
+     * <p>
+     * Creates a new exercise with the default values and adds it to the internal list.
+     * </p>
+     */
     @FXML
     private void handleAdd() {
         Exercise ex = new Exercise("New exercise", 8, 0.0, null); // id auto-UUID
@@ -297,7 +314,12 @@ public class ExerciseTableController extends BaseController {
         exerciseTable.edit(row, nameColumn);
     }
 
-    /** Delete selection from editor only (not the model until Save). */
+    /**
+     * Deletes the selected exercises from the editor only (not the model until Save).
+     * <p>
+     * Removes the selected exercises from the internal list and refreshes the table.
+     * </p>
+     */
     @FXML
     private void handleDelete() {
         var selected = new ArrayList<>(exerciseTable.getSelectionModel().getSelectedItems());
@@ -306,7 +328,12 @@ public class ExerciseTableController extends BaseController {
         }
     }
 
-    /* Simple Message-Display for Info-Button */
+    /**
+     * Displays a simple message for the Info-Button.
+     * <p>
+     * Shows a guide for the workout edit functionality.
+     * </p>
+     */
     @FXML
     private void handleInfo() {
         String infoText = """
@@ -326,6 +353,14 @@ public class ExerciseTableController extends BaseController {
     }
 
     // ---- edit commit handlers ----
+    /**
+     * Handles the commit event for the name column.
+     * <p>
+     * If the new value is not blank, sets the name of the exercise to the new value.
+     * Otherwise, refreshes the table.
+     * </p>
+     * @param evt the cell edit event
+     */
     private void onNameEditCommit(TableColumn.CellEditEvent<Exercise, String> evt) {
         String v = (evt.getNewValue() == null) ? "" : evt.getNewValue().trim();
         if (!v.isBlank()) {
@@ -336,6 +371,14 @@ public class ExerciseTableController extends BaseController {
         }
     }
 
+    /**
+     * Handles the commit event for the repetitions column.
+     * <p>
+     * If the new value is not null and is greater than or equal to 0, sets the repetitions of the exercise to the new value.
+     * Otherwise, refreshes the table.
+     * </p>
+     * @param evt the cell edit event
+     */
     private void onRepsEditCommit(TableColumn.CellEditEvent<Exercise, Integer> evt) {
         Integer v = evt.getNewValue();
         if (v != null && v >= 0) {
@@ -346,6 +389,14 @@ public class ExerciseTableController extends BaseController {
         }
     }
 
+    /**
+     * Handles the commit event for the weight column.
+     * <p>
+     * If the new value is not null and is greater than or equal to 0.0, sets the weight of the exercise to the new value.
+     * Otherwise, refreshes the table.
+     * </p>
+     * @param evt the cell edit event
+     */
     private void onWeightEditCommit(TableColumn.CellEditEvent<Exercise, Double> evt) {
         Double v = evt.getNewValue();
         if (v != null && v >= 0.0) {
@@ -394,7 +445,6 @@ public class ExerciseTableController extends BaseController {
             }
             stagedMinutes.set(newV == null ? 0 : newV);
         });
-
         comboBoxHours.setOnAction(e -> { 
             if (suppressDurationListeners) {
                 return;
@@ -556,11 +606,12 @@ public class ExerciseTableController extends BaseController {
         });
     }
 
-
-    // ======================== INITIALIZE-FUNCTIONS ========================
-
-
-    /** Enables drag-and-drop row reordering on exerciseTable. */
+    /**
+     * Enables drag-and-drop row reordering on exerciseTable.
+     * <p>
+     * Allows the user to reorder the exercises in the table by dragging and dropping them.
+     * </p>
+     */
     private void installRowReorderDnD() {
         final var items = exerciseTable.getItems();
 
@@ -576,8 +627,7 @@ public class ExerciseTableController extends BaseController {
                     db.setContent(cc);
                     e.consume();
                 }
-            }
-            );
+            });
 
             row.setOnDragOver(e -> {
                 var db = e.getDragboard();
@@ -588,8 +638,7 @@ public class ExerciseTableController extends BaseController {
                         e.consume();
                     }
                 }
-            }
-            );
+            });
 
             row.setOnDragDropped(e -> {
                 var db = e.getDragboard();
@@ -622,8 +671,7 @@ public class ExerciseTableController extends BaseController {
                 }
                 e.setDropCompleted(success);
                 e.consume();
-            }
-            );
+            });
 
             row.setOnDragEntered(e -> row.setOpacity(0.3));
             row.setOnDragExited(e -> row.setOpacity(1.0));
@@ -643,8 +691,7 @@ public class ExerciseTableController extends BaseController {
                 e.acceptTransferModes(TransferMode.MOVE);
                 e.consume();
             }
-        }
-        );
+        });
 
         exerciseTable.setOnDragDropped(e -> {
             var db = e.getDragboard();
@@ -662,12 +709,16 @@ public class ExerciseTableController extends BaseController {
                     e.consume();
                 }
             }
-        }
-        );
+        });
     }
 
     /* ---------- helpers ---------- */
 
+    /**
+     * Gets the ancestor row of a given node in the table.
+     * @param n the node to find the ancestor row of
+     * @return the ancestor row of the given node
+     */
     private static TableRow<?> getRowAncestor(Node n) {
         while (n != null && !(n instanceof TableRow)) {
             n = n.getParent();
@@ -675,6 +726,11 @@ public class ExerciseTableController extends BaseController {
         return (TableRow<?>) n;
     }
 
+    /**
+     * Checks if a given node is in the header of the table.
+     * @param n the node to check if it is in the header of the table
+     * @return true if the given node is in the header of the table, false otherwise
+     */
     private static boolean isInHeader(Node n) {
         while (n != null) {
             var sc = n.getStyleClass();

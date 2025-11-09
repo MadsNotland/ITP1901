@@ -21,6 +21,11 @@ public class WorkoutService {
     private final WorkoutFileManager fileManager;
     private final AtomicLong nextId = new AtomicLong(1);
     
+    /**
+     * Creates a new WorkoutService.
+     * Initializes the file manager with the default data file path.
+     * Initializes the ID counter based on existing workouts.
+     */
     public WorkoutService() {
         // Initialize with default data file path
         this.fileManager = new WorkoutFileManager(Path.of("../data/workouts.json"));
@@ -29,6 +34,8 @@ public class WorkoutService {
     
     /**
      * Initialize ID counter based on existing workouts.
+     * 
+     * @throws IOException if the workouts cannot be loaded
      */
     private void initializeIds() {
         try {
@@ -50,6 +57,7 @@ public class WorkoutService {
     /**
      * Get all workouts.
      * @return list of all workouts
+     * @throws RuntimeException if the workouts cannot be loaded
      */
     public List<Workout> getAllWorkouts() {
         try {
@@ -75,6 +83,8 @@ public class WorkoutService {
      * Create a new workout.
      * @param workout the workout to create
      * @return the created workout with assigned ID
+     * @throws RuntimeException if the workout cannot be created
+     * @throws RuntimeException if the workout cannot be saved
      */
     public Workout createWorkout(Workout workout) {
         // Assign ID to the workout
@@ -94,6 +104,10 @@ public class WorkoutService {
      * @param id the workout ID
      * @param updatedWorkout the updated workout data
      * @return the updated workout
+     * 
+     * @throws RuntimeException if the workout is not found
+     * @throws RuntimeException if the workout cannot be updated
+     * @throws RuntimeException if the workout cannot be saved
      */
     public Workout updateWorkout(Long id, Workout updatedWorkout) {
         List<Workout> workouts = getAllWorkouts();
@@ -121,6 +135,8 @@ public class WorkoutService {
      * Delete a workout by ID.
      * @param id the workout ID
      * @return true if workout was deleted, false if not found
+     * @throws RuntimeException if the workout is not found
+     * @throws RuntimeException if the workout cannot be deleted
      */
     public boolean deleteWorkout(Long id) {
         List<Workout> workouts = getAllWorkouts();

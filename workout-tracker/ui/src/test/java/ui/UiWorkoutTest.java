@@ -31,13 +31,22 @@ public class UiWorkoutTest extends ApplicationTest {
     private static final String RUN_TAG = "UI-" + System.nanoTime() + "-"; //unique per testrun
     private RestWorkoutClient restClient;
 
-    /* Start the JavaFX application before tests */
+    /**
+     * Start the JavaFX application before tests.
+     * <p>
+     * Starts the JavaFX application before tests.
+     * </p>
+     * @param stage the stage to start the application on
+     * @throws Exception if the application cannot be started
+     */
     @Override
     public void start(Stage stage) throws Exception {
         new WorkoutTrackerApp().start(stage);
     }
 
-    /* Setup RestWorkoutClient before each test */
+    /**
+     * Setup RestWorkoutClient before each test.
+     */
     @BeforeEach
     void setupClient() {
         restClient = new RestWorkoutClient();
