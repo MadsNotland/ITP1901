@@ -17,26 +17,23 @@ The app supports saving workouts to JSON so they can be loaded again later.
 ## Quick Start
 The Workout Tracker is a JavaFX application for tracking workout sessions. Users can add workouts with type, duration, date, and notes, then view their workout history in a table format.
 
-## First, set up springboot server
+## Clean install without tests
+```bash
+cd workout-tracker
+mvn clean install -DskipTests
+```
+
+## Set up springboot server
 ```bash
 cd workout-tracker
 mvn spring-boot:run -pl server
 ```
 
 ## How to run
-```bash
-cd workout-tracker
-cd ui
-mvn javafx:run
-```
-OR
+Open a new terminal and
 ```bash
 cd workout-tracker
 mvn javafx:run -pl ui
-```
-OR
-```bash
-mvn -f workout-tracker -pl ui javafx:run
 ```
 
 ## How to test
