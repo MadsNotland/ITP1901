@@ -22,7 +22,6 @@
             <version>${project.version}</version>
         </dependency>
         
-
         <!-- JavaFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -66,6 +65,8 @@
             <artifactId>hamcrest</artifactId>
         </dependency>
         <!-- Headless Glass toolkit for CI: Monocle (match JavaFX version via parent) -->
+        <!-- Note: This dependency produces a harmless warning about invalid module name (8u76) -->
+        <!-- The warning can be safely ignored as it doesn't affect functionality -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>openjfx-monocle</artifactId>
@@ -77,6 +78,18 @@
     <!-- Module-specific build configuration -->
     <build>
         <plugins>
+            <!-- Maven Compiler Plugin - suppress module name warnings from Monocle -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <compilerArgs>
+                        <arg>-Xlint:-module</arg>
+                    </compilerArgs>
+                    <showWarnings>true</showWarnings>
+                    <failOnWarning>false</failOnWarning>
+                </configuration>
+            </plugin>
             <!-- Maven Surefire plugin - runs unit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

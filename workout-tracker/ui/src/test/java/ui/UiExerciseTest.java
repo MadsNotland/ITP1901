@@ -203,6 +203,7 @@ class UiExerciseTest extends ApplicationTest {
             "Exercise table should gain 1 row after adding a valid exercise"
         );
     }
+    
     /**
      * Happy path:
      *  - Add an exercise

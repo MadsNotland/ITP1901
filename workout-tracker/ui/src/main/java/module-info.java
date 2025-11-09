@@ -21,6 +21,6 @@ module workout.tracker.ui {
     exports ui;
 
     // Open package for JavaFX reflection (FXML) and for testing
-    opens ui to javafx.graphics, javafx.fxml, org.junit.jupiter;
+    opens ui to javafx.graphics, javafx.fxml;
     opens ui.base to javafx.fxml;
 }

@@ -8,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-
-
 import org.junit.jupiter.api.Test;
 
 /**
@@ -41,7 +39,6 @@ public class ExerciseTest {
         assertEquals(100.0, e.getWeight());
     }
     
-
     /**
      * Boundary: repetitions = 0 and weight = 0 should be accepted.
      */
@@ -78,6 +75,7 @@ public class ExerciseTest {
     void constructor_throws_whenWeightNegative() {
         assertThrows(IllegalArgumentException.class, () -> new Exercise("Deadlift", 3, -0.1,null));
     }
+
     /**
      * Tests that a random UUID is generated when id is null or blank.
      */
@@ -87,6 +85,7 @@ public class ExerciseTest {
         assertNotNull(e.getId());
         assertFalse(e.getId().isBlank());
     }
+
     /**
      * Tests that the provided id is used when it is not blank.
      */
@@ -153,6 +152,7 @@ public class ExerciseTest {
                 () -> assertTrue(s.contains("55.5"))
         );
     }
+
     /**
      * Tests that equals and hashCode are based on the unique identifier (id) only.
      */
@@ -170,6 +170,7 @@ public class ExerciseTest {
         assertTrue(b.equals(c));
         assertTrue(a.equals(c));
     }
+
     /**
      * Tests that equals returns false for different ids or null.
      */
@@ -180,6 +181,7 @@ public class ExerciseTest {
         assertNotEquals(a, b);
         assertNotEquals(a, null);
     }
+
     /**
      * Tests that hashCode is consistent with equals based on id.
      */
@@ -189,5 +191,4 @@ public class ExerciseTest {
         Exercise b = new Exercise("B", 2, 2.0, "id1");
         assertEquals(a.hashCode(), b.hashCode());
     }
-
 }
