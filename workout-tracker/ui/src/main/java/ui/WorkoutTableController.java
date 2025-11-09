@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import core.Workout;
+import core.service.WorkoutService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -11,7 +12,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import ui.base.BaseController;
-import ui.service.WorkoutService;
 
 /**
  * Controller class for the {@code WorkoutTableView.fxml} view.
@@ -25,13 +25,13 @@ import ui.service.WorkoutService;
  * <ul>
  *   <li>Bind {@link core.Workout} data to the table columns</li>
  *   <li>Delegate navigation to {@link MainController}</li>
- *   <li>Persist workout data via {@link ui.service.WorkoutService}</li>
+ *   <li>Persist workout data via {@link core.service.WorkoutService}</li>
  * </ul>
  * </p>
  *
  * @see ui.WorkoutFormController
  * @see core.Workout
- * @see ui.service.WorkoutService
+ * @see core.service.WorkoutService
  */
 public class WorkoutTableController extends BaseController {
 
@@ -261,12 +261,12 @@ public class WorkoutTableController extends BaseController {
         String infoText = """
                      Workout Tracker App Guide
             
-            • Click "Add Workout" button to add a workout.
-            • Fill in necessary input-fields and add workout.
-            • Each workout is saved automatically.
-            • Doubleclick a workout-row to view its exercises.
-            • Click or Ctrl+Click to select multiple workouts for deletion.
+            • Add a workout: Click "Add Workout" button.
+            • View the workout: Doubleclick a workout-row.
+            • Delete multiple workouts: Ctrl+Click
+            
             • Click outside the table to clear a selection.
+            • Each workout is saved automatically.
             """;
 
         showAlert(javafx.scene.control.Alert.AlertType.INFORMATION,

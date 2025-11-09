@@ -239,9 +239,6 @@ class ExerciseTableViewTest extends ApplicationTest {
         }
     }
 
-
-
-
     /** Minimal, valid Workout with two exercises for driving the UI. */
     private static Workout sampleWorkout() {
         Exercise e1 = new Exercise("Warmup", 0, 0.0, "ex-1");

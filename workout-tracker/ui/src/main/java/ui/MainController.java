@@ -5,19 +5,19 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 import java.io.IOException;
 
 import core.Workout;
+import core.service.WorkoutService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import ui.base.BaseController;
-import ui.service.WorkoutService;
 
 /**
  * Main controller responsible for coordinating view navigation and shared data management.
  * <p>
  * This controller acts as the central hub of the application, managing transitions between
  * different UI views (e.g., {@link ui.WorkoutTableController} and {@link ui.WorkoutFormController})
- * and maintaining shared references to the {@link ui.service.WorkoutService} model used for persistence.
+ * and maintaining shared references to the {@link core.service.WorkoutService} model used for persistence.
  * </p>
  * <p>
  * Responsibilities:
@@ -29,7 +29,7 @@ import ui.service.WorkoutService;
  *
  * @see ui.WorkoutTableController
  * @see ui.WorkoutFormController
- * @see ui.service.WorkoutService
+ * @see core.service.WorkoutService
  */
 public class MainController extends BaseController {
 
@@ -57,7 +57,7 @@ public class MainController extends BaseController {
     /**
      * Loads and displays the {@code WorkoutTableView.fxml} view in the center of the layout.
      * <p>
-     * This method also injects the shared {@link ui.service.WorkoutService} instance into the {@link WorkoutTableController}.
+     * This method also injects the shared {@link core.service.WorkoutService} instance into the {@link WorkoutTableController}.
      * </p>
      *
      * @throws IOException if the FXML resource cannot be loaded
@@ -78,7 +78,7 @@ public class MainController extends BaseController {
     /**
      * Loads and displays the {@code WorkoutFormView.fxml} view in the center of the layout.
      * <p>
-     * This method injects the shared {@link ui.service.WorkoutService} instance into the
+     * This method injects the shared {@link core.service.WorkoutService} instance into the
      * {@link WorkoutFormController} for adding new workouts.
      * </p>
      *

@@ -29,10 +29,33 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
-        <!-- Jackson for JSON annotations-->
+        <!-- Jackson for JSON serialization/deserialization in REST client -->
+        <!-- Jackson-annotations provides annotations for JSON mapping -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        <!-- Jackson-core provides the foundational JSON parsing capabilities -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        <!-- Jackson-databind enables conversion between JSON and Java objects -->
+        <!-- Used to serialize Workout objects to JSON for POST/PUT requests -->
+        <!-- and deserialize JSON responses to Workout objects from GET requests -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        <!-- Jackson-datatype-jsr310 provides support for Java 8+ time types -->
+        <!-- Required for proper serialization/deserialization of LocalDate fields -->
+        <!-- in Workout objects (e.g., workout.getDate() returns LocalDate) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
             <version>2.15.2</version>
         </dependency>
     </dependencies>

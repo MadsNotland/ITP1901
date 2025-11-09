@@ -30,7 +30,7 @@
 
         <!-- Row 0: Date -->
         <Label styleClass="label-field" text="Date:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-        <DatePicker fx:id="datePicker" prefHeight="31.0" prefWidth="375.0" styleClass="date-picker" GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <DatePicker fx:id="datePicker" promptText="12/24/2025" prefHeight="31.0" prefWidth="375.0" styleClass="date-picker" GridPane.columnIndex="1" GridPane.rowIndex="0">
          <GridPane.margin>
             <Insets left="25.0" />
          </GridPane.margin></DatePicker>
@@ -58,7 +58,7 @@
 
         <!-- Row 3: Notes -->
         <Label styleClass="label-field" text="Notes:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-        <TextArea fx:id="notesField" maxWidth="-Infinity" minWidth="-Infinity" prefRowCount="3" prefWidth="375.0" styleClass="text-area" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
+        <TextArea fx:id="notesField" promptText="Hard workout today..." maxWidth="-Infinity" minWidth="-Infinity" prefRowCount="3" prefWidth="375.0" styleClass="text-area" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="25.0" />
          </GridPane.margin></TextArea>

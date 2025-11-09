@@ -271,7 +271,6 @@ class UiExerciseTest extends ApplicationTest {
         );
     }
 
-
     @Test
     void addMultipleExercises_addsMultipleRows() {
         navigateToWorkoutForm("#exerciseNameField");

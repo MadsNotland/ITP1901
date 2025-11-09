@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import core.Exercise;
 import core.Workout;
 import core.WorkoutTracker;
+import core.service.WorkoutService;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,7 +26,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import ui.base.BaseController;
-import ui.service.WorkoutService;
 
 /**
  * Controller class for the {@code WorkoutFormView.fxml} view.
