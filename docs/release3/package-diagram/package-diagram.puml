@@ -1,0 +1,40 @@
+@startuml
+skinparam packageStyle rectangle
+skinparam arrow {
+  thickness 1
+  color #666666
+  style dashed
+}
+
+package "workout-tracker" {
+' Core module - no internal dependencies
+  package "core" {
+    ' Exercise, Workout, WorkoutTracker
+  }
+
+  ' Persistence module - depends on core
+  package "persistence" {
+    ' WorkoutFileManager
+  }
+
+  ' Server module - depends on core and persistence
+  package "server" {
+    ' ApiInfoController, ServerApplication, WorkoutController, WorkoutService
+  }
+
+  ' UI module - depends on core
+  package "ui" {
+    ' MainController, ExerciseTableController, WorkoutFormController, 
+    ' WorkoutTableController, WorkoutTrackerApp, UiConstants,
+    ' base/BaseController, service/RestWorkoutClient, etc.
+  }
+  persistence --> core
+  server --> core
+  server --> persistence
+  ui --> core
+
+}
+
+@enduml
+
+

@@ -1,7 +1,6 @@
 module workout.tracker.ui {
     // Dependencies on internal modules
     requires workout.tracker.core;
-    requires workout.tracker.persistence;
 
     // JavaFX dependencies
     requires javafx.controls;
