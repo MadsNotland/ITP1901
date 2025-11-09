@@ -11,7 +11,11 @@ In documentation, I co-created the sequence diagram for the “Add Workout” fl
 
 
 ## madsnot <madsnot@stud.ntnu.no>
+In this project, my main focus was on improving the overall test quality and coverage. I spent much of my time strengthening the TestFX suite for the UI layer, extending existing tests and adding several new ones to cover edge cases, validation, user interactions, and controller logic. This work helped raise the overall test coverage to above 80 percent and made the test suite more stable and reliable.
 
+I also contributed to the core module by implementing the Workout class, including its validation rules and data handling logic. In addition, I introduced the project’s Checkstyle setup, ensuring consistent formatting and helping the team maintain cleaner, more uniform code.
+
+Throughout the development process, I helped refine documentation by co-authoring the sequence diagram and contributing to the project’s package diagram. I was also active in code reviews, where I provided feedback on structure, clarity, and testability to help keep the codebase coherent across team members.
 
 ## markrin <markrin@stud.ntnu.no>
 During this project, my main contributions were in the core, UI, and documentation modules. I designed and implemented the Exercise domain class and extended the Workout class to include a list of exercises with full validation, JSON serialization, and unique exercise IDs. Also, I updated associated tests to ensure model integrity and prevent duplicate entries. In the UI, I helped build the ExerciseTableView to display and edit general workout information in the same view as the Exercise table. This involved implementing staged editing behavior, improving validation, and resolving several UX and initialization bugs. For this, I also created TestFX UI tests to verify correct user interactions. I also wrote and updated documentation, including persistence.md, teamwork.md, co-created sequence- and package-diagram and created class-diagram-release2/3 alongside class-level Javadoc. 
