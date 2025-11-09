@@ -21,12 +21,6 @@
             <artifactId>workout-tracker-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>it1901</groupId>
-            <artifactId>workout-tracker-persistence</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- JavaFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>
