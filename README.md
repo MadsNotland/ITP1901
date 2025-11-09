@@ -62,14 +62,14 @@ mvn javafx:run -pl ui
     │   ├── pom.xml                    # Parent POM (packaging=pom)
     │   ├── core/                      # Core module (domain logic)
     │   │   ├── pom.xml                    # Core module POM
-    │   │   ├── src/main/java/core/service # Core business logic    
-    │   │   ├── src/main/java/core/        # Core business logic
-    │   │   ├── src/test/java/core/service # Core unit tests
-    │   │   └── src/test/java/core/        # Core unit tests   
+    │   │   ├── src/main/java/core/service # Business logic (service and data flow)   
+    │   │   ├── src/test/java/core/service # Business logic tests
+    │   │   ├── src/main/java/core/        # Domain model (entities and validation)
+    │   │   └── src/test/java/core/        # Domain model tests   
     │   ├── ui/                        # UI module (JavaFX)
     │   │   ├── pom.xml                    # UI module POM
-    │   │   ├── src/main/java/ui/base      # JavaFX UI components
-    │   │   ├── src/main/java/ui/          # JavaFX UI components
+    │   │   ├── src/main/java/ui/base      # Shared base controller
+    │   │   ├── src/main/java/ui/          # View controllers for FXML
     │   │   ├── src/main/resources/ui/     # FXML files and resources
     │   │   └── src/test/java/ui/          # UI tests (TestFX)
     │   ├── persistence/               # Persistence module
@@ -80,7 +80,7 @@ mvn javafx:run -pl ui
     │   │   ├── pom.xml                    # Server module POM
     │   │   └── src/main/java/server/      # Server logic
     │   ├── data/                      # Data files
-    │   │   └── workouts.json              # Example data file
+    │   │   └── workouts.json              # Default data file (persistence storage)
     │   └── README.md                  # README for project repository
     ├── docs/                      # Documentation and mockups
     │   ├── release1                   # Release 1
