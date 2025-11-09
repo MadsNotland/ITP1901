@@ -1,3 +1,10 @@
+' ===============================================================
+' Extensions to download for preview to work:
+'   • PlantUML extension (jebbs)
+'   • PlantUML Previewer (Mebrahtom Guesh)
+'   (Click Ctrl + P to preview) (smaller png is also provided, see folder)
+' ===============================================================
+
 @startuml
 skinparam packageStyle rectangle
 skinparam arrow {
@@ -7,9 +14,10 @@ skinparam arrow {
 }
 
 package "workout-tracker" {
-' Core module - no internal dependencies
+' Core module - business logic and REST communication
   package "core" {
-    ' Exercise, Workout, WorkoutTracker
+    ' Exercise, Workout, WorkoutTracker,
+    ' WorkoutService, WorkoutClient, RestWorkoutClient
   }
 
   ' Persistence module - depends on core
@@ -26,7 +34,7 @@ package "workout-tracker" {
   package "ui" {
     ' MainController, ExerciseTableController, WorkoutFormController, 
     ' WorkoutTableController, WorkoutTrackerApp, UiConstants,
-    ' base/BaseController, service/RestWorkoutClient, etc.
+    ' base/BaseController.
   }
   persistence --> core
   server --> core

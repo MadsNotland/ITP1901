@@ -9,7 +9,7 @@ Viewing options:
 classDiagram
 direction TB
 
-%% UI layer
+%% === UI Layer ===
 class MainController {
   + showWorkoutTable()
   + showWorkoutForm()
@@ -28,12 +28,14 @@ class ExerciseTableController {
   + handleSave()
 }
 
-%% Application services
-class WorkoutService {
+%% === Core  Layer (Business & Domain Logic) ===
+class core.WorkoutService {
   + loadWorkouts()
   + addWorkout(workout : Workout)
   + updateWorkout(id : Long, workout : Workout)
   + getWorkoutTracker() : WorkoutTracker
+  + findWorkout(workoutId : Long)
+  + deleteWorkout(workout : Workout)
 }
 class WorkoutClient {
   <<interface>>
@@ -49,11 +51,11 @@ class RestWorkoutClient {
   + deleteWorkout(id : Long) : void
 }
 
-%% Domain
 class WorkoutTracker {
   - workouts : final ObservableList~Workout~
   + addWorkout(workout : Workout)
   + getAllWorkouts() : ObservableList~Workout~
+  + removeWorkoutById(id : Long)
 }
 class Workout {
   - id : Long
@@ -74,12 +76,15 @@ class Exercise {
   - id : final String
 }
 
-%% Persistence & server
+%% === Persistence Layer ===
 class WorkoutFileManager {
   + saveWorkouts(workouts : List~Workout~)
   + loadWorkouts() : List~Workout~
+  + addWorkout(workout : Workout)
 }
-class ServerWorkoutService {
+
+%% === Server Layer ===
+class server.WorkoutService {
   + getAllWorkouts() : List~Workout~
   + createWorkout(workout : Workout) : Workout
   + updateWorkout(id : Long, workout : Workout) : Workout
@@ -92,17 +97,17 @@ class WorkoutController {
   + deleteWorkout(id : Long)
 }
 
-%% Relationships
-MainController --> WorkoutService
+%% === Relationships ===
+MainController --> core.WorkoutService
 MainController ..> WorkoutTableController
 MainController ..> WorkoutFormController
 MainController ..> ExerciseTableController
-WorkoutTableController --> WorkoutService
-WorkoutFormController --> WorkoutService
-ExerciseTableController --> WorkoutService
+WorkoutTableController --> core.WorkoutService
+WorkoutFormController --> core.WorkoutService
+ExerciseTableController --> core.WorkoutService
 
-WorkoutService --> WorkoutTracker
-WorkoutService --> WorkoutClient
+core.WorkoutService --> WorkoutTracker
+core.WorkoutService --> WorkoutClient
 RestWorkoutClient ..|> WorkoutClient
 RestWorkoutClient ..> Workout
 
@@ -110,6 +115,6 @@ WorkoutTracker o-- "*" Workout
 Workout "1" *-- "0..*" Exercise
 WorkoutFileManager ..> Workout : serializes
 
-ServerWorkoutService --> WorkoutFileManager
-WorkoutController --> ServerWorkoutService
+server.WorkoutService --> WorkoutFileManager
+WorkoutController --> server.WorkoutService
 ```
