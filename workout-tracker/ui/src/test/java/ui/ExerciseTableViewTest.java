@@ -3,14 +3,18 @@ package ui;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
 import org.testfx.util.WaitForAsyncUtils;
 
 import core.Exercise;
 import core.Workout;
+import core.WorkoutTracker;
+import core.service.WorkoutService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -36,7 +40,9 @@ class ExerciseTableViewTest extends ApplicationTest {
 
     private ExerciseTableController controller;
     private Workout sample;
+    private TestWorkoutService workoutService;
 
+    
     /**
      * TestFX setup:
      * - Load ExerciseTableView.fxml
@@ -51,6 +57,9 @@ class ExerciseTableViewTest extends ApplicationTest {
 
         // Create sample workout with two exercises
         sample = sampleWorkout();
+                // Create test workout service
+        workoutService = new TestWorkoutService(sample);
+        controller.setWorkoutService(workoutService);
         // Populate the table via snapshot (no navigation / services involved)
         controller.setWorkout(sample);
         // Ensure FX bindings/cell factories have run before assertions
@@ -58,6 +67,12 @@ class ExerciseTableViewTest extends ApplicationTest {
 
         stage.setScene(new Scene(root, 800, 500));
         stage.show();
+    }
+    @BeforeEach
+    void resetFlags() {
+        if (workoutService != null) {
+            workoutService.reset();
+        }
     }
 
     /** Table should list both exercises from the injected snapshot, in order. */
@@ -243,13 +258,338 @@ class ExerciseTableViewTest extends ApplicationTest {
         }
     }
 
-
-
-
     /** Minimal, valid Workout with two exercises for driving the UI. */
+       /** Minimal, valid Workout with two exercises for driving the UI. */
     private static Workout sampleWorkout() {
         Exercise e1 = new Exercise("Warmup", 0, 0.0, "ex-1");
         Exercise e2 = new Exercise("Bench Press", 5, 80.0, "ex-2");
-        return new Workout("Gym", "Chest day", LocalDate.now(), 1.0, List.of(e1, e2));
+        Workout workout = new Workout("Gym", "Chest day", LocalDate.now(), 1.0, List.of(e1, e2));
+        // Set an ID for the workout to ensure findWorkout works correctly
+        workout.setId(1L);
+        return workout;
+    }
+    /**
+     * Test that saving commits staged header changes to the model.
+     */
+    @Test
+    void handleSave_commitsHeaderChangesToModel() {
+        // First verify initial state
+        assertEquals("Gym", sample.getType());
+        
+        // Edit header fields using direct approach
+        interact(() -> {
+            TextField typeField = lookup("#typeField").query();
+            typeField.setText("Leg Day");
+        });
+        
+        interact(() -> {
+            TextArea notesArea = lookup("#notesArea").query();
+            notesArea.setText("Updated notes");
+        });
+        
+        // For date
+        LocalDate newDate = LocalDate.now().plusDays(5);
+        interact(() -> {
+            DatePicker datePicker = lookup("#datePicker").query();
+            datePicker.setValue(newDate);
+        });
+        
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Verify staged values changed but model unchanged
+        TextField typeField = lookup("#typeField").query();
+        assertEquals("Leg Day", typeField.getText());
+        assertEquals("Gym", sample.getType()); // Model unchanged before save
+        
+        // Save changes
+        clickOn("#saveButton");
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Verify model was updated
+        assertTrue(workoutService.wasUpdated(), "Workout should have been updated");
+        assertEquals("Leg Day", sample.getType());
+        assertEquals("Updated notes", sample.getNotes());
+        assertEquals(newDate, sample.getDate());
+    }
+
+    /**
+     * Test that saving commits exercise changes to the model.
+     */
+    @Test
+    void handleSave_commitsExerciseChangesToModel() {
+        TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
+        
+        // Edit an exercise using direct approach
+        interact(() -> {
+            if (!table.getItems().isEmpty()) {
+                Exercise firstExercise = table.getItems().get(0);
+                firstExercise.setName("Updated Warmup");
+            }
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Verify staged value changed but model unchanged
+        assertEquals("Updated Warmup", table.getItems().get(0).getName());
+        assertEquals("Warmup", sample.getExercises().get(0).getName()); // Model unchanged before save
+        
+        // Save changes
+        clickOn("#saveButton");
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Verify save was attempted and model was updated
+        assertTrue(workoutService.wasUpdated(), "Workout should have been updated");
+        assertEquals("Updated Warmup", sample.getExercises().get(0).getName());
+    }
+
+    /**
+     * Test that saving commits added exercises to the model.
+     */
+    @Test
+    void handleSave_commitsAddedExercisesToModel() {
+        TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
+        int initialExerciseCount = sample.getExercises().size();
+        
+        // Add a new exercise
+        clickOn("#addButton");
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Verify UI updated but model unchanged
+        assertEquals(initialExerciseCount + 1, table.getItems().size());
+        assertEquals(initialExerciseCount, sample.getExercises().size()); // Model unchanged before save
+        
+        // Save changes
+        clickOn("#saveButton");
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Verify save was attempted and model was updated
+        assertTrue(workoutService.wasUpdated(), "Workout should have been updated");
+        assertEquals(initialExerciseCount + 1, sample.getExercises().size());
+    }
+
+    /**
+     * Test that saving commits deleted exercises to the model.
+     */
+    @Test
+    void handleSave_commitsDeletedExercisesToModel() {
+        TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
+        int initialExerciseCount = sample.getExercises().size();
+        
+        // Select and delete an exercise
+        interact(() -> table.getSelectionModel().select(0));
+        clickOn("#deleteButton");
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Verify UI updated but model unchanged
+        assertEquals(initialExerciseCount - 1, table.getItems().size());
+        assertEquals(initialExerciseCount, sample.getExercises().size()); // Model unchanged before save
+        
+        // Save changes
+        clickOn("#saveButton");
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Verify save was attempted and model was updated
+        assertTrue(workoutService.wasUpdated(), "Workout should have been updated");
+        assertEquals(initialExerciseCount - 1, sample.getExercises().size());
+    }
+
+    /**
+     * Test that saving with zero duration shows validation error.
+     */
+    @Test
+    void handleSave_showsError_whenDurationIsZero() {
+        @SuppressWarnings("unchecked")
+        ComboBox<Integer> comboHours = lookup("#comboBoxHours").query();
+        @SuppressWarnings("unchecked")
+        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").query();
+        
+        // Set duration to zero
+        interact(() -> {
+            comboHours.setValue(0);
+            comboMinutes.setValue(0);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Try to save
+        clickOn("#saveButton");
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // For validation errors, we expect workout not to be updated
+        assertFalse(workoutService.wasUpdated(), "Workout should not be updated when validation fails");
+        assertEquals(1.00, sample.getTime(), 0.0001, "Model should not be updated when validation fails");
+    }
+
+    /**
+     * Test that saving preserves exercise order after reordering.
+     */
+    @Test
+    void handleSave_preservesReorderedExercises() {
+        TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
+        
+        // Get initial order
+        String firstExerciseBefore = table.getItems().get(0).getName();
+        String secondExerciseBefore = table.getItems().get(1).getName();
+        
+        // Simulate reordering by swapping the exercises in the table
+        interact(() -> {
+            List<Exercise> items = new ArrayList<>(table.getItems());
+            Exercise first = items.remove(0);
+            items.add(first); // Move first to last
+            table.getItems().setAll(items);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Verify UI order changed but model unchanged
+        assertEquals(secondExerciseBefore, table.getItems().get(0).getName());
+        assertEquals(firstExerciseBefore, table.getItems().get(1).getName());
+        assertEquals(firstExerciseBefore, sample.getExercises().get(0).getName()); // Model unchanged
+        
+        // Save changes
+        clickOn("#saveButton");
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Verify save was attempted and model order was updated
+        assertTrue(workoutService.wasUpdated(), "Workout should have been updated");
+        assertEquals(secondExerciseBefore, sample.getExercises().get(0).getName());
+        assertEquals(firstExerciseBefore, sample.getExercises().get(1).getName());
+    }
+
+    /**
+     * Test that saving updates the workout time correctly from hours and minutes.
+     */
+    @Test
+    void handleSave_updatesWorkoutTimeCorrectly() {
+        @SuppressWarnings("unchecked")
+        ComboBox<Integer> comboHours = lookup("#comboBoxHours").query();
+        @SuppressWarnings("unchecked")
+        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").query();
+        
+        // Change time to 2 hours and 30 minutes
+        interact(() -> {
+            comboHours.setValue(2);
+            comboMinutes.setValue(30);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Save changes
+        clickOn("#saveButton");
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Verify save was attempted and model time was updated correctly (2.30 hours)
+        assertTrue(workoutService.wasUpdated(), "Workout should have been updated");
+        assertEquals(2.30, sample.getTime(), 0.0001);
+    }
+
+    /**
+     * Test that empty type field shows validation error on save.
+     */
+    @Test
+    void handleSave_showsError_whenTypeIsEmpty() {
+        // First ensure duration is valid to isolate type validation
+        interact(() -> {
+            @SuppressWarnings("unchecked")
+            ComboBox<Integer> comboHours = lookup("#comboBoxHours").query();
+            comboHours.setValue(1);
+        });
+        
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Clear type field using direct approach
+        interact(() -> {
+            TextField typeField = lookup("#typeField").query();
+            typeField.setText("");
+        });
+        
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // Try to save
+        clickOn("#saveButton");
+        WaitForAsyncUtils.waitForFxEvents();
+        
+        // For validation errors, the model should not be updated
+        assertFalse(workoutService.wasUpdated(), "Workout should not be updated when validation fails");
+        assertEquals("Gym", sample.getType(), "Model should not be updated when validation fails");
+    }
+
+    /**
+ * Test implementation of {@link WorkoutService} for UI testing.
+ * 
+ * <p>This fake service provides a simplified in-memory implementation that:
+ * <ul>
+ *   <li>Tracks when {@link #updateWorkout(Long, Workout)} is called via {@link #wasUpdated()}</li>
+ *   <li>Maintains a single sample workout for all find operations</li>
+ *   <li>Updates the sample workout in-place when save operations are performed</li>
+ *   <li>Does not perform actual HTTP calls or file I/O operations</li>
+ * </ul>
+ * </p>
+ * 
+ * <p>Primary use case: Enables testing of {@link ExerciseTableController#handleSave()} 
+ * functionality without requiring a live backend or complex setup.</p>
+ */
+     private static class TestWorkoutService extends WorkoutService {
+        private final Workout sampleWorkout;
+        private boolean updated = false;
+
+        TestWorkoutService(Workout sampleWorkout) {
+            super(new TestWorkoutClient());
+            this.sampleWorkout = sampleWorkout;
+        }
+
+
+
+        @Override
+        public Workout findWorkout(Long id) {
+            return sampleWorkout;
+        }
+
+        @Override
+        public void updateWorkout(Long id, Workout workout) {
+            updated = true;
+            // Update our sample workout in-place for testing
+            sampleWorkout.setType(workout.getType());
+            sampleWorkout.setNotes(workout.getNotes());
+            sampleWorkout.setDate(workout.getDate());
+            sampleWorkout.setTime(workout.getTime());
+            sampleWorkout.setExercises(new ArrayList<>(workout.getExercises()));
+        }
+
+        public boolean wasUpdated() {
+            return updated;
+        }
+
+        public void reset() {
+            updated = false;
+        }
+
+        @Override
+        public WorkoutTracker getWorkoutTracker() {
+            WorkoutTracker tracker = new WorkoutTracker();
+            tracker.addWorkout(sampleWorkout);
+            return tracker;
+        }
+    }
+
+    /**
+     * Test implementation of WorkoutClient that doesn't make actual HTTP calls. (fake)
+     */
+    private static class TestWorkoutClient implements core.service.WorkoutClient {
+        @Override
+        public List<Workout> getAllWorkouts() {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public Workout createWorkout(Workout workout) {
+            return workout;
+        }
+
+        @Override
+        public Workout updateWorkout(Long id, Workout workout) {
+            return workout;
+        }
+
+        @Override
+        public void deleteWorkout(Long id) {
+            // No-op for testing
+        }
     }
 }
