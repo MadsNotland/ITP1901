@@ -20,4 +20,26 @@
     "id" : "7ef0cc9a-7718-4b95-a8c2-dc49924b82e9"
   } ],
   "id" : 4
+}, {
+  "type" : "Push",
+  "notes" : "Easy workout",
+  "date" : [ 2025, 11, 19 ],
+  "time" : 4.15,
+  "exercises" : [ {
+    "name" : "Running",
+    "repetitions" : 1,
+    "weight" : 0.0,
+    "id" : "d061093a-4da3-48b2-9e7b-92c5639ee9bf"
+  }, {
+    "name" : "Flies",
+    "repetitions" : 1,
+    "weight" : 60.0,
+    "id" : "eca75506-3e21-4bb4-b852-30fc90ed1909"
+  }, {
+    "name" : "Dumbell",
+    "repetitions" : 1,
+    "weight" : 0.0,
+    "id" : "476917a1-5148-453b-90bf-1c05acc2d959"
+  } ],
+  "id" : 8
 } ]

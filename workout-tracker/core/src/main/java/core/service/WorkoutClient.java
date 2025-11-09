@@ -1,4 +1,4 @@
-package ui.service;
+package core.service;
 
 import java.io.IOException;
 import java.util.List;
