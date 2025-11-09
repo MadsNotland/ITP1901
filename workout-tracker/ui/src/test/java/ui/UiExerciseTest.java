@@ -253,6 +253,15 @@ class UiExerciseTest extends ApplicationTest {
         );
     }
 
+    /**
+     * Error path:
+     *  - Do not fill in repetitions
+     *  - Click "Add Exercise"
+     *  - Expect an Alert (DialogPane) with an error message
+     *
+     * This tests that validation actually communicates with the user via the UI
+     * and does not just throw exceptions in the console.
+     */
     @Test
     void addExercise_showsAlert_whenRepetitionsMissing() {
         navigateToWorkoutForm("#exerciseNameField");
@@ -272,6 +281,11 @@ class UiExerciseTest extends ApplicationTest {
         );
     }
 
+    /**
+     * Happy path:
+     *  - Add two exercises
+     *  - Expect exerciseTable to have two more rows
+     */
     @Test
     void addMultipleExercises_addsMultipleRows() {
         navigateToWorkoutForm("#exerciseNameField");

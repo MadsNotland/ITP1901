@@ -19,6 +19,7 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 /**
  * UI integration tests for the Workout Tracker JavaFX interface.
  * <p>
