@@ -48,7 +48,7 @@ mvn javafx:run -pl ui
 ### Documentation
 - [Release 1 Documentation](docs/release1/release1.md): Complete feature overview and technical details
 - [Release 2 Documentation](docs/release2/release2.md): Overview over modularisation, code quality, documentation, architecture, work habits
-- [Release 3 Documentation](docs/release3/release3.md): 
+- [Release 3 Documentation](docs/release3/release3.md): Architectural separation (Spring Boot REST server + JavaFX client), exercise editor, REST API integration, domain model enhancements 
 - [Application README](workout-tracker/README.md): Quick start guide and basic usage
 
 ### Requirements
@@ -98,4 +98,4 @@ mvn javafx:run -pl ui
 ### Releases
 - Release 1: Basic workout creation, list view, save/load
 - Release 2: Modularisation, code quality, documentation, architecture, work habits
-- Release 3: 
+- Release 3: Architectural separation (Spring Boot REST server + JavaFX client), REST API with full CRUD, exercise editor view, domain model updates 
