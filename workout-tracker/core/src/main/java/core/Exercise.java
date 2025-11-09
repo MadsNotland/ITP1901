@@ -66,7 +66,10 @@ public final class Exercise {
         this.name = name;
     }
 
-     /** Returns the number of repetitions. */
+     /** Returns the number of repetitions.
+      * 
+      * @return the number of repetitions
+      */
     public int getRepetitions() {
         return repetitions;
     }
@@ -102,13 +105,20 @@ public final class Exercise {
         this.weight = weight;
     }
 
-    /** Returns the unique identifier of this exercise. */
+    /** Returns the unique identifier of this exercise.
+     * 
+     * @return the unique identifier of this exercise
+     */
     @JsonProperty("id")
     public String getId() {
         return id;
     }
 
-    /** Checks equality based on the unique identifier. */
+    /** Checks equality based on the unique identifier.
+     * 
+     * @param o the object to compare to
+     * @return true if the objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -121,13 +131,19 @@ public final class Exercise {
         return java.util.Objects.equals(this.id, other.id);
     }
 
-    /** Computes hash code based on the unique identifier. */
+    /** Computes hash code based on the unique identifier.
+     * 
+     * @return the hash code of the exercise
+     */
     @Override
     public int hashCode() {
         return java.util.Objects.hash(id);
     }
 
-    /** Returns a concise string representation of this exercise. */
+    /** Returns a concise string representation of this exercise.
+     * 
+     * @return a concise string representation of this exercise
+     */
     @Override
     public String toString() {
         return "Exercise{name='" + name + "', repetitions=" + repetitions + ", weight=" + weight + ", id=" + id + "}";
