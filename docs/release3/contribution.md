@@ -19,4 +19,8 @@ During this project, my main contributions were in the core, UI, and documentati
 In addition to my individual work, I was a co-author on several commits contributing to architecture and design documentation, UI enhancements, and code quality improvements. These included creating and updating PlantUML and package diagrams to visualize project structure, improving navigation between main screens, introducing a dedicated UI constants class, and preventing persistent storage of test data during automated UI tests. I also co-authored updates to the Release 2 documentation, adding guidance on quality tooling, modular structure, and diagram conventions.
 
 ## trymajo <trymajo@stud.ntnu.no>
+My main contributions in this release were centered around the server, backend logic, and related documentation. I spent most of my time improving and maintaining the backend module, ensuring stable communication with the REST API and supporting the frontend team by clarifying data flow and integration needs between the client and server. I also worked on fixing several failing tests and refactoring parts of the backend to improve reliability and maintainability.
+
+Beyond development, I contributed significantly to documentation. I wrote and updated several project documents, including teamwork.md and ai-tools.md, to ensure clarity and consistency across releases. Additionally, I assisted in setting up the Windows packaging process with jpackage and WiX, making the application buildable as a native installer. Overall, I served as a link between frontend and backend work, providing technical guidance, improving test coverage, and helping ensure the project’s backend was both stable and well-documented.
+
 
