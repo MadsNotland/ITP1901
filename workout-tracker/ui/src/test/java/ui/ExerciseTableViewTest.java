@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -592,4 +593,61 @@ class ExerciseTableViewTest extends ApplicationTest {
             // No-op for testing
         }
     }
+    /** onNameEditCommit: commits non-blank values, ignores blank. */
+@Test
+void nameEditCommit_updates_whenNonBlank_and_ignores_blank() {
+    TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
+
+    @SuppressWarnings("unchecked")
+    TableColumn<Exercise, String> nameCol =
+            (TableColumn<Exercise, String>) table.getColumns().get(1); // 0:set#, 1:name
+
+    // --- commit non-blank ---
+    javafx.application.Platform.runLater(() -> {
+        var pos = new TablePosition<Exercise, String>(table, 0, nameCol);
+        var evt = new TableColumn.CellEditEvent<>(
+                table, pos, TableColumn.editCommitEvent(), "New Warmup");
+        nameCol.getOnEditCommit().handle(evt);
+    });
+    WaitForAsyncUtils.waitForFxEvents();
+    assertEquals("New Warmup", table.getItems().get(0).getName(),
+            "Commit med ikke-blank tekst skal sette nytt navn");
+
+    // --- commit blank (should be ignored & refresh back) ---
+    javafx.application.Platform.runLater(() -> {
+        var pos = new TablePosition<Exercise, String>(table, 0, nameCol);
+        var evt = new TableColumn.CellEditEvent<>(
+                table, pos, TableColumn.editCommitEvent(), "   "); // blank
+        nameCol.getOnEditCommit().handle(evt);
+    });
+    WaitForAsyncUtils.waitForFxEvents();
+    assertEquals("New Warmup", table.getItems().get(0).getName(),
+            "Blank commit skal ignoreres og ikke overskrive navnet");
+}
+
+/** installRowReorderDnD: dragging row 2 onto the top half of row 1 moves it before. */
+@Test
+void dragAndDrop_reorders_rows() {
+    TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
+    // Precondition: Warmup (row0), Bench Press (row1)
+    assertEquals("Warmup", table.getItems().get(0).getName());
+    assertEquals("Bench Press", table.getItems().get(1).getName());
+
+    interact(() -> {
+        table.scrollTo(0);
+        table.scrollTo(1);
+    });
+    WaitForAsyncUtils.waitForFxEvents();
+
+    javafx.scene.Node row0 = lookup(".table-row-cell").nth(0).query();
+    javafx.scene.Node row1 = lookup(".table-row-cell").nth(1).query();
+
+    drag(row1).moveTo(row0).moveBy(0, -8).drop(); 
+    WaitForAsyncUtils.waitForFxEvents();
+
+    assertEquals("Bench Press", table.getItems().get(0).getName(),
+            "Andre rad skal være først etter DnD");
+    assertEquals("Warmup", table.getItems().get(1).getName());
+}
+
 }
