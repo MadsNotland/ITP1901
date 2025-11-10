@@ -21,7 +21,7 @@
             <artifactId>workout-tracker-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <!-- JavaFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -35,6 +35,31 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- Jackson for JSON serialization/deserialization in REST client -->
+        <!-- Required for RestWorkoutClient to communicate with the server API -->
+        <!-- Jackson-core provides the foundational JSON parsing capabilities -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        <!-- Jackson-databind enables conversion between JSON and Java objects -->
+        <!-- Used to serialize Workout objects to JSON for POST/PUT requests -->
+        <!-- and deserialize JSON responses to Workout objects from GET requests -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        <!-- Jackson-datatype-jsr310 provides support for Java 8+ time types -->
+        <!-- Required for proper serialization/deserialization of LocalDate fields -->
+        <!-- in Workout objects (e.g., workout.getDate() returns LocalDate) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.15.2</version>
         </dependency>
 
         <!-- Test dependencies -->
