@@ -17,12 +17,12 @@ For a complete overview over all user stories, see the [project repository READM
 ## Implemented Features
 
 ### Architectural Separation
-- **Spring Boot REST server**: New `workout-tracker/server` module packages the core domain and persistence layers behind `/api/workouts` endpoints.
-- **Shared domain model**: `core` remains the single source of truth for entities and validation, reducing duplication between client and server.
-- **File-backed persistence**: The server reuses `WorkoutFileManager` to persist data to `data/workouts.json`, keeping compatibility with earlier releases.
+- **Spring Boot REST server**: New [workout-tracker/server](../../workout-tracker/server/) module packages the core domain and persistence layers behind `/api/workouts` endpoints.
+- **Shared domain model**: [core](../../workout-tracker/core/) remains the single source of truth for entities and validation, reducing duplication between client and server.
+- **File-backed persistence**: The server reuses `WorkoutFileManager` to persist data to [data/workouts.json](../../workout-tracker/data/workouts.json), keeping compatibility with earlier releases.
 
 ### REST API & Integration
-- **Full CRUD endpoints**: `GET`, `POST`, `PUT`, and `DELETE` operations provide complete lifecycle management for workouts (see `rest-api.md` for payloads).
+- **Full CRUD endpoints**: `GET`, `POST`, `PUT`, and `DELETE` operations provide complete lifecycle management for workouts (see [rest-api.md](rest-api.md) for payloads).
 - **ID management**: The server assigns stable numeric IDs while the JavaFX client caches them locally via `WorkoutService`.
 - **Error handling & CORS**: Uniform JSON error responses and open CORS configuration allow future clients (web/mobile) to integrate without extra setup.
 
@@ -45,26 +45,25 @@ For a complete overview over all user stories, see the [project repository READM
 - **Che-ready tooling**: Updated instructions in the root `README.md` ensure evaluators can open the repo in Eclipse Che and run the split server/client workflow.
 
 ## Documentation Updates
-- **Architecture diagrams**: Updated UML artifacts (`class-diagram-release3.md`, `package-diagram/package-diagram.puml/png`, `sequence-diagram.puml`) reflect the new REST layers.
-- **Process reflections**: Refreshed `teamwork.md` and `ai-tools.md` capture collaboration habits and responsible AI usage for this milestone.
-- **REST reference**: `rest-api.md` documents request/response formats, validation rules, and example flows for the published API.
-- **Sustainability focus**: `sustainability/sustainability.md` discusses the project’s sustainability considerations for this iteration.
-- **Distribution guides**: New `packaging/README.md` walks through invoking jlink and jpackage, explains artifact locations, and links CI outputs for release managers.
-- **Contributor attribution**: Added `.mailmap` file to consolidate author identities across different email addresses and names. Note that this was added fairly late in the project, so the GitHub "Contributors" tab may not accurately reflect individual contributions as it only counts all commits after the `.mailmap` was introduced.
+- **Architecture diagrams**: Updated UML artifacts ([class-diagram-release3.md](class-diagram-release3.md), [package-diagram/package-diagram.puml](package-diagram/package-diagram.puml), [package-diagram/package-diagram.png](package-diagram/package-diagram.png), [sequence-diagram.puml](sequence-diagram.puml)) reflect the new REST layers.
+- **Process reflections**: Refreshed [teamwork.md](teamwork.md) and [ai-tools.md](ai-tools.md) capture collaboration habits and responsible AI usage for this milestone.
+- **REST reference**: [rest-api.md](rest-api.md) documents request/response formats, validation rules, and example flows for the published API.
+- **Sustainability focus**: [sustainability.md](sustainability/sustainability.md) discusses the project's sustainability considerations for this iteration.
+- **Contributor attribution**: Added [.mailmap](../../.mailmap) file to consolidate author identities across different email addresses and names. Note that this was added fairly late in the project, so the GitHub "Contributors" tab may not accurately reflect individual contributions as it only counts all commits after the `.mailmap` was introduced.
 
 ## Screenshots
 - Main dashboard (and with information button clicked)
 
-    ![alt text](.\screenshots\image.png)
+    ![alt text](screenshots/image.png)
 
-    ![alt text](.\screenshots\image-4.png)
+    ![alt text](screenshots/image-4.png)
 
 - Workout creation form
 
-    ![alt text](.\screenshots\image-1.png)
+    ![alt text](screenshots/image-1.png)
 
 - Workout edit form (and with information button clicked)
 
-    ![alt text](.\screenshots\image-2.png)
+    ![alt text](screenshots/image-2.png)
 
-    ![alt text](.\screenshots\image-3.png)
+    ![alt text](screenshots/image-3.png)

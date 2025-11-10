@@ -1,3 +1,4 @@
+
 # Sustainability Reflection
 
 This reflection evaluates the sustainability aspects of our workout tracking application using the SusAF framework. Even though the current version is small and locally hosted, it is still relevant to consider how design and technology choices can influence long-term sustainability.
