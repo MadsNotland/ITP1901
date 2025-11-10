@@ -2,7 +2,7 @@
 
 ## Overview
 
-Release 3 establishes the required separation between backend and client components. The application is now organized as a Spring Boot server that exposes the workout API and a JavaFX client that consumes it. Beyond the architectural restructuring, this release adds per-exercise data in the domain model, improves the editing workflow in the client, and updates documentation to reflect the new scope and quality requirements.
+Release 3 establishes the required separation between backend and client components. The application is now organized as a Spring Boot server that exposes the workout API and a JavaFX client that consumes it. Beyond the architectural restructuring, this release adds per-exercise data in the domain model, improves the editing workflow in the client, updates documentation to reflect the new scope and quality requirements, and introduces production-ready packaging via jlink and jpackage
 
 ## Implemented Features
 
@@ -20,6 +20,10 @@ Release 3 establishes the required separation between backend and client compone
 - **REST-backed UI**: `MainController` boots the app by loading workouts from the server and surfaces connection failures with user-facing alerts.
 - **Exercise editor view**: New `ExerciseTableView` lets users manage sets for a workout with inline editing, drag-and-drop reordering, staged edits, and undo via “Back”.
 - **Form refinements**: Duration pickers now separate hours/minutes, and header fields toggle editability to prevent accidental changes.
+- **Custom runtime image**: A jlink build task produces a trimmed Java runtime tailored to the JavaFX client modules for smaller downloads and guaranteed compatibility.
+- **Installers via jpackage**: jpackage scripts wrap the client and the jlink image into platform installers (MSI/DMG) under dist/, enabling evaluators to install and launch the app without manual Java setup.
+- **CI integration**: Packaging tasks run behind the package-client profile so release pipelines can generate artifacts alongside the existing mvn verify stage.
+
 
 ### Domain Model Updates
 - **Exercise entity**: Introduced `core.Exercise` with validation, UUID identifiers, and Jackson annotations for seamless JSON serialization.
@@ -36,24 +40,24 @@ Release 3 establishes the required separation between backend and client compone
 - **Process reflections**: Refreshed `teamwork.md` and `ai-tools.md` capture collaboration habits and responsible AI usage for this milestone.
 - **REST reference**: `rest-api.md` documents request/response formats, validation rules, and example flows for the published API.
 - **Sustainability focus**: `sustainability/sustainability.md` discusses the project’s sustainability considerations for this iteration.
+- **Distribution guides**: New `packaging/README.md` walks through invoking jlink and jpackage, explains artifact locations, and links CI outputs for release managers.
 
-## Screenshots / Demo
-- Add updated UI captures (e.g., main dashboard, exercise editor, REST error dialog) under `docs/release3/screenshots/` and reference them here:
 
-- Main dashboard (and with informatiin button clicked)
+## Screenshots
+- Main dashboard (and with information button clicked)
 
-    ![image info](./screenshots/image.png)
+    ![alt text](.\screenshots\image.png)
 
-    ![image info](./screenshots/image-4.png)
+    ![alt text](.\screenshots\image-4.png)
 
 - Workout creation form
 
-    ![image info](./screenshots/image-1.png)
+    ![alt text](.\screenshots\image-1.png)
 
 - Workout edit form (and with information button clicked)
 
-    ![image info](./screenshots/image-2.png)
-    
-    ![image info](./screenshots/image-3.png)
+    ![alt text](.\screenshots\image-2.png)
+
+    ![alt text](.\screenshots\image-3.png)
 
 
