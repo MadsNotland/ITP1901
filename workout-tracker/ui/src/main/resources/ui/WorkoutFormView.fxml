@@ -16,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" styleClass="dark-container" xmlns="http://javafx.com/javafx/17.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WorkoutFormController">
+<VBox alignment="CENTER" styleClass="dark-container" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WorkoutFormController">
 
     <!-- Screen title -->
     <Label styleClass="label-title" text="Workout Session Input" />
