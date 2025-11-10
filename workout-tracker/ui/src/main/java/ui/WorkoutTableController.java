@@ -102,6 +102,11 @@ public class WorkoutTableController extends BaseController {
     /**
      * Loads workouts from the server via {@link WorkoutService}
      * and handles any potential IO exceptions.
+     * <p>
+     * Handles the click event for a row in the workout table.
+     * </p>
+     * @param event the mouse event
+     * @throws IOException if the workout form cannot be loaded
      */
     @FXML
     private void handleRowClick(MouseEvent event) throws IOException {
@@ -117,7 +122,12 @@ public class WorkoutTableController extends BaseController {
         }
     }
 
-    /* Deletes the selected workout(s) after user confirmation */
+    /**
+     * Deletes the selected workout(s) after user confirmation.
+     * <p>
+     * Deletes the selected workouts from the workout table.
+     * </p>
+     */
     @FXML
     private void handleDeleteWorkout() {
         var selectedItems = workoutTable.getSelectionModel().getSelectedItems();
@@ -255,7 +265,12 @@ public class WorkoutTableController extends BaseController {
         });
     }
 
-    /* Simple Message-Display for Info-Button */
+    /**
+     * Displays a simple message for the Info-Button.
+     * <p>
+     * Shows a guide for the workout tracker functionality.
+     * </p>
+     */
     @FXML
     private void handleInfo() {
         String infoText = """

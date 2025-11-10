@@ -54,6 +54,7 @@ public class RestWorkoutClient implements WorkoutClient {
      * 
      * @return a list of all workouts from the server
      * @throws IOException if the HTTP request fails or the server cannot be reached
+     * @throws InterruptedException if the HTTP request is interrupted
      */
     @Override
     public List<Workout> getAllWorkouts() throws IOException {
@@ -166,6 +167,7 @@ public class RestWorkoutClient implements WorkoutClient {
      * @param id the ID of the workout to delete
      * @throws IOException if the HTTP request fails, the server cannot be reached,
      *                     or the workout with the given ID is not found (404)
+     * @throws InterruptedException if the HTTP request is interrupted
      */
     @Override
     public void deleteWorkout(Long id) throws IOException {
