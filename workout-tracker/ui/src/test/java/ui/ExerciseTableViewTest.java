@@ -21,7 +21,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -446,10 +445,8 @@ class ExerciseTableViewTest extends ApplicationTest {
      */
     @Test
     void handleSave_showsError_whenDurationIsZero() {
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboHours = lookup("#comboBoxHours").query();
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").query();
+        ComboBox<Integer> comboHours = lookup("#comboBoxHours").<ComboBox<Integer>>query();
+        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").<ComboBox<Integer>>query();
         
         // Set duration to zero
         interact(() -> {
@@ -507,10 +504,8 @@ class ExerciseTableViewTest extends ApplicationTest {
      */
     @Test
     void handleSave_updatesWorkoutTimeCorrectly() {
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboHours = lookup("#comboBoxHours").query();
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").query();
+        ComboBox<Integer> comboHours = lookup("#comboBoxHours").<ComboBox<Integer>>query();
+        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").<ComboBox<Integer>>query();
         
         // Change time to 2 hours and 30 minutes
         interact(() -> {
@@ -535,8 +530,7 @@ class ExerciseTableViewTest extends ApplicationTest {
     void handleSave_showsError_whenTypeIsEmpty() {
         // First ensure duration is valid to isolate type validation
         interact(() -> {
-            @SuppressWarnings("unchecked")
-            ComboBox<Integer> comboHours = lookup("#comboBoxHours").query();
+            ComboBox<Integer> comboHours = lookup("#comboBoxHours").<ComboBox<Integer>>query();
             comboHours.setValue(1);
         });
         
@@ -583,8 +577,6 @@ class ExerciseTableViewTest extends ApplicationTest {
             this.sampleWorkout = sampleWorkout;
         }
 
-
-
         @Override
         public Workout findWorkout(Long id) {
             return sampleWorkout;
@@ -619,6 +611,9 @@ class ExerciseTableViewTest extends ApplicationTest {
 
     /**
      * Test implementation of WorkoutClient that doesn't make actual HTTP calls. (fake)
+     * <p>
+     * This client does nothing and is used to satisfy the super calls in the TestWorkoutService.
+     * </p>
      */
     private static class TestWorkoutClient implements core.service.WorkoutClient {
         @Override
@@ -693,7 +688,11 @@ class ExerciseTableViewTest extends ApplicationTest {
             "Blank commit should be ignored");
     }
 
-    /** installRowReorderDnD: drag row 2 to upper half of row 1 (before it). */
+    /** installRowReorderDnD: drag row 2 to upper half of row 1 (before it).
+     * <p>
+     * Verifies that dragging a row to the upper half of another row reorders the rows correctly.
+     * </p>
+     */
     @Test
     void dragAndDrop_reorders_rows() {
         TableView<Exercise> table = lookup("#exerciseTable").queryTableView();

@@ -4,6 +4,15 @@
 
 Release 3 establishes the required separation between backend and client components. The application is now organized as a Spring Boot server that exposes the workout API and a JavaFX client that consumes it. Beyond the architectural restructuring, this release adds per-exercise data in the domain model, improves the editing workflow in the client, updates documentation to reflect the new scope and quality requirements, and introduces production-ready packaging via jlink and jpackage
 
+## User stories
+For this release we implemented 3 additional user stories:
+
+- **User Story 3:** As a user, I want to add specific exercises to my workouts.
+- **User story 4:** As a user, I want to be able to see which exercises I have done in a workout.
+- **User Story 5:** As a user, I want to be able to edit workouts after I have created them.
+
+For a complete overview over all user stories, see the [project repository README](../../workout-tracker/README.md).
+
 ## Implemented Features
 
 ### Architectural Separation
@@ -59,5 +68,3 @@ Release 3 establishes the required separation between backend and client compone
     ![alt text](.\screenshots\image-2.png)
 
     ![alt text](.\screenshots\image-3.png)
-
-

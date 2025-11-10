@@ -147,7 +147,12 @@ public class UiWorkoutTableControllerTest extends ApplicationTest {
         }
     }
 
-    /** Minimal client for satisfying super calls; does nothing. */
+    /** Minimal client for satisfying super calls; does nothing.
+     * 
+     * <p>
+     * This client does nothing and is used to satisfy the super calls in the FakeWorkoutService.
+     * </p>
+     */
     private static class TestWorkoutClient implements core.service.WorkoutClient {
         @Override public java.util.List<Workout> getAllWorkouts() { return java.util.List.of(); }
         @Override public Workout createWorkout(Workout workout) { return workout; }

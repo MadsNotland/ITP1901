@@ -78,6 +78,6 @@ JaCoCo coverage report: open `target/site/jacoco/index.html` inside each module 
 - ✅ **Code Quality Tools**: JaCoCo (coverage), SpotBugs (static analysis), Checkstyle (style)
 
 For detailed documentation, see 
-- [Release 1 Documentation](../../docs/release1/release1.md)
-- [Release 2 Documentation](../../docs/release2/release2.md)
-- [Release 3 Documentation](../../docs/release3/release3.md)
+- [Release 1 Documentation](../docs/release1/release1.md)
+- [Release 2 Documentation](../docs/release2/release2.md)
+- [Release 3 Documentation](../docs/release3/release3.md)
