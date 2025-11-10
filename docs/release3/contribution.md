@@ -8,7 +8,9 @@ It naturally follows that I also took extra responsibility for code quality. I a
 In documentation, I co-created the sequence diagram for the “Add Workout” flow, co-created the package diagram, and wrote the sustainability reflection, as well as contributed to user stories (US3 specifically) and GitHub organization.
 
 ## konradj <konradj@stud.ntnu.no>
+During this project, my main contributions were in the UI module, test reliability, and documentation. I implemented drag-and-drop row reordering for the Exercise TableView, adding installRowReorderDnD() (invoked from nitialize()) with half-row logic (drop in upper/lower half to insert before/after) and subtle hover feedback. I also added editing/CRUD support for exercises and ensured that navigating back from the Exercises view cancels uncommitted edits, keeping the model consistent. In addition, I created the dedicated Exercises view and controller ExerciseTableView.fxml`, `ExerciseTableController accessible by double-clicking a workout; the Set # column is computed from the row position and updates automatically.
 
+I strengthened UI testing by adding focused TestFX cases (e.g., table population, sequential Set # rendering, and basic DnD behavior). For documentation, I updated docs/release2/code-quality.md to clearly describe our quality tooling (SpotBugs, JaCoCo, Surefire, JUnit 5, TestFX, Hamcrest), configurations, and where to find reports. Overall, these changes improved usability, predictability, and maintainability without altering the core data model.
 
 ## madsnot <madsnot@stud.ntnu.no>
 In this project, my main focus was on improving the overall test quality and coverage. I spent much of my time strengthening the TestFX suite for the UI layer, extending existing tests and adding several new ones to cover edge cases, validation, user interactions, and controller logic. This work helped raise the overall test coverage to above 80 percent and made the test suite more stable and reliable.
