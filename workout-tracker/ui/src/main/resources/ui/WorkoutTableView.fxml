@@ -11,8 +11,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.Region?>
 
-
-
 <VBox 
     alignment="CENTER" 
     spacing="10" 

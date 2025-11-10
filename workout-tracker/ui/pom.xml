@@ -21,7 +21,6 @@
             <artifactId>workout-tracker-core</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
 
         <!-- JavaFX dependencies -->
         <dependency>
@@ -36,6 +35,31 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>${javafx.version}</version>
+        </dependency>
+
+        <!-- Jackson for JSON serialization/deserialization in REST client -->
+        <!-- Required for RestWorkoutClient to communicate with the server API -->
+        <!-- Jackson-core provides the foundational JSON parsing capabilities -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        <!-- Jackson-databind enables conversion between JSON and Java objects -->
+        <!-- Used to serialize Workout objects to JSON for POST/PUT requests -->
+        <!-- and deserialize JSON responses to Workout objects from GET requests -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.15.2</version>
+        </dependency>
+        <!-- Jackson-datatype-jsr310 provides support for Java 8+ time types -->
+        <!-- Required for proper serialization/deserialization of LocalDate fields -->
+        <!-- in Workout objects (e.g., workout.getDate() returns LocalDate) -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>2.15.2</version>
         </dependency>
 
         <!-- Test dependencies -->
@@ -66,6 +90,9 @@
             <artifactId>hamcrest</artifactId>
         </dependency>
         <!-- Headless Glass toolkit for CI: Monocle (match JavaFX version via parent) -->
+        <!-- Note: This dependency produces a harmless Maven warning about invalid module name (8u76) -->
+        <!-- The warning "Can't extract module name from openjfx-monocle-8u76-b04.jar" appears during test compilation -->
+        <!-- This is a Maven module analysis warning (not a compiler warning) and can be safely ignored -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>openjfx-monocle</artifactId>
@@ -77,6 +104,14 @@
     <!-- Module-specific build configuration -->
     <build>
         <plugins>
+            <!-- Maven Compiler Plugin - show warnings (default is false) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
             <!-- Maven Surefire plugin - runs unit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -117,7 +152,6 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <configuration>
                     <mainClass>workout.tracker.ui/ui.WorkoutTrackerApp</mainClass>
-
                     <!-- These 4 controls the jlink-part -->
                     <compress>2</compress>
                     <stripDebug>true</stripDebug>

@@ -118,7 +118,6 @@
             <Button fx:id="deleteExerciseButton" onAction="#handleDeleteExercise" styleClass="button-delete-side" text="x" visible="false" translateX="10.0"/>
         </HBox>
    
-
     <rowConstraints>
        <RowConstraints />
        <RowConstraints />
@@ -130,7 +129,6 @@
          <RowConstraints maxHeight="195.33333333333331" minHeight="154.66668701171875" prefHeight="195.33333333333331" />
       </rowConstraints>
     </GridPane>
-     
 
     <!-- Buttons -->
     <HBox alignment="CENTER" spacing="10">
