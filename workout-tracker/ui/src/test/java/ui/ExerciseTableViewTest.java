@@ -110,10 +110,8 @@ class ExerciseTableViewTest extends ApplicationTest {
     void header_showsWorkoutFields_initialValues() {
         TextField typeField = lookup("#typeField").query();
         DatePicker datePicker = lookup("#datePicker").query();
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboHours = lookup("#comboBoxHours").query();
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").query();
+        ComboBox<Integer> comboHours = lookup("#comboBoxHours").<ComboBox<Integer>>query();
+        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").<ComboBox<Integer>>query();
         TextArea notesArea = lookup("#notesArea").query();
 
         assertEquals("Gym", typeField.getText());
@@ -180,10 +178,8 @@ class ExerciseTableViewTest extends ApplicationTest {
     /** Changing time via ComboBoxes -> UI staged values change, model time remains unchanged. */
     @Test
     void editing_duration_updatesUI_only_notModel() {
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboHours = lookup("#comboBoxHours").query();
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").query();
+        ComboBox<Integer> comboHours = lookup("#comboBoxHours").<ComboBox<Integer>>query();
+        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").<ComboBox<Integer>>query();
 
         // Start from 1:00 (from sample)
         assertEquals(1.00, sample.getTime(), 0.0001);

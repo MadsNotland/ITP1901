@@ -33,14 +33,12 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class UiExerciseTest extends ApplicationTest {
 
-    private MainController controller;
     private Parent root;
 
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(this.getClass().getResource("MainView.fxml"));
         root = fxmlLoader.load();
-        controller = fxmlLoader.getController();
         stage.setScene(new Scene(root));
         stage.show();
     }
@@ -205,6 +203,7 @@ class UiExerciseTest extends ApplicationTest {
             "Exercise table should gain 1 row after adding a valid exercise"
         );
     }
+    
     /**
      * Happy path:
      *  - Add an exercise
@@ -254,6 +253,15 @@ class UiExerciseTest extends ApplicationTest {
         );
     }
 
+    /**
+     * Error path:
+     *  - Do not fill in repetitions
+     *  - Click "Add Exercise"
+     *  - Expect an Alert (DialogPane) with an error message
+     *
+     * This tests that validation actually communicates with the user via the UI
+     * and does not just throw exceptions in the console.
+     */
     @Test
     void addExercise_showsAlert_whenRepetitionsMissing() {
         navigateToWorkoutForm("#exerciseNameField");
@@ -273,7 +281,11 @@ class UiExerciseTest extends ApplicationTest {
         );
     }
 
-
+    /**
+     * Happy path:
+     *  - Add two exercises
+     *  - Expect exerciseTable to have two more rows
+     */
     @Test
     void addMultipleExercises_addsMultipleRows() {
         navigateToWorkoutForm("#exerciseNameField");

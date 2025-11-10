@@ -121,9 +121,6 @@ public class WorkoutFormController extends BaseController {
         this.workoutService = workoutService;
     }
 
-
-
-    
     /**
      * Handles the Add Workout button click.
      * Validates the current input fields and, if valid, creates and appends a
@@ -164,6 +161,7 @@ public class WorkoutFormController extends BaseController {
                 "Could not save workout. Please check that the server is running on http://localhost:8080");
         }
     }
+    
     /**
      * Handles adding a new exercise to the current workout draft.
      * Validates the exercise input fields (name, repetitions, weight) and enforces
@@ -279,8 +277,6 @@ public class WorkoutFormController extends BaseController {
         mainController.showWorkoutTable();
     }
 
-
-
     /**
      * Populates the hour and minute combo boxes with selectable values.
      */
@@ -360,7 +356,6 @@ public class WorkoutFormController extends BaseController {
         }
         return true;
     }
-
 
     /**
      * Validates user input for a new Exercises. If validation fails, an alert is

@@ -21,6 +21,7 @@
             <artifactId>workout-tracker-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <!-- JavaFX dependencies -->
         <dependency>
             <groupId>org.openjfx</groupId>
@@ -89,6 +90,9 @@
             <artifactId>hamcrest</artifactId>
         </dependency>
         <!-- Headless Glass toolkit for CI: Monocle (match JavaFX version via parent) -->
+        <!-- Note: This dependency produces a harmless Maven warning about invalid module name (8u76) -->
+        <!-- The warning "Can't extract module name from openjfx-monocle-8u76-b04.jar" appears during test compilation -->
+        <!-- This is a Maven module analysis warning (not a compiler warning) and can be safely ignored -->
         <dependency>
             <groupId>org.testfx</groupId>
             <artifactId>openjfx-monocle</artifactId>
@@ -100,6 +104,14 @@
     <!-- Module-specific build configuration -->
     <build>
         <plugins>
+            <!-- Maven Compiler Plugin - show warnings (default is false) -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <showWarnings>true</showWarnings>
+                </configuration>
+            </plugin>
             <!-- Maven Surefire plugin - runs unit tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -129,7 +141,7 @@
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ui.WorkoutTrackerApp</mainClass>
+                    <mainClass>workout.tracker.ui/ui.WorkoutTrackerApp</mainClass>
                     <options>
                         <option>--add-exports</option>
                         <option>javafx.base/javafx.collections=ALL-UNNAMED</option>
