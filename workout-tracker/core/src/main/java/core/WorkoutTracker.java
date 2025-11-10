@@ -14,6 +14,9 @@ import javafx.collections.ObservableList;
 public class WorkoutTracker {
     private final ObservableList<Workout> workouts;
 
+    /**
+     * Creates a new WorkoutTracker.
+     */
     public WorkoutTracker() {
         this.workouts = FXCollections.observableArrayList();
     }

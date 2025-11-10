@@ -21,7 +21,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -49,6 +48,9 @@ class ExerciseTableViewTest extends ApplicationTest {
      * - Load ExerciseTableView.fxml
      * - Get controller and inject a sample Workout (snapshot into table)
      * - Show the scene
+     * 
+     * @param stage the stage to show the scene on
+     * @throws Exception if the scene cannot be loaded or shown
      */
     @Override
     public void start(Stage stage) throws Exception {
@@ -79,7 +81,11 @@ class ExerciseTableViewTest extends ApplicationTest {
         }
     }
 
-    /** Table should list both exercises from the injected snapshot, in order. */
+    /** Table should list both exercises from the injected snapshot, in order.
+     * <p>
+     * Verifies that the table lists both exercises from the injected snapshot, in order.
+     * </p>
+     */
     @Test
     void table_populates_withExercises() {
         TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
@@ -88,7 +94,11 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals("Bench Press", table.getItems().get(1).getName());
     }
 
-    /** First column is the computed 1-based "Set #" index; verify values for first two rows. */
+    /** First column is the computed 1-based "Set #" index; verify values for first two rows.
+     * <p>
+     * Verifies that the first column is the computed 1-based "Set #" index and that the values for the first two rows are correct.
+     * </p>
+     */
     @Test
     void setColumn_showsSequentialIndices() {
         TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
@@ -105,7 +115,11 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals(2, second, "Second row should display set #2");
     }
 
-    /** Header shows values seeded from Workout on load. */
+    /** Header shows values seeded from Workout on load.
+     * <p>
+     * Verifies that the header shows the values seeded from the Workout on load.
+     * </p>
+     */
     @Test
     void header_showsWorkoutFields_initialValues() {
         TextField typeField = lookup("#typeField").query();
@@ -121,7 +135,11 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals("Chest day", notesArea.getText());
     }
 
-    /** Edit name via double-click + Enter -> UI updates, model remains unchanged. */
+    /** Edit name via double-click + Enter -> UI updates, model remains unchanged.
+     * <p>
+     * Verifies that editing the name via double-click + Enter updates the UI and the model remains unchanged.
+     * </p>
+     */
     @Test
     void editing_name_updatesUI_only_notModel() {
         TextField typeField = lookup("#typeField").query();
@@ -138,7 +156,11 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals("Gym", sample.getType(), "Model should remain unchanged");
     }
 
-     /** Edit notes via double-click + blur -> UI updates, model remains unchanged. */
+     /** Edit notes via double-click + blur -> UI updates, model remains unchanged.
+      * <p>
+      * Verifies that editing the notes via double-click + blur updates the UI and the model remains unchanged.
+      * </p>
+      */
     @Test
     void editing_notes_updatesUI_only_notModel() {
         TextArea notesArea = lookup("#notesArea").query();
@@ -155,7 +177,11 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals("Chest day", sample.getNotes(), "Model should remain unchanged");
     }
 
-    /** Edit date via double-click + setValue + action -> UI updates, model remains unchanged. */
+    /** Edit date via double-click + setValue + action -> UI updates, model remains unchanged.
+     * <p>
+     * Verifies that editing the date via double-click + setValue + action updates the UI and the model remains unchanged.
+     * </p>
+     */
     @Test
     void editing_date_updatesUI_only_notModel() {
         DatePicker datePicker = lookup("#datePicker").query();
@@ -175,7 +201,11 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertNotEquals(newDate, sample.getDate(), "Model should remain unchanged");
     }
 
-    /** Changing time via ComboBoxes -> UI staged values change, model time remains unchanged. */
+    /** Changing time via ComboBoxes -> UI staged values change, model time remains unchanged.
+     * <p>
+     * Verifies that changing the time via ComboBoxes updates the UI staged values and the model time remains unchanged.
+     * </p>
+     */
     @Test
     void editing_duration_updatesUI_only_notModel() {
         ComboBox<Integer> comboHours = lookup("#comboBoxHours").<ComboBox<Integer>>query();
@@ -197,7 +227,11 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals(1.00, sample.getTime(), 0.0001, "Model time should remain unchanged");
     }
 
-    /** Clicking "Add" adds a row to the snapshot table (no need to call private handleAdd). */
+    /** Clicking "Add" adds a row to the snapshot table (no need to call private handleAdd).
+     * <p>
+     * Verifies that clicking the "Add" button adds a row to the snapshot table (no need to call private handleAdd).
+     * </p>
+     */
     @Test
     void addButton_click_addsRow() {
         TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
@@ -210,7 +244,11 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals(before + 1, table.getItems().size(), "Add button should append a row");
     }
 
-    /** Select a row and click "Delete" -> row removed from snapshot. */
+    /** Select a row and click "Delete" -> row removed from snapshot.
+     * <p>
+     * Verifies that selecting a row and clicking the "Delete" button removes the row from the snapshot.
+     * </p>
+     */
     @Test
     void deleteButton_click_removesSelectedRows() {
         TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
@@ -231,7 +269,13 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals(before - 1, table.getItems().size(), "Delete button should remove selected row(s)");
     }
 
-    /** After add/delete, the computed "Set #" column reindexes to 1..n. */
+    /** After add/delete, the computed "Set #" column reindexes to 1..n.
+     * <p>
+     * Verifies that after adding and deleting a row, the computed "Set #" column reindexes to 1..n.
+     * </p>
+     * 
+     * @throws AssertionError if the set column does not reindex correctly
+     */
     @Test
     void setColumn_reindexes_afterAddDelete() {
         TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
@@ -258,7 +302,12 @@ class ExerciseTableViewTest extends ApplicationTest {
         }
     }
 
-    /** Minimal, valid Workout with two exercises for driving the UI. */
+    /** Minimal, valid Workout with two exercises for driving the UI. 
+     * <p>
+     * Creates a sample workout with two exercises.
+     * </p>
+     * @return the sample workout
+    */
     private static Workout sampleWorkout() {
         Exercise e1 = new Exercise("Warmup", 0, 0.0, "ex-1");
         Exercise e2 = new Exercise("Bench Press", 5, 80.0, "ex-2");
@@ -396,10 +445,8 @@ class ExerciseTableViewTest extends ApplicationTest {
      */
     @Test
     void handleSave_showsError_whenDurationIsZero() {
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboHours = lookup("#comboBoxHours").query();
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").query();
+        ComboBox<Integer> comboHours = lookup("#comboBoxHours").<ComboBox<Integer>>query();
+        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").<ComboBox<Integer>>query();
         
         // Set duration to zero
         interact(() -> {
@@ -457,10 +504,8 @@ class ExerciseTableViewTest extends ApplicationTest {
      */
     @Test
     void handleSave_updatesWorkoutTimeCorrectly() {
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboHours = lookup("#comboBoxHours").query();
-        @SuppressWarnings("unchecked")
-        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").query();
+        ComboBox<Integer> comboHours = lookup("#comboBoxHours").<ComboBox<Integer>>query();
+        ComboBox<Integer> comboMinutes = lookup("#comboBoxMinutes").<ComboBox<Integer>>query();
         
         // Change time to 2 hours and 30 minutes
         interact(() -> {
@@ -485,8 +530,7 @@ class ExerciseTableViewTest extends ApplicationTest {
     void handleSave_showsError_whenTypeIsEmpty() {
         // First ensure duration is valid to isolate type validation
         interact(() -> {
-            @SuppressWarnings("unchecked")
-            ComboBox<Integer> comboHours = lookup("#comboBoxHours").query();
+            ComboBox<Integer> comboHours = lookup("#comboBoxHours").<ComboBox<Integer>>query();
             comboHours.setValue(1);
         });
         
@@ -533,8 +577,6 @@ class ExerciseTableViewTest extends ApplicationTest {
             this.sampleWorkout = sampleWorkout;
         }
 
-
-
         @Override
         public Workout findWorkout(Long id) {
             return sampleWorkout;
@@ -569,6 +611,9 @@ class ExerciseTableViewTest extends ApplicationTest {
 
     /**
      * Test implementation of WorkoutClient that doesn't make actual HTTP calls. (fake)
+     * <p>
+     * This client does nothing and is used to satisfy the super calls in the TestWorkoutService.
+     * </p>
      */
     private static class TestWorkoutClient implements core.service.WorkoutClient {
         @Override
@@ -643,7 +688,11 @@ class ExerciseTableViewTest extends ApplicationTest {
             "Blank commit should be ignored");
     }
 
-    /** installRowReorderDnD: drag row 2 to upper half of row 1 (before it). */
+    /** installRowReorderDnD: drag row 2 to upper half of row 1 (before it).
+     * <p>
+     * Verifies that dragging a row to the upper half of another row reorders the rows correctly.
+     * </p>
+     */
     @Test
     void dragAndDrop_reorders_rows() {
         TableView<Exercise> table = lookup("#exerciseTable").queryTableView();

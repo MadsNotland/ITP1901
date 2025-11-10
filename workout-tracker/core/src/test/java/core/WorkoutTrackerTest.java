@@ -16,6 +16,12 @@ class WorkoutTrackerTest {
     /**
      * Helper method to create workout objects for testing.
      * 
+     * @param type the type of workout
+     * @param notes the notes of the workout
+     * @param date the date of the workout
+     * @param time the time of the workout
+     * @param exercises the exercises of the workout
+     * @return the created workout
      */
     private static Workout w(String type, String notes, String date, double time, List<Exercise> exercises) {
         return new Workout(type, notes, LocalDate.parse(date), time, exercises);
@@ -24,6 +30,11 @@ class WorkoutTrackerTest {
     /**
      * Helper method to create an Exercise with a given name, sets and reps for reuse across tests.
      * Pass null for id to trigger auto-UUID generation.
+     * 
+     * @param name the name of the exercise
+     * @param reps the number of repetitions
+     * @param weight the weight of the exercise
+     * @return the created exercise
      */
     private static Exercise exercise(String name, int reps, double weight) {
         return new Exercise(name, reps, weight,null);
@@ -31,6 +42,8 @@ class WorkoutTrackerTest {
 
     /**
      * Helper method to create a sample list of Exercises for reuse across tests.
+     * 
+     * @return the created list of exercises
      */
     private static List<Exercise> pushExercises() {
         return List.of(
@@ -40,6 +53,8 @@ class WorkoutTrackerTest {
 
     /**
      * Helper method to create a sample list of Exercises for reuse across tests.
+     * 
+     * @return the created list of exercises
      */
     private static List<Exercise> pullExercises() {
         return List.of(
@@ -50,6 +65,9 @@ class WorkoutTrackerTest {
     /**
      * Tests that workouts are added at the front of the list (most recent first)
      * and that getWorkouts() returns a defensive copy of the internal list.
+     * 
+     * @throws AssertionError if the workouts are not added at the front of the list
+     * @throws AssertionError if the getWorkouts() method returns a live list
      */
     @Test
     void addsAtFrontAndGetWorkoutsReturnsCopy() {
@@ -74,6 +92,8 @@ class WorkoutTrackerTest {
 
     /**
      * Tests that adding a null workout is not allowed and throws an exception.
+     * 
+     * @throws IllegalArgumentException if the workout is null
      */
     @Test
     void addWorkout_throwsOnNull() {
@@ -84,6 +104,8 @@ class WorkoutTrackerTest {
     /**
      * Tests that getAllWorkouts returns a live list connected to the tracker.
      * Mutations on this list should reflect in the tracker state.
+     * 
+     * @throws AssertionError if the getAllWorkouts() method returns a live list
      */
     @Test
     void getAllWorkouts_isLiveList() {

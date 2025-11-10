@@ -52,8 +52,8 @@ EOF
 chmod +x ~/.vnc/xstartup
 
 # Ensure interactive terminals default to the project directory
-if [ -f "$HOME/.bashrc" ] && ! grep -q "cd /projects/gr2528/workout-tracker" "$HOME/.bashrc"; then
-  printf '\n# Default to project directory in terminals\ncd /projects/gr2528/workout-tracker\n' >> "$HOME/.bashrc"
+if [ -f "$HOME/.bashrc" ] && ! grep -q "cd /projects/gr2528" "$HOME/.bashrc"; then
+  printf '\n# Default to project directory in terminals\ncd /projects/gr2528\n' >> "$HOME/.bashrc"
 fi
 
 # Restart VNC server on :1 and bind to 0.0.0.0
