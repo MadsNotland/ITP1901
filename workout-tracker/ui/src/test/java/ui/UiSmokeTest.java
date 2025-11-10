@@ -16,6 +16,9 @@ import javafx.stage.Stage;
 /**
  * Minimal UI smoke test to ensure the main JavaFX view loads and shows.
  * This avoids brittle node lookups and end-to-end flows that vary by environment.
+ * <p>
+ * Verifies that the primary stage is showing and has a scene and a root node.
+ * </p>
  */
 class UiSmokeTest extends ApplicationTest {
 
@@ -30,6 +33,9 @@ class UiSmokeTest extends ApplicationTest {
         this.primaryStage = stage;
     }
 
+    /**
+     * Verifies that the primary stage is showing and has a scene and a root node.
+     */
     @Test
     void primaryStage_isShowing_andHasScene() {
         assertNotNull(primaryStage, "Primary stage should be initialized");
@@ -38,5 +44,3 @@ class UiSmokeTest extends ApplicationTest {
         assertNotNull(primaryStage.getScene().getRoot(), "Scene should have a root node");
     }
 }
-
-

@@ -52,7 +52,7 @@
     </dependency>
    
 
-    <!-- Tester -->
+    <!-- Test dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -62,10 +62,11 @@
 
   <build>
     <plugins>
-      <!-- Kjøre Spring Boot (repackage gjør fat-jar) -->
+      <!-- Run Spring Boot (repackage makes fat-jar) -->
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot.version}</version>
         <executions>
           <execution>
             <goals>
@@ -75,7 +76,7 @@
         </executions>
       </plugin>
 
-      <!-- Sørg for Java 17 -->
+      <!-- Set Java version to 17 -->
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.11.0</version>

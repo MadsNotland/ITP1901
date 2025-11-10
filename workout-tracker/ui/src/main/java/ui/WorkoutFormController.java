@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import core.Exercise;
 import core.Workout;
 import core.WorkoutTracker;
+import core.service.WorkoutService;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -25,7 +26,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import ui.base.BaseController;
-import ui.service.WorkoutService;
 
 /**
  * Controller class for the {@code WorkoutFormView.fxml} view.
@@ -121,14 +121,13 @@ public class WorkoutFormController extends BaseController {
         this.workoutService = workoutService;
     }
 
-
-
-    
     /**
      * Handles the Add Workout button click.
      * Validates the current input fields and, if valid, creates and appends a
      * new {@link Workout} to the tracker. Any validation problem results in a
      * user-facing alert.
+     *
+     * @throws IOException if the workout table cannot be shown
      */
     @FXML
     private void handleAddWorkout() throws IOException {
@@ -164,12 +163,15 @@ public class WorkoutFormController extends BaseController {
                 "Could not save workout. Please check that the server is running on http://localhost:8080");
         }
     }
+    
     /**
      * Handles adding a new exercise to the current workout draft.
      * Validates the exercise input fields (name, repetitions, weight) and enforces
      * a maximum of five exercises. If the input is valid, a new {@link Exercise}
      * is created and added to the observable list backing the exercise table.
      * If validation fails, an alert is shown and the exercise is not added.
+     *
+     * @throws IllegalArgumentException if the exercise data is invalid
      */
     @FXML
     public void handleAddExercise() {
@@ -192,6 +194,9 @@ public class WorkoutFormController extends BaseController {
 
     /**
      * Deletes the chosen exercise in the exerciseTable
+     * <p>
+     * Removes the selected exercise from the observable list backing the exercise table.
+     * </p>
      */
     @FXML
     public void handleDeleteExercise() {
@@ -242,7 +247,12 @@ public class WorkoutFormController extends BaseController {
         });
     }
 
-    /* Shows deleteExersiceButton relative to where the selected exercise is */
+    /**
+     * Shows the deleteExerciseButton relative to where the selected exercise is.
+     * <p>
+     * Calculates the vertical position of the button based on the selected exercise's index.
+     * </p>
+     */
     private void showDeleteButton() {
         int index = exerciseTable.getSelectionModel().getSelectedIndex();
         if (index < 0) {
@@ -263,8 +273,13 @@ public class WorkoutFormController extends BaseController {
         deleteExerciseButton.setTranslateY(translateY);
     }
 
-    /* Hides the deleteExersiceButton when an exercise is not selected */
-    private void hideDeleteButton() {
+    /**
+     * Hides the deleteExerciseButton when an exercise is not selected.
+     * <p>
+     * Sets the visibility and managed properties of the button to false.
+     * </p>
+     */
+    private void hideDeleteButton() {   
         deleteExerciseButton.setVisible(false);
         deleteExerciseButton.setManaged(false);
     }
@@ -279,10 +294,11 @@ public class WorkoutFormController extends BaseController {
         mainController.showWorkoutTable();
     }
 
-
-
     /**
      * Populates the hour and minute combo boxes with selectable values.
+     * <p>
+     * Adds the hours and minutes to the combo boxes.
+     * </p>
      */
     private void initializeComboBoxes() {
         comboBoxHours.getItems().clear();
@@ -307,8 +323,13 @@ public class WorkoutFormController extends BaseController {
      * Defines how each column retrieves its value from the {@link Exercise} model
      * and ensures the table updates automatically when the list changes.
      *
+     * <p>
      * Sets a constrained resize policy for consistent layout and a placeholder
      * message when no exercises are present.
+     * </p>
+     * <p>
+     * Sets up the columns and binds them to the current list of exercises.
+     * </p>
      */
     private void initializeExerciseTable() {
         colName.setCellValueFactory(cell ->
@@ -360,7 +381,6 @@ public class WorkoutFormController extends BaseController {
         }
         return true;
     }
-
 
     /**
      * Validates user input for a new Exercises. If validation fails, an alert is

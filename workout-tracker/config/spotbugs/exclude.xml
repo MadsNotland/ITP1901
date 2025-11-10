@@ -46,23 +46,23 @@
   <!-- ========== SERVICE / CLIENT EXCLUSIONS ========== -->
   
   <!-- WorkoutService intentionally exposes observable data for UI binding.
-       Tjese lists must remain "live" to support automatic updates in the UI. -->
+       These lists must remain "live" to support automatic updates in the UI. -->
   <Match>
-    <Class name="ui.service.WorkoutService"/>
+    <Class name="core.service.WorkoutService"/>
     <Bug pattern="EI_EXPOSE_REP"/>
   </Match>
 
   <!-- WorkoutService constructor may throw IO or initialization errors during setup.
        Throwing exceptions here is acceptable for controlled startup failure handling. -->
   <Match>
-    <Class name="ui.service.WorkoutService"/>
+    <Class name="core.service.WorkoutService"/>
     <Bug pattern="CT_CONSTRUCTOR_THROW"/>
   </Match>
 
   <!-- RestWorkoutClient is effectively immutable (final fields, no setters)
        Constructor injection pattern is safe for dependency injection in tests -->
   <Match>
-    <Class name="ui.service.WorkoutService"/>
+    <Class name="core.service.WorkoutService"/>
     <Bug pattern="EI_EXPOSE_REP2"/>
   </Match>
 

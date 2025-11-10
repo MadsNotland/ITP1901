@@ -25,12 +25,13 @@ public class WorkoutFileManager {
 
     private final Path filePath;
     private final ObjectMapper objectMapper;
-/**
- * Creates a new {@code WorkoutFileManager}.
- *
- * @param filePath path to the JSON file; if {@code null}, defaults to
- *                 {@code workout-tracker/data/workouts.json}
- */
+
+    /**
+     * Creates a new {@code WorkoutFileManager}.
+     *
+     * @param filePath path to the JSON file; if {@code null}, defaults to
+     *                 {@code workout-tracker/data/workouts.json}
+     */
     public WorkoutFileManager(Path filePath) {
         if (filePath == null) {
             this.filePath = Path.of("workout-tracker/data/workouts.json");

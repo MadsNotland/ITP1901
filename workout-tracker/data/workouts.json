@@ -1,37 +1,98 @@
 [ {
-  "type" : "r",
-  "notes" : "tde",
-  "date" : [ 2025, 11, 7 ],
-  "time" : 0.1,
-  "exercises" : [ {
-    "name" : "te",
-    "repetitions" : 1,
-    "weight" : 2.5,
-    "id" : "963996d0-c48b-4d57-9f9a-b9e5f8dc5426"
-  } ],
-  "id" : 1
-}, {
-  "type" : "upperbody",
-  "notes" : "helt sjuk pump",
-  "date" : [ 2025, 11, 1 ],
-  "time" : 1.3,
-  "exercises" : [ {
-    "name" : "skrå benk",
-    "repetitions" : 8,
-    "weight" : 25.0,
-    "id" : "60f10475-67ad-4caf-94d9-9b0498f8d30d"
-  } ],
-  "id" : 2
-}, {
-  "type" : "Strength",
-  "notes" : "Leg day",
+  "type" : "Push",
+  "notes" : "Felt good",
   "date" : [ 2025, 11, 4 ],
-  "time" : 1.3,
+  "time" : 2.0,
+  "exercises" : [ {
+    "name" : "Bench press",
+    "repetitions" : 8,
+    "weight" : 80.0,
+    "id" : "1e576eed-b7fc-4dbb-b499-4d413aab5689"
+  }, {
+    "name" : "Bench press",
+    "repetitions" : 8,
+    "weight" : 80.0,
+    "id" : "a4a85eb8-9fb4-4739-90d0-6d860fbff0dd"
+  }, {
+    "name" : "Bench press",
+    "repetitions" : 8,
+    "weight" : 80.0,
+    "id" : "3662fd96-8be7-4737-9caf-4a3fd9d90017"
+  }, {
+    "name" : "Incline dumbell press",
+    "repetitions" : 8,
+    "weight" : 60.0,
+    "id" : "4087ac5c-1f5c-49fc-ae81-bd4855e1294d"
+  }, {
+    "name" : "Incline dumbell press",
+    "repetitions" : 8,
+    "weight" : 60.0,
+    "id" : "83920dce-4126-4b13-b6ac-4875d0352b78"
+  } ],
+  "id" : 9
+}, {
+  "type" : "Pull",
+  "notes" : "Heavy sunday today",
+  "date" : [ 2025, 11, 9 ],
+  "time" : 1.45,
+  "exercises" : [ {
+    "name" : "Pull ups",
+    "repetitions" : 10,
+    "weight" : 0.0,
+    "id" : "0047839a-c1bf-4c56-a919-9ec95a6f01a1"
+  }, {
+    "name" : "Pull ups",
+    "repetitions" : 10,
+    "weight" : 0.0,
+    "id" : "1e5461fb-8900-49e0-89dc-83d521e0546d"
+  }, {
+    "name" : "Pull ups",
+    "repetitions" : 10,
+    "weight" : 0.0,
+    "id" : "d7cfff7a-fe20-4f70-abdf-1556406828fd"
+  }, {
+    "name" : "Rows",
+    "repetitions" : 8,
+    "weight" : 80.0,
+    "id" : "7a4400a2-da8a-41c5-a0fa-b527961aa269"
+  }, {
+    "name" : "Rows",
+    "repetitions" : 8,
+    "weight" : 80.0,
+    "id" : "819ba727-0355-48f9-b5d9-6b47cc4ab55a"
+  } ],
+  "id" : 10
+}, {
+  "type" : "Legs",
+  "notes" : "Legs <<<",
+  "date" : [ 2025, 11, 10 ],
+  "time" : 2.25,
   "exercises" : [ {
     "name" : "Squat",
-    "repetitions" : 10,
-    "weight" : 100.0,
-    "id" : "2f8551a9-c9a3-4874-b3af-51cf3c9387e5"
+    "repetitions" : 8,
+    "weight" : 90.0,
+    "id" : "0023c68d-e98c-44ca-8472-780070bca8e7"
+  }, {
+    "name" : "Squat",
+    "repetitions" : 8,
+    "weight" : 90.0,
+    "id" : "4aff47fd-1e30-4ad4-a753-d237088b2da2"
+  }, {
+    "name" : "Squat",
+    "repetitions" : 8,
+    "weight" : 90.0,
+    "id" : "af389b11-6bce-48fd-b1b4-56454627cf4e"
+  }, {
+    "name" : "RDL",
+    "repetitions" : 5,
+    "weight" : 70.0,
+    "id" : "550c7ae0-f101-42fc-8f08-d4f55df5d8f9"
+  }, {
+    "name" : "RDL",
+    "repetitions" : 5,
+    "weight" : 70.0,
+    "id" : "84890ce1-e338-4fd9-8a58-b0006a52feed"
   } ],
-  "id" : 3
+  "id" : 11
 } ]
+

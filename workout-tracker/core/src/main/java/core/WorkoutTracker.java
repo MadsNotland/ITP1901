@@ -14,6 +14,9 @@ import javafx.collections.ObservableList;
 public class WorkoutTracker {
     private final ObservableList<Workout> workouts;
 
+    /**
+     * Creates a new WorkoutTracker.
+     */
     public WorkoutTracker() {
         this.workouts = FXCollections.observableArrayList();
     }
@@ -29,6 +32,19 @@ public class WorkoutTracker {
             throw new IllegalArgumentException("Workout cannot be null");
         }
         workouts.add(0, workout);
+    }
+
+    /**
+     * Removes the workout with the specified ID from the tracker.
+     *
+     * @param id the unique identifier of the workout to remove
+     * @throws IllegalArgumentException if {@code id} is {@code null}
+     */
+    public void removeWorkoutById(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Workout ID cannot be null");
+        }
+        workouts.removeIf(w -> id.equals(w.getId()));
     }
     
     /**

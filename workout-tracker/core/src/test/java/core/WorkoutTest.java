@@ -20,6 +20,11 @@ class WorkoutTest {
     /**
      * Helper method to create an Exercise with a given name, sets and reps for reuse across tests.
      * Pass null for id to trigger auto-UUID generation.
+     * 
+     * @param name the name of the exercise
+     * @param reps the number of repetitions
+     * @param weight the weight of the exercise
+     * @return the created exercise
      */
     private static Exercise exercise(String name, int reps, double weight) {
         return new Exercise(name, reps, weight,null);
@@ -27,6 +32,8 @@ class WorkoutTest {
 
     /**
      * Helper method to create a sample list of Exercises for reuse across tests.
+     * 
+     * @return the created list of exercises
      */
     private static List<Exercise> sampleExercises() {
         return List.of(
@@ -36,6 +43,8 @@ class WorkoutTest {
 
     /**
      * Helper method to create a valid Workout for reuse across tests.
+     * 
+     * @return the created workout
      */
     private static Workout validWorkout() {
         return new Workout("Push", "Morning workout", LocalDate.parse("2025-09-15"), 1.5, sampleExercises());
@@ -59,6 +68,8 @@ class WorkoutTest {
 
     /**
      * Tests that invalid type values (null/blank) are rejected by the constructor.
+     * 
+     * @throws IllegalArgumentException if the type is null or blank
      */
     @Test
     void constructor_throws_whenTypeIsNullOrBlank() {
@@ -70,6 +81,8 @@ class WorkoutTest {
 
     /**
      * Tests that invalid notes values (null/blank) are rejected by the constructor.
+     * 
+     * @throws IllegalArgumentException if the notes is null or blank
      */
     @Test
     void constructor_throws_whenNotesIsNullOrBlank() {
@@ -81,6 +94,8 @@ class WorkoutTest {
 
     /**
      * Tests that a null date is rejected by the constructor.
+     * 
+     * @throws IllegalArgumentException if the date is null
      */
     @Test
     void constructor_throws_whenDateIsNull() {
@@ -90,6 +105,8 @@ class WorkoutTest {
 
     /**
      * Tests that non-positive time values (0 or negative) are rejected by the constructor.
+     * 
+     * @throws IllegalArgumentException if the time is non-positive
      */
     @Test
     void constructor_throws_whenTimeIsNonPositive() {
@@ -101,6 +118,8 @@ class WorkoutTest {
 
     /**
      * Tests that a null or empty exercises list is rejected by the constructor.
+     * 
+     * @throws IllegalArgumentException if the exercises list is null or empty
      */
     @Test
     void constructor_throws_whenExercisesNullOrEmpty() {
@@ -132,6 +151,8 @@ class WorkoutTest {
 
     /**
      * Tests that adding and removing exercises works as expected.
+     * 
+     * @throws IllegalArgumentException if the exercise is null or already exists in the workout
      */
     @Test
     void addExercise_andRemoveExercise_workAsExpected() {
@@ -156,6 +177,13 @@ class WorkoutTest {
 
     /**
      * Tests that setters validate inputs and throw on invalid values.
+     * 
+     * @throws IllegalArgumentException if the type is null or blank
+     * @throws IllegalArgumentException if the notes is null or blank
+     * @throws IllegalArgumentException if the date is null
+     * @throws IllegalArgumentException if the time is non-positive
+     * @throws IllegalArgumentException if the exercise is null
+     * @throws IllegalArgumentException if the exercise is not found in the workout
      */
     @Test
     void setters_throw_onInvalidInput() {
@@ -174,6 +202,8 @@ class WorkoutTest {
 
     /**
      * Tests that toString contains the main fields for basic debugging visibility.
+     * 
+     * @throws AssertionError if the string does not contain the expected fields
      */
     @Test
     void toString_containsAllFields() {
