@@ -9,7 +9,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.testfx.framework.junit5.ApplicationTest;
-import org.testfx.api.FxRobot;
 import org.testfx.util.WaitForAsyncUtils;
 
 import core.Exercise;
@@ -57,19 +56,22 @@ class ExerciseTableViewTest extends ApplicationTest {
         Parent root = loader.load();
         controller = loader.getController();
 
-        // Create sample workout with two exercises
         sample = sampleWorkout();
-                // Create test workout service
         workoutService = new TestWorkoutService(sample);
+
         controller.setWorkoutService(workoutService);
-        // Populate the table via snapshot (no navigation / services involved)
         controller.setWorkout(sample);
-        // Ensure FX bindings/cell factories have run before assertions
+
         WaitForAsyncUtils.waitForFxEvents();
 
         stage.setScene(new Scene(root, 800, 500));
         stage.show();
     }
+
+    /**
+     * Reset the in-memory test data to a clean default state before each test run
+     * and flush any pending JavaFX events to ensure the UI is stable.
+     */
     @BeforeEach
     void resetFlags() {
         if (workoutService != null) {
@@ -94,7 +96,7 @@ class ExerciseTableViewTest extends ApplicationTest {
         // Column 0 is "Set #"; cast so we can access cell values by row index
         @SuppressWarnings("unchecked")
         TableColumn<Exercise, Number> setCol =
-                (TableColumn<Exercise, Number>) table.getColumns().get(0);
+        (TableColumn<Exercise, Number>) table.getColumns().get(0);
 
         int first  = setCol.getCellObservableValue(0).getValue().intValue();
         int second = setCol.getCellObservableValue(1).getValue().intValue();
@@ -103,7 +105,7 @@ class ExerciseTableViewTest extends ApplicationTest {
         assertEquals(2, second, "Second row should display set #2");
     }
 
-   /** Header shows values seeded from Workout on load. */
+    /** Header shows values seeded from Workout on load. */
     @Test
     void header_showsWorkoutFields_initialValues() {
         TextField typeField = lookup("#typeField").query();
@@ -261,7 +263,6 @@ class ExerciseTableViewTest extends ApplicationTest {
     }
 
     /** Minimal, valid Workout with two exercises for driving the UI. */
-       /** Minimal, valid Workout with two exercises for driving the UI. */
     private static Workout sampleWorkout() {
         Exercise e1 = new Exercise("Warmup", 0, 0.0, "ex-1");
         Exercise e2 = new Exercise("Bench Press", 5, 80.0, "ex-2");
@@ -270,6 +271,7 @@ class ExerciseTableViewTest extends ApplicationTest {
         workout.setId(1L);
         return workout;
     }
+
     /**
      * Test that saving commits staged header changes to the model.
      */
@@ -289,7 +291,6 @@ class ExerciseTableViewTest extends ApplicationTest {
             notesArea.setText("Updated notes");
         });
         
-        // For date
         LocalDate newDate = LocalDate.now().plusDays(5);
         interact(() -> {
             DatePicker datePicker = lookup("#datePicker").query();
@@ -357,7 +358,7 @@ class ExerciseTableViewTest extends ApplicationTest {
         
         // Verify UI updated but model unchanged
         assertEquals(initialExerciseCount + 1, table.getItems().size());
-        assertEquals(initialExerciseCount, sample.getExercises().size()); // Model unchanged before save
+        assertEquals(initialExerciseCount, sample.getExercises().size()); 
         
         // Save changes
         clickOn("#saveButton");
@@ -513,20 +514,20 @@ class ExerciseTableViewTest extends ApplicationTest {
     }
 
     /**
- * Test implementation of {@link WorkoutService} for UI testing.
- * 
- * <p>This fake service provides a simplified in-memory implementation that:
- * <ul>
- *   <li>Tracks when {@link #updateWorkout(Long, Workout)} is called via {@link #wasUpdated()}</li>
- *   <li>Maintains a single sample workout for all find operations</li>
- *   <li>Updates the sample workout in-place when save operations are performed</li>
- *   <li>Does not perform actual HTTP calls or file I/O operations</li>
- * </ul>
- * </p>
- * 
- * <p>Primary use case: Enables testing of {@link ExerciseTableController#handleSave()} 
- * functionality without requiring a live backend or complex setup.</p>
- */
+     * Test implementation of {@link WorkoutService} for UI testing.
+     * 
+     * <p>This fake service provides a simplified in-memory implementation that:
+     * <ul>
+     *   <li>Tracks when {@link #updateWorkout(Long, Workout)} is called via {@link #wasUpdated()}</li>
+     *   <li>Maintains a single sample workout for all find operations</li>
+     *   <li>Updates the sample workout in-place when save operations are performed</li>
+     *   <li>Does not perform actual HTTP calls or file I/O operations</li>
+     * </ul>
+     * </p>
+     * 
+     * <p>Primary use case: Enables testing of {@link ExerciseTableController#handleSave()} 
+     * functionality without requiring a live backend or complex setup.</p>
+     */
      private static class TestWorkoutService extends WorkoutService {
         private final Workout sampleWorkout;
         private boolean updated = false;
@@ -594,79 +595,78 @@ class ExerciseTableViewTest extends ApplicationTest {
             // No-op for testing
         }
     }
-/**
- * Commits edits for the exercise name column.
- *
- * <p>Trims the new value and applies it to the row's {@link Exercise}
- * only if non-blank; otherwise ignores the change and keeps the
- * previous value. This updates the table's staged/snapshot data only;
- * the underlying {@link Workout} is persisted on Save.</p>
- */
- @Test
-void nameEditCommit_updates_whenNonBlank_and_ignores_blank() {
-    TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
-    @SuppressWarnings("unchecked")
-    TableColumn<Exercise, String> nameCol =
+
+    /**
+     * Commits edits for the exercise name column.
+     *
+     * <p>Trims the new value and applies it to the row's {@link Exercise}
+     * only if non-blank; otherwise ignores the change and keeps the
+     * previous value. This updates the table's staged/snapshot data only;
+     * the underlying {@link Workout} is persisted on Save.</p>
+     */
+    @Test
+    void nameEditCommit_updates_whenNonBlank_and_ignores_blank() {
+        TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
+        @SuppressWarnings("unchecked")
+        TableColumn<Exercise, String> nameCol =
         (TableColumn<Exercise, String>) table.getColumns().get(1);
 
-    interact(() -> { table.layout(); table.scrollTo(0); });
-    WaitForAsyncUtils.waitForFxEvents();
+        interact(() -> { table.layout(); table.scrollTo(0); });
 
-    interact(() -> {
-        table.getSelectionModel().clearAndSelect(0, nameCol);
-        table.edit(0, nameCol);
-    });
-    WaitForAsyncUtils.waitForFxEvents();
+        WaitForAsyncUtils.waitForFxEvents();
 
-    TextField editor = from(table).lookup(".text-field").query();
-    clickOn(editor);
-    eraseText(editor.getText() == null ? 0 : editor.getText().length());
-    write("New Warmup");
-    type(javafx.scene.input.KeyCode.ENTER);
-    WaitForAsyncUtils.waitForFxEvents();
+        interact(() -> {
+            table.getSelectionModel().clearAndSelect(0, nameCol);
+            table.edit(0, nameCol);
+        });
 
-    assertEquals("New Warmup", table.getItems().get(0).getName());
+        WaitForAsyncUtils.waitForFxEvents();
 
-    interact(() -> {
-        table.getSelectionModel().clearAndSelect(0, nameCol);
-        table.edit(0, nameCol);
-    });
-    WaitForAsyncUtils.waitForFxEvents();
+        TextField editor = from(table).lookup(".text-field").query();
+        clickOn(editor);
+        eraseText(editor.getText() == null ? 0 : editor.getText().length());
+        write("New Warmup");
+        type(javafx.scene.input.KeyCode.ENTER);
+        WaitForAsyncUtils.waitForFxEvents();
 
-    editor = from(table).lookup(".text-field").query();
-    clickOn(editor);
-    eraseText(editor.getText() == null ? 0 : editor.getText().length());
-    write("   ");
-    type(javafx.scene.input.KeyCode.ENTER);
-    WaitForAsyncUtils.waitForFxEvents();
+        assertEquals("New Warmup", table.getItems().get(0).getName());
 
-    assertEquals("New Warmup", table.getItems().get(0).getName(),
+        interact(() -> {
+            table.getSelectionModel().clearAndSelect(0, nameCol);
+            table.edit(0, nameCol);
+        });
+        WaitForAsyncUtils.waitForFxEvents();
+        editor = from(table).lookup(".text-field").query();
+        clickOn(editor);
+        eraseText(editor.getText() == null ? 0 : editor.getText().length());
+        write("   ");
+        type(javafx.scene.input.KeyCode.ENTER);
+        WaitForAsyncUtils.waitForFxEvents();
+
+        assertEquals("New Warmup", table.getItems().get(0).getName(),
             "Blank commit should be ignored");
-}
+    }
 
+    /** installRowReorderDnD: drag row 2 to upper half of row 1 (before it). */
+    @Test
+    void dragAndDrop_reorders_rows() {
+        TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
+        assertEquals("Warmup", table.getItems().get(0).getName());
+        assertEquals("Bench Press", table.getItems().get(1).getName());
 
+        interact(() -> { table.scrollTo(0); table.scrollTo(1); });
+        WaitForAsyncUtils.waitForFxEvents();
 
-/** installRowReorderDnD: drag row 2 to upper half of row 1 (before it). */
-@Test
-void dragAndDrop_reorders_rows() {
-    TableView<Exercise> table = lookup("#exerciseTable").queryTableView();
-    assertEquals("Warmup", table.getItems().get(0).getName());
-    assertEquals("Bench Press", table.getItems().get(1).getName());
-
-    interact(() -> { table.scrollTo(0); table.scrollTo(1); });
-    WaitForAsyncUtils.waitForFxEvents();
-
-    javafx.scene.Node row0 = lookup(".table-row-cell").nth(0).query();
-    javafx.scene.Node row1 = lookup(".table-row-cell").nth(1).query();
-
-    drag(row1, javafx.scene.input.MouseButton.PRIMARY)
+        javafx.scene.Node row0 = lookup(".table-row-cell").nth(0).query();
+        javafx.scene.Node row1 = lookup(".table-row-cell").nth(1).query();
+        drag(row1, javafx.scene.input.MouseButton.PRIMARY)
         .moveTo(row0)
         .moveBy(0, -10) 
         .drop();
-    WaitForAsyncUtils.waitForFxEvents();
+        WaitForAsyncUtils.waitForFxEvents();
 
-    assertEquals("Bench Press", table.getItems().get(0).getName(),
+        assertEquals("Bench Press", table.getItems().get(0).getName(),
             "Second row should be first after DnD");
-    assertEquals("Warmup", table.getItems().get(1).getName());
-}
+        assertEquals("Warmup", table.getItems().get(1).getName());
+    }
 }

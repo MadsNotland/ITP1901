@@ -46,20 +46,22 @@ public class UiWorkoutTableControllerTest extends ApplicationTest {
 
         WaitForAsyncUtils.waitForFxEvents();
     }
-/**
- * Reset the in-memory test data to a clean default state before each test run
- * and flush any pending JavaFX events to ensure the UI is stable.
- */
+
+    /**
+     * Reset the in-memory test data to a clean default state before each test run
+     * and flush any pending JavaFX events to ensure the UI is stable.
+     */
     @BeforeEach
     void beforeEach() {
         workoutService.resetWithDefaults();
         WaitForAsyncUtils.waitForFxEvents();
     }
-/**
- * Verifies that the workout table is populated from the injected
- * {@code WorkoutService} and contains exactly the expected workouts,
- * without relying on row order.
- */
+
+    /**
+     * Verifies that the workout table is populated from the injected
+     * {@code WorkoutService} and contains exactly the expected workouts,
+     * without relying on row order.
+     */
     @Test
     void table_populates_with_workouts() {
         TableView<Workout> table = lookup("#workoutTable").queryTableView();
@@ -70,11 +72,11 @@ public class UiWorkoutTableControllerTest extends ApplicationTest {
         assertEquals(Set.of("Gym A", "Gym B"), types);
     }
 
-/**
- * Simulates a user double-click on a table row and asserts that the controller
- * navigates to the exercise view with the same {@code Workout} as the selected row.
- * This exercises the private {@code handleRowClick} via actual UI events.
- */
+    /**
+     * Simulates a user double-click on a table row and asserts that the controller
+     * navigates to the exercise view with the same {@code Workout} as the selected row.
+     * This exercises the private {@code handleRowClick} via actual UI events.
+     */
     @Test
     void double_click_on_row_navigates_to_exercise_table() {
         TableView<Workout> table = lookup("#workoutTable").queryTableView();
@@ -145,13 +147,14 @@ public class UiWorkoutTableControllerTest extends ApplicationTest {
         }
     }
 
-    /** Minimal klient for å tilfredsstille superkall; gjør ingenting. */
+    /** Minimal client for satisfying super calls; does nothing. */
     private static class TestWorkoutClient implements core.service.WorkoutClient {
         @Override public java.util.List<Workout> getAllWorkouts() { return java.util.List.of(); }
         @Override public Workout createWorkout(Workout workout) { return workout; }
         @Override public Workout updateWorkout(Long id, Workout workout) { return workout; }
         @Override public void deleteWorkout(Long id) { /* no-op */ }
     }
+    
     /**
      * Confirms the deletion dialog by pressing ENTER (defaults to OK).
      * Keeps tests independent of button text and locale.
