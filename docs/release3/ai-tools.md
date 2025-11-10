@@ -1,7 +1,7 @@
 
 # Usage of AI tools
 
-Our use of AI tools in release 3 has been largely similar to release 2. We continue to use them selectively to improve efficiency without replacing our own problem-solving and understanding. ChatGPT has been used occasionally to generate small pieces of code, for example when styling UI components with CSS 
+Our use of AI tools in release 3 has been largely similar to [release 2](../release2/ai-tools.md). We continue to use them selectively to improve efficiency without replacing our own problem-solving and understanding. ChatGPT has been used occasionally to generate small pieces of code, for example when styling UI components with CSS 
 [workout-form.css](../../workout-tracker/ui/src/main/resources/ui/workout-form.css). We also use AI to assist in writing documentation, such as summaries or descriptive text for issues and pull requests. This helps save time and ensures consistent quality, especially in smaller repetitive tasks. Each team member provides clear input to the AI and reviews all generated content before it is committed. Without proper quality assurance processes and human oversight, the use of AI can quickly lead to failure and the accumulation of technical debt.
 
 We deliberately avoid using AI for the core architecture or critical logic of the project. Structural decisions, system design, and implementation details remain entirely human-driven. The main purpose of AI is to speed up secondary tasks like writing commit messages, PR descriptions, and Javadoc comments.
