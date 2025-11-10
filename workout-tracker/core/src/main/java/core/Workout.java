@@ -164,6 +164,12 @@ public class Workout {
         exercises.remove(toRemove);
     }
 
+    public void setExercises(List<Exercise> newList) {
+        java.util.Objects.requireNonNull(newList);
+        this.exercises.clear();
+        this.exercises.addAll(newList);
+    }
+
     @Override
     public String toString() {
         return "Workout{" +

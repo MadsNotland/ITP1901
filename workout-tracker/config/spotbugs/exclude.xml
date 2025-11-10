@@ -1,63 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <FindBugsFilter>
-  <!-- Suppress warnings in generated code -->
+  <!-- ========== GENERATED CODE EXCLUSIONS ========== -->
+  <!-- Ignore automatically generated code (e.g., FXML, build tools).
+       We don’t maintain or modify these files manually, so static analysis is not useful here. -->
   <Match>
     <Class name="~.*\.generated\..*"/>
   </Match>
 
-  <!-- Allow constructor validation in core.Workout - legitimate design choice -->
+
+  <!-- ========== CORE DOMAIN MODEL EXCLUSIONS ========== -->
+
+  <!-- Allow constructor validation in core.Workout
+       This is an intentional design choice to enforce valid object state. -->
   <Match>
     <Class name="core.Workout"/>
     <Bug pattern="CT_CONSTRUCTOR_THROW"/>
   </Match>
 
-  <!-- Expose live ObservableList for UI bindings by design -->
+  <!-- getAllWorkouts() return a live ObservableList used for JavaFX data binding.
+       Exposing the list reference is required for proper UI synchronization. -->
   <Match>
     <Class name="core.WorkoutTracker"/>
     <Method name="getAllWorkouts"/>
     <Bug pattern="EI_EXPOSE_REP"/>
   </Match>
 
-  <!-- Ignore Internal representation warning in controllers-->
-  <!-- Controllers intentionally share mutable references for coordination between views -->
+
+  <!-- ========== UI CONTROLLER EXCLUSIONS ========== -->
+  
+  <!-- Controllers intentionally share mutable references for navigation 
+       and coordination between different JavaFX views.
+       This is normal and safe in UI architecture. -->
+  <Match>
+    <Class name="~ui\..*Controller" />
+    <Bug pattern="EI_EXPOSE_REP2" />
+  </Match>
+
+  <!-- MainController coordinates navigation and shares references with sub-controllers. 
+       Exposing internal fields is part of the controller communication design. -->
   <Match>
     <Class name="ui.MainController"/>
     <Bug pattern="EI_EXPOSE_REP"/>
   </Match>
 
+  <!-- ========== SERVICE / CLIENT EXCLUSIONS ========== -->
+  
+  <!-- WorkoutService intentionally exposes observable data for UI binding.
+       These lists must remain "live" to support automatic updates in the UI. -->
   <Match>
-    <Class name="ui.WorkoutFormController"/>
-    <Bug pattern="EI_EXPOSE_REP2"/>
-  </Match>
-
-  <Match>
-    <Class name="ui.WorkoutTableController"/>
-    <Bug pattern="EI_EXPOSE_REP2"/>
-  </Match>
-
-  <Match>
-    <Class name="ui.WorkoutTableController"/>
-    <Bug pattern="EI_EXPOSE_REP2"/>
-  </Match>
-
-  <Match>
-    <Class name="ui.service.WorkoutService"/>
+    <Class name="core.service.WorkoutService"/>
     <Bug pattern="EI_EXPOSE_REP"/>
   </Match>
 
+  <!-- WorkoutService constructor may throw IO or initialization errors during setup.
+       Throwing exceptions here is acceptable for controlled startup failure handling. -->
   <Match>
-    <Class name="ui.service.WorkoutService"/>
+    <Class name="core.service.WorkoutService"/>
     <Bug pattern="CT_CONSTRUCTOR_THROW"/>
   </Match>
 
-  <!-- RestWorkoutClient is effectively immutable (final fields, no setters) -->
-  <!-- Constructor injection pattern is safe for dependency injection in tests -->
+  <!-- RestWorkoutClient is effectively immutable (final fields, no setters)
+       Constructor injection pattern is safe for dependency injection in tests -->
   <Match>
-    <Class name="ui.service.WorkoutService"/>
+    <Class name="core.service.WorkoutService"/>
     <Bug pattern="EI_EXPOSE_REP2"/>
   </Match>
 
-  <!-- Ignore Internal representation warning in Spring Boot controllers -->
+  <!-- ========== SERVER EXCLUSIONS (Spring Controllers) ========== -->
+  
+  <!-- Spring Boot controllers serialize and expose DTOs via JSON by design.
+       Exposing internal fields through REST responses is expected behavior. -->
   <Match>
     <Class name="server.WorkoutController"/>
     <Bug pattern="EI_EXPOSE_REP2"/>

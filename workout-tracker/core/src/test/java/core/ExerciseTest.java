@@ -2,8 +2,13 @@ package core;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
 
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +40,7 @@ public class ExerciseTest {
         assertEquals(5, e.getRepetitions());
         assertEquals(100.0, e.getWeight());
     }
+    
 
     /**
      * Boundary: repetitions = 0 and weight = 0 should be accepted.
@@ -71,6 +77,24 @@ public class ExerciseTest {
     @Test
     void constructor_throws_whenWeightNegative() {
         assertThrows(IllegalArgumentException.class, () -> new Exercise("Deadlift", 3, -0.1,null));
+    }
+    /**
+     * Tests that a random UUID is generated when id is null or blank.
+     */
+    @Test
+    void constructor_generatesId_whenIdBlank() {
+        Exercise e = new Exercise("Test", 1, 1.0, " ");
+        assertNotNull(e.getId());
+        assertFalse(e.getId().isBlank());
+    }
+    /**
+     * Tests that the provided id is used when it is not blank.
+     */
+    @Test
+    void constructor_usesProvidedId_whenNotBlank() {
+        String id = "abc123";
+        Exercise e = new Exercise("Test", 1, 1.0, id);
+        assertEquals(id, e.getId());
     }
 
     /**
@@ -129,4 +153,41 @@ public class ExerciseTest {
                 () -> assertTrue(s.contains("55.5"))
         );
     }
+    /**
+     * Tests that equals and hashCode are based on the unique identifier (id) only.
+     */
+    @Test
+    void equals_returnsTrue_forSameId() {
+        Exercise a = new Exercise("A", 1, 1.0, "id1");
+        Exercise b = new Exercise("B", 2, 2.0, "id1");
+        Exercise c = new Exercise("C", 2, 2.0, "id1");
+        //reflexive
+        assertTrue(a.equals(a));
+        //Symmetric
+        assertTrue(a.equals(b));
+        assertTrue(b.equals(a));
+        //Transitive
+        assertTrue(b.equals(c));
+        assertTrue(a.equals(c));
+    }
+    /**
+     * Tests that equals returns false for different ids or null.
+     */
+    @Test
+    void equals_returnsFalse_forDifferentIdOrNull() {
+        Exercise a = new Exercise("A", 1, 1.0, "id1");
+        Exercise b = new Exercise("A", 1, 1.0, "id2");
+        assertNotEquals(a, b);
+        assertNotEquals(a, null);
+    }
+    /**
+     * Tests that hashCode is consistent with equals based on id.
+     */
+    @Test
+    void hashCode_matchesForEqualObjects() {
+        Exercise a = new Exercise("A", 1, 1.0, "id1");
+        Exercise b = new Exercise("B", 2, 2.0, "id1");
+        assertEquals(a.hashCode(), b.hashCode());
+    }
+
 }

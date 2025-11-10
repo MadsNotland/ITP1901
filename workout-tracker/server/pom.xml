@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>server</artifactId>
-  <name>Workout Tracker Server</name>
+  <name>workout-tracker-server</name>
   <packaging>jar</packaging>
 
   <!-- Java 17 -->

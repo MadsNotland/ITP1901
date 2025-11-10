@@ -5,19 +5,19 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 import java.io.IOException;
 
 import core.Workout;
+import core.service.WorkoutService;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import ui.base.BaseController;
-import ui.service.WorkoutService;
 
 /**
  * Main controller responsible for coordinating view navigation and shared data management.
  * <p>
  * This controller acts as the central hub of the application, managing transitions between
  * different UI views (e.g., {@link ui.WorkoutTableController} and {@link ui.WorkoutFormController})
- * and maintaining shared references to the {@link ui.service.WorkoutService} model used for persistence.
+ * and maintaining shared references to the {@link core.service.WorkoutService} model used for persistence.
  * </p>
  * <p>
  * Responsibilities:
@@ -29,7 +29,7 @@ import ui.service.WorkoutService;
  *
  * @see ui.WorkoutTableController
  * @see ui.WorkoutFormController
- * @see ui.service.WorkoutService
+ * @see core.service.WorkoutService
  */
 public class MainController extends BaseController {
 
@@ -50,19 +50,14 @@ public class MainController extends BaseController {
     @FXML
     private void initialize() throws IOException {
         showWorkoutTable();
-        try {
-            workoutService.loadWorkouts();
-        } 
-        catch (IOException e) {
-            showAlert(ERROR, "Server Connection Error", 
-                "Could not connect to the server. Please check that the server is running on http://localhost:8080");
-        }   
+        loadWorkoutsFromServer();
+        addCssListener();  
     }
 
     /**
      * Loads and displays the {@code WorkoutTableView.fxml} view in the center of the layout.
      * <p>
-     * This method also injects the shared {@link ui.service.WorkoutService} instance into the {@link WorkoutTableController}.
+     * This method also injects the shared {@link core.service.WorkoutService} instance into the {@link WorkoutTableController}.
      * </p>
      *
      * @throws IOException if the FXML resource cannot be loaded
@@ -83,7 +78,7 @@ public class MainController extends BaseController {
     /**
      * Loads and displays the {@code WorkoutFormView.fxml} view in the center of the layout.
      * <p>
-     * This method injects the shared {@link ui.service.WorkoutService} instance into the
+     * This method injects the shared {@link core.service.WorkoutService} instance into the
      * {@link WorkoutFormController} for adding new workouts.
      * </p>
      *
@@ -117,7 +112,53 @@ public class MainController extends BaseController {
         ExerciseTableController controller = loader.getController();
         controller.setMainController(this);
         controller.setWorkout(workout);
+        controller.setWorkoutService(workoutService);
 
         contentArea.setCenter(tableView);
+    }
+
+    /**
+     * Attempts to load all saved workouts from the remote REST server using {@link WorkoutService}.
+     * <p>
+     * This method is called during initialization to ensure that previously stored workouts are available
+     * when the application starts. If the server cannot be reached or a network error occurs,
+     * an error alert is displayed to inform the user.
+     * </p>
+     * <p>
+     * The alert message includes a suggestion to verify that the backend server is running on
+     * {@code http://localhost:8080}.
+     * </p>
+     */
+    public void loadWorkoutsFromServer() {
+        try {
+            workoutService.loadWorkouts();
+        } 
+        catch (IOException e) {
+            showAlert(ERROR, "Server Connection Error", 
+                "Could not connect to the server. Please check that the server is running on http://localhost:8080");
+        } 
+    }
+
+    /**
+     * Adds a listener to the {@link #contentArea} scene property that automatically applies the
+     * global dark theme stylesheet once the scene becomes available.
+     * <p>
+     * This ensures that the {@code dark-theme.css} file is loaded dynamically when the root layout
+     * ({@link javafx.scene.layout.BorderPane}) is attached to a {@link javafx.scene.Scene}.
+     * As a result, all current and future views inserted into the content area will inherit
+     * the same consistent dark styling across the application.
+     * </p>
+     * <p>
+     * The stylesheet is located at {@code /ui/style/dark-theme.css} within the application's resources.
+     * </p>
+     */
+    public void addCssListener() {
+        contentArea.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                newScene.getStylesheets().add(
+                    getClass().getResource("/ui/style/dark-theme.css").toExternalForm()
+                );
+            }
+        });
     }
 }
