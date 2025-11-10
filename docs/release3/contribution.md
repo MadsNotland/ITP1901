@@ -1,5 +1,12 @@
-## anhugli <anhugli@stud.ntnu.no>
 
+# Contributions
+
+## anhugli <anhugli@stud.ntnu.no>
+Throughout the project, I took primary responsibility for Eclipse Che development environment configuration and infrastructure. I set up the initial devfile configuration, implemented automatic desktop access with VNC/noVNC servers, and created startup scripts for workspace initialization. While the team ultimately worked primarily in local environments, this infrastructure work provided an alternative development option and helped ensure the project could run in containerized environments.
+
+I contributed extensively to documentation across all releases, writing and updating README files at both root and project levels, adding comprehensive Javadoc comments throughout the core and UI modules, and maintaining documentation consistency. I also worked on code quality improvements, fixing unchecked type warnings, resolving Maven build configuration issues, addressing Java module system accessibility problems, and fixing SpotBugs warnings. Additionally, I fixed numerous bugs including UI test timing issues, API endpoint handling, and file path resolution problems.
+
+In the UI layer, I implemented multi-select deletion functionality for workouts, improved delete button positioning to follow selected items during scrolling, and fixed various layout and interaction issues. I also contributed to project refactoring efforts, including directory renaming and file structure reorganization, ensuring the codebase remained maintainable and well-organized throughout the project lifecycle.
 
 ## daviros <daviros@stud.ntnu.no>
 Throughout the project, I have been primarily responsible for the structural architecture of the application. I set up the modular Maven structure and continuously refactored it to ensure a clean, well-separated, and maintainable architecture. I introduced the WorkoutService and WorkoutClient interface to strengthen the separation between the presentation layer and business logic, ensuring a clean and scalable system design. I also created the structural foundation that made the application a shippable product.

@@ -1,3 +1,4 @@
+
 # Release 3
 
 ## Overview
@@ -33,7 +34,6 @@ For a complete overview over all user stories, see the [project repository READM
 - **Installers via jpackage**: jpackage scripts wrap the client and the jlink image into platform installers (MSI/DMG) under dist/, enabling evaluators to install and launch the app without manual Java setup.
 - **CI integration**: Packaging tasks run behind the package-client profile so release pipelines can generate artifacts alongside the existing mvn verify stage.
 
-
 ### Domain Model Updates
 - **Exercise entity**: Introduced `core.Exercise` with validation, UUID identifiers, and Jackson annotations for seamless JSON serialization.
 - **Workout validation**: `Workout` now enforces non-empty exercise lists, supports ID assignment, and exposes helper methods used by both server and client flows.
@@ -50,7 +50,7 @@ For a complete overview over all user stories, see the [project repository READM
 - **REST reference**: `rest-api.md` documents request/response formats, validation rules, and example flows for the published API.
 - **Sustainability focus**: `sustainability/sustainability.md` discusses the project’s sustainability considerations for this iteration.
 - **Distribution guides**: New `packaging/README.md` walks through invoking jlink and jpackage, explains artifact locations, and links CI outputs for release managers.
-
+- **Contributor attribution**: Added `.mailmap` file to consolidate author identities across different email addresses and names. Note that this was added fairly late in the project, so the GitHub "Contributors" tab may not accurately reflect individual contributions as it only counts all commits after the `.mailmap` was introduced.
 
 ## Screenshots
 - Main dashboard (and with information button clicked)
