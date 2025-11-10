@@ -44,5 +44,3 @@ class UiSmokeTest extends ApplicationTest {
         assertNotNull(primaryStage.getScene().getRoot(), "Scene should have a root node");
     }
 }
-
-

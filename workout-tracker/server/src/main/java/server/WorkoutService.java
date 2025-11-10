@@ -127,7 +127,6 @@ public class WorkoutService {
                 }
             }
         }
-        
         throw new RuntimeException("Workout with ID " + id + " not found");
     }
     
@@ -152,7 +151,6 @@ public class WorkoutService {
                 throw new RuntimeException("Failed to delete workout", e);
             }
         }
-        
         return false;
     }
 }

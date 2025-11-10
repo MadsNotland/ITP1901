@@ -55,7 +55,6 @@
                   GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="text-field" />
     </GridPane>
 
-
     <!-- Title -->
     <Label text="Exercises" styleClass="label-undertitle" />
 
