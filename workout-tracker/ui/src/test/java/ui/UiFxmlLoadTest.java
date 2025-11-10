@@ -45,5 +45,3 @@ class UiFxmlLoadTest {
         assertNotNull(loader.getController());
     }
 }
-
-

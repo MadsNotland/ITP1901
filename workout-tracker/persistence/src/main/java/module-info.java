@@ -1,5 +1,6 @@
 module workout.tracker.persistence {
-    requires workout.tracker.core;
+    // Use 'transitive' so clients of this module can access core types from exported packages
+    requires transitive workout.tracker.core;
     requires java.base;
 
     requires com.fasterxml.jackson.core;
