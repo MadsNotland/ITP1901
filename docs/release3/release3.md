@@ -48,8 +48,8 @@ For a complete overview over all user stories, see the [project repository READM
 - **Architecture diagrams**: Updated UML artifacts (`class-diagram-release3.md`, `package-diagram/package-diagram.puml/png`, `sequence-diagram.puml`) reflect the new REST layers.
 - **Process reflections**: Refreshed `teamwork.md` and `ai-tools.md` capture collaboration habits and responsible AI usage for this milestone.
 - **REST reference**: `rest-api.md` documents request/response formats, validation rules, and example flows for the published API.
-- **Sustainability focus**: `sustainability/sustainability.md` discusses the project’s sustainability considerations for this iteration.
-- **Distribution guides**: New `packaging/README.md` walks through invoking jlink and jpackage, explains artifact locations, and links CI outputs for release managers.
+- **Packaging guide**: [packaging.md](./packaging.md) provides detailed instructions for building distributable applications using JLink and JPackage, including step-by-step tutorials for creating runtime images and installers.
+- **Sustainability focus**: `sustainability/sustainability.md` discusses the project's sustainability considerations for this iteration.
 
 
 ## Screenshots

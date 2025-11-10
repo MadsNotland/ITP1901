@@ -49,6 +49,7 @@ mvn javafx:run -pl ui
 - [Release 1 Documentation](docs/release1/release1.md): Complete feature overview and technical details
 - [Release 2 Documentation](docs/release2/release2.md): Overview over modularisation, code quality, documentation, architecture, work habits
 - [Release 3 Documentation](docs/release3/release3.md): Architectural separation (Spring Boot REST server + JavaFX client), exercise editor, REST API integration, domain model enhancements 
+- [Packaging Guide](docs/release3/packaging.md): Instructions for building distributable applications using JLink and JPackage
 - [Application README](workout-tracker/README.md): Quick start guide, basic usage and user story overview.
 
 ### Requirements
