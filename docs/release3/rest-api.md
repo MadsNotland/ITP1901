@@ -1,3 +1,4 @@
+
 # Workout Tracker REST API Documentation
 
 ## Overview
